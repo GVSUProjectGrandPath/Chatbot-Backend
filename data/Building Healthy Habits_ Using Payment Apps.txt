@@ -1,0 +1,111 @@
+﻿Using Payment Apps
+Here’s a clear and engaging 2-3 minute video outline based on your new topic:
+________________
+
+
+Video Title:
+Payment Apps 101: How They Work, Pros & Cons, and Avoiding Scams
+________________
+
+
+Introduction (15-20 seconds)
+* Greet and introduce the topic:
+"Hi everyone! Today we’re breaking down how payment apps like Venmo and Cash App work, what you need to watch out for, and how to stay safe."
+
+________________
+
+
+Part 1: How Payment Apps Work (30-40 seconds)
+   * Basic Function:
+
+      * Link your bank account, debit, or credit card to the app.
+
+      * Send or receive money instantly with just a username or QR code.
+
+         * Examples:
+
+            * Venmo: Often used for splitting bills.
+
+            * Cash App: Popular for both personal payments and business transactions.
+
+________________
+
+
+Part 2: Benefits of Payment Apps (20-25 seconds)
+               * Convenience: Fast and easy way to send/receive money.
+
+               * Accessibility: Most apps are free to use and work with smartphones.
+
+               * Record-Keeping: Built-in payment history helps track spending.
+
+________________
+
+
+Part 3: Drawbacks of Payment Apps (20-25 seconds)
+                  * Fees:
+
+                     * Instant transfers to your bank might have a small fee.
+                     * If you connect your credit card instead of a checking account, transfers from the credit card count as cash advances - this is when you withdraw cash from your credit card instead of making a purchase. The interest on cash advances begins accruing immediately, so even if you pay off the balance in full each month, you will still be charged interest for the cash advance
+
+                        * Privacy and Security:
+
+                           * Transactions might be public by default (e.g., Venmo’s feed).
+                           * Because you are entering your banking information into a third party site, be sure to review their security practices and follow safe password and authentication practices for your account
+
+                              * Limited Protections:
+
+                                 * If you send money to the wrong person, it’s often hard to get it back.
+
+________________
+
+
+Part 4: Common Payment App Scams (30-40 seconds)
+                                    * Scams to Watch Out For:
+
+                                       * Fake buyers/sellers: Requesting payment outside official platforms. Make sure the product or service you are paying for is real.
+
+                                       * "Accidental" payments: Scammers sending money and asking for it back before their original payment is reversed.
+                                          * If you think it is a legitimate accident, wait 3 or more business days before returning to make sure it clears their account before returning.
+
+                                             * Phishing texts/emails: Fake notifications asking for login info.
+
+                                                * Tip:
+
+                                                   * Only send money to people you know and double-check usernames carefully.
+
+________________
+
+
+Conclusion (10-15 seconds)
+                                                      * Recap key points:
+"Payment apps are super handy, but only when you use them carefully. Stay smart, stay secure!"
+
+
+
+
+Script:
+Hey! Let’s talk about payment apps like Venmo and Cash App—how they work and how to use them safely.
+You link your bank or debit card, and then you can send or receive money instantly using someone’s username or QR code. They’re super convenient for things like splitting bills or quick payments.
+The pros? They’re fast, easy to use, and track your transactions for you.
+The cons? There might be fees for instant transfers, and using a credit card can lead to interest charges. Some apps make transactions public by default, and if you send money to the wrong person, it’s usually hard to get it back.
+Watch out for scams—like fake buyers, “accidental” payments, or phishing texts. Always double-check usernames and only send money to people you know.
+Bottom line: Payment apps are super useful, but only if you stay alert and use them wisely.
+
+
+
+
+
+
+
+
+
+
+New script:
+Walking
+Being that friend who doesn’t have a payment app set up can be challenging. Having to ask the waiter to split the bill is so last year. It’s super easy to set up your card to an app, so let's jump into it.
+Sitting/standing on balcony
+There are many different apps out there, to avoid getting scammed, try using  one that is common amongst your friends. 
+Most payment apps will keep your money in the app until you “transfer” it to your bank. This usually costs a fee if you want the money immediately, but there are also apps that deposit directly to your bank account without a fee.
+Before you connect one of these apps to your bank, make sure you do the proper research to ensure that it's safe. Also,  NEVER send money to someone you don’t know to stay clear from scammers.
+Ending
+If you’re being safe, payment apps can be a super convenient and easy way to send money without going to the bank. Give one a try!
