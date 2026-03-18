@@ -1,0 +1,58 @@
+Module: Money Management
+Lesson: Spending Plan Foundations
+────────────────────────────────────────
+
+Spending Plan Foundations (2-3 Minute Course)
+1. Introduction (20-30 seconds)
+ * Topic Introduction: A spending plan is a powerful tool for managing your finances effectively. But how does it differ from a traditional budget? In this lesson, we’ll explore what a spending plan is, how it works, and how you can use it to take control of your money.
+ * Objective: You'll learn the basic math behind creating a spending plan, the types of expenses to consider, and how the 50/30/20 rule can help simplify your financial planning.
+2. Spending Plan vs. Budget (40-50 seconds) (5)
+ * Spending Plan: A spending plan is a flexible guide that helps you manage your income by prioritizing essentials, leaving room for personal needs and savings. Unlike a rigid budget, it adapts as your circumstances change—perfect for the unpredictable nature of college life.
+ * Budget: Budgets are more structured and goal-driven. They work best when aligned with your lifestyle and financial priorities, but they can feel restrictive if your income varies month to month.
+ * Key Difference: While both aim to help you manage money, a spending plan is often more realistic for students because it evolves with your situation. A strict budget requires tight control, which isn’t always feasible for those living on fluctuating or limited income.
+ * How to Build a Student-Friendly Spending Plan:
+1. Start with real data: Review 3–6 months of account history to find your average spending by category.
+2. Identify non-negotiables: Rent, student loans, phone bills—things you must pay.
+3. Calculate your net income: If you work hourly, average it out. Subtract your fixed costs to see what’s left.
+4. Adjust and adapt: Reduce spending where possible and seek campus or community resources if needed (like food pantries or rent support).
+5. Save what you can: Even if it’s not 20%, every dollar counts.
+6. Struggling to meet basic needs? Explore DHS support or look into additional income streams like part-time work or short-term gigs.
+3. Basic Math for a Spending Plan (40-50 seconds)
+ * Income: The first step is to calculate your total monthly income—this includes your salary, side gigs, financial aid, or any other sources of income.
+ * Expenses: Next, list all your expenses—fixed costs (like rent, utilities, insurance) and variable costs (like groceries, entertainment, or personal items).
+ * Math: Subtract your total expenses from your income. If your expenses are higher than your income, you’ll need to adjust your spending plan to avoid going into debt.
+ * The 50/30/20 Breakdown (1): Apply the 50/30/20 rule to simplify the math:
+ * 50% of income for needs
+ * 30% for wants
+ * 20% for savings and debt repayment
+This breakdown ensures you're covering your essentials first, indulging in personal wants moderately, and saving for future needs.
+ 4. Types of Expenses to Consider (40-50 seconds) (3)
+ * Fixed Expenses: These are costs that remain constant each month, such as rent, mortgage, utilities, car payments, or insurance. These expenses are necessary and non-negotiable.
+ * Variable Expenses: These costs can fluctuate monthly, including groceries, transportation, entertainment, and dining out. While these can be adjusted, they are still essential for managing your lifestyle.
+ * Discretionary Spending: These are optional expenses like shopping for clothes, subscriptions (Netflix, Spotify), and vacations. These expenses should be part of your "wants" category in the spending plan.
+ * Savings and Debt: Don't forget to include savings for future goals (emergency fund, retirement) and debt repayment. Allocating 20% of your income to this category ensures that you are securing your financial future.
+ * Planning for Irregular Expenses: Also, remember to plan for irregular or seasonal expenses like gifts, vacations, or medical bills. These can be set aside in advance to avoid surprises.
+ 5. Conclusion and Takeaways (20-30 seconds)
+ * Summary of Key Points:
+ * A spending plan is a flexible tool that helps you manage your income and expenses while keeping a balance between needs, wants, and savings.
+ * The basic math involves tracking your income, calculating expenses, and applying the 50/30/20 rule for easy allocation.
+ * Don't forget to account for both fixed and variable expenses, along with discretionary spending and savings.
+ * Call to Action:
+Create a spending plan today by starting with the 50/30/20 rule. Adjust it as needed based on your personal circumstances. This plan will help you feel more in control of your money and lay the foundation for better financial habits.
+References:
+ 1. https://www.unfcu.org/financial-wellness/50-30-20-rule/?utm
+ 2. https://www.wellsfargo.com/financial-education/basic-finances/build-the-future/short-long-term-planning/budget-vs-financial-plan/?utm
+ 3. https://www.intuit.com/blog/budgeting/include-budget/
+ 4. https://livingwage.mit.edu/counties/26081
+ 5. https://www.cnbc.com/2023/05/23/why-the-50-30-20-budgeting-rule-is-out-of-reach-for-most-americans.html
+
+I think we should actually steer away from the 50/30/20 rule. It works really well for people at the median income level, but when you are below that (most college students and recent grads are) it simply doesn't work. Article with example: https://www.cnbc.com/2023/05/23/why-the-50-30-20-budgeting-rule-is-out-of-reach-for-most-americans.html
+
+My suggestion for making a spending plan is to start with your actual spending.
+1. look at your account history to come up with your average monthly expense for each budget category (on average how much did you spend on entertainment in the last 3-6 months?
+2. what are the non-negotiable expenses? (rent, loan payments, expenses that don't change)
+3. subtract that from your monthly net income (average this if you are hourly) to find out if you are overspending or if there is month left over
+4. adjust your target budget for the expenses you can decrease, find resources to assist with necessary expenses if needed (food programs, rent programs, etc.)
+5. Save what you can even if it isn't 20% yet.
+6. If you don't have enough income to support your necessary expenses like housing and food, need to review DHS services and increasing income (second job? short term or project work?)
+Sounds good!
