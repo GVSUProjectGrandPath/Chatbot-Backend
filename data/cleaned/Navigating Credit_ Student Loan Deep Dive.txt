@@ -3,10 +3,10 @@ Lesson: Student Loan Deep Dive
 ────────────────────────────────────────
 
 Student Loans Deep Dive (2-3 Minute Course Outline)
-1. Introduction (10-15 seconds)
+1. Introduction
 * Briefly introduce the importance of understanding student loans.
 * Highlight key takeaways: loan types, repayment strategies, and avoiding scams.
-2. Types of Student Loans (30-45 seconds)
+2. Types of Student Loans
 * Federal vs. Private Loans:
  * Federal loans typically offer lower interest rates and more flexible repayment options
  * (MUST file the FAFSA form to use federal loans).
@@ -17,18 +17,18 @@ Student Loans Deep Dive (2-3 Minute Course Outline)
 * Subsidized vs. Unsubsidized Loans:
  * Subsidized: Interest does not accrue while in school.
  * Unsubsidized: Interest accrues immediately.
-3. Planning for Repayment (30-45 seconds)
+3. Planning for Repayment
 * When repayment begins:
  * Federal loans: Typically 6-month grace period after graduation.
  * Private loans: Varies by lender.
 * Creating a repayment strategy:
  * Include loan payments in your budget early.
  * Consider making interest payments while in school.
-4. Student Loan Refunds – What to Do? (15-30 seconds)
+4. Student Loan Refunds – What to Do?
 * Options for using loan refunds:
  * Apply it to the loan principal to reduce debt.
  * Use for necessary living expenses but avoid unnecessary spending.
-5. Navigating Hardships (30-45 seconds)
+5. Navigating Hardships
 * Deferment vs. Forbearance:
  * Deferment: Temporarily stops payments, interest may not accrue (for subsidized loans).
  * Forbearance: Temporarily reduces or pauses payments, but interest continues accruing.
@@ -39,7 +39,7 @@ Student Loans Deep Dive (2-3 Minute Course Outline)
  * Red flags: Upfront fees, aggressive sales tactics, and promises of “immediate” loan forgiveness.
 * Campus & Community Resources:
  * Financial aid office, nonprofit student loan counseling services.
-6. Conclusion & Key Takeaways (10-15 seconds)
+6. Conclusion & Key Takeaways
 * Recap key points: loan types, repayment planning, responsible use of refunds, and avoiding scams.
 * Encourage proactive financial planning and seeking guidance from trusted sources.
 Useful Links:

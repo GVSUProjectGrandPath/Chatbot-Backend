@@ -7,15 +7,15 @@ Avoiding Fees and Overdrafts
  Ever checked your bank account only to find unexpected fees? Overdraft charges, ATM fees, and maintenance fees can add up fast. Let’s break down how to avoid them and keep more of your money!
 
 1. Common Bank Fees (and How to Avoid Them!)
-💰 Monthly Maintenance Fees – Some banks charge $5–$15 just for having an account. ✅ Look for student accounts that waive these fees.
-💰 Overdraft Fees – If you spend more than you have, banks may charge $30+ per overdraft. ✅ Set up overdraft alerts or link a savings account for protection.
-💰 ATM Fees – Using an out-of-network ATM can cost $3–$5 per withdrawal. ✅ Use in-network ATMs or find a bank that reimburses fees.
-💰 Insufficient Funds Fees (NSF Fees) – If a payment bounces, you could be charged $30+. ✅ Check your balance before making payments.
+ Monthly Maintenance Fees – Some banks charge $5–$15 just for having an account. ✅ Look for student accounts that waive these fees.
+ Overdraft Fees – If you spend more than you have, banks may charge $30+ per overdraft. ✅ Set up overdraft alerts or link a savings account for protection.
+ ATM Fees – Using an out-of-network ATM can cost $3–$5 per withdrawal. ✅ Use in-network ATMs or find a bank that reimburses fees.
+ Insufficient Funds Fees (NSF Fees) – If a payment bounces, you could be charged $30+. ✅ Check your balance before making payments.
 
 2. Available vs. Total Account Balance
 * Total Balance: The full amount in your account, including pending transactions.
 * Available Balance: The actual money you can spend right now.
-🔴 Example: You have $500 in your account, but a $200 rent payment is pending.
+ Example: You have $500 in your account, but a $200 rent payment is pending.
 * Total Balance: $500
 * Available Balance: $300
 * If you spend more than $300 before the rent clears, you may overdraft!
@@ -23,7 +23,7 @@ Avoiding Fees and Overdrafts
 
 3. What is ChexSystems? (Your Banking Reputation)
 Just like a credit report tracks loans and payments, ChexSystems tracks your banking history.
-🔍 If you’ve had too many overdrafts, unpaid fees, or bounced checks, banks may deny you a new account.
+ If you’ve had too many overdrafts, unpaid fees, or bounced checks, banks may deny you a new account.
 ✅ How to Stay in Good Standing:
 * Keep your account in the positive.
 * Pay off any unpaid bank fees.

@@ -8,11 +8,11 @@ Here’s a clear and engaging 2-3 minute video outline based on your new topic:
 Video Title:
 Payment Apps 101: How They Work, Pros & Cons, and Avoiding Scams
 
-Introduction (15-20 seconds)
+Introduction
 * Greet and introduce the topic:
 "Hi everyone! Today we’re breaking down how payment apps like Venmo and Cash App work, what you need to watch out for, and how to stay safe."
 
-Part 1: How Payment Apps Work (30-40 seconds)
+Part 1: How Payment Apps Work
  * Basic Function:
 
  * Link your bank account, debit, or credit card to the app.
@@ -25,14 +25,14 @@ Part 1: How Payment Apps Work (30-40 seconds)
 
  * Cash App: Popular for both personal payments and business transactions.
 
-Part 2: Benefits of Payment Apps (20-25 seconds)
+Part 2: Benefits of Payment Apps
  * Convenience: Fast and easy way to send/receive money.
 
  * Accessibility: Most apps are free to use and work with smartphones.
 
  * Record-Keeping: Built-in payment history helps track spending.
 
-Part 3: Drawbacks of Payment Apps (20-25 seconds)
+Part 3: Drawbacks of Payment Apps
  * Fees:
 
  * Instant transfers to your bank might have a small fee.
@@ -47,7 +47,7 @@ Part 3: Drawbacks of Payment Apps (20-25 seconds)
 
  * If you send money to the wrong person, it’s often hard to get it back.
 
-Part 4: Common Payment App Scams (30-40 seconds)
+Part 4: Common Payment App Scams
  * Scams to Watch Out For:
 
  * Fake buyers/sellers: Requesting payment outside official platforms. Make sure the product or service you are paying for is real.
@@ -61,7 +61,7 @@ Part 4: Common Payment App Scams (30-40 seconds)
 
  * Only send money to people you know and double-check usernames carefully.
 
-Conclusion (10-15 seconds)
+Conclusion
  * Recap key points:
 "Payment apps are super handy, but only when you use them carefully. Stay smart, stay secure!"
 

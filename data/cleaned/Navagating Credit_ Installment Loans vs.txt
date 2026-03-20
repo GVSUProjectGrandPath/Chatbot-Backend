@@ -57,7 +57,7 @@ Character 1:
 Character 2:
  "Bingo."
 
-📚 Scene 2: Know These Loan Terms
+ Scene 2: Know These Loan Terms
 [Pop-up definitions appear on screen as Character 2 talks]
 Character 2:
  You need to know are some terms you need to know as well:
@@ -74,7 +74,7 @@ Character 1:
 Character 2:
  "Usually. It means your payment stays the same. But lines of credit often have variable rates, so your payment can change—up or down."
 
-💸 Scene 3: Collateral or Not?
+ Scene 3: Collateral or Not?
 [Visual: Car key and house icon vs. floating unsecured loan app]
 Character 2:
  "There are two big loan types to know:
@@ -88,7 +88,7 @@ Character 1:
 Character 2:
  "No collateral. Just your promise to pay it back. More risk for lenders = higher interest. Credit cards and most student loans fall in this group."
 
-🧠 Scene 4: Final Recap
+ Scene 4: Final Recap
 
 Character 2:
  "So here’s the cheat code:

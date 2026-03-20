@@ -17,12 +17,12 @@ To manage your account, you should regularly:
 
 2. Moving Money: Different Payment Methods
 There are several ways to send and receive money:
-💵 Checks – Though less common, checks allow you to pay rent or bills. To write one:
+ Checks – Though less common, checks allow you to pay rent or bills. To write one:
 * Fill in the date, recipient, amount (numerical and written), and sign it.
 * Keep track in your check register to avoid overdrafts.
-🔁 ACH Transfers (Automated Clearing House) – Used for direct deposit, bill payments, and sending money between accounts (e.g., linking your bank to Venmo or PayPal).
+ ACH Transfers (Automated Clearing House) – Used for direct deposit, bill payments, and sending money between accounts (e.g., linking your bank to Venmo or PayPal).
 ⚡ Wire Transfers – A fast but costly way to send money, often used for large transactions like tuition payments.
-💳 Debit Card vs. Credit Card Transactions – When using a debit card, you may see the option to run it as "debit" or "credit."
+ Debit Card vs. Credit Card Transactions – When using a debit card, you may see the option to run it as "debit" or "credit."
 * Debit (with PIN): Money is immediately withdrawn from your account. Some ATMs allow cash back.
 * Credit (without PIN): The transaction is processed through Visa/Mastercard’s network, often offering better fraud protection but no rewards like a real credit card. Money still comes from your account, but it may take a day or two to clear.
 
