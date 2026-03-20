@@ -9,11 +9,11 @@ Here’s a 2-3 minute video outline based on your slideshow “MSL 2024 Financia
 Video Title:
 Financial Aid Basics and Paying Your College Bill: What You Need to Know
 
-Introduction (15-20 seconds)
+Introduction
 * Greet and briefly introduce the topic:
 "Let’s quickly cover the essentials of financial aid and how you can manage your college bill."
 
-Part 1: Understanding Financial Aid (30-40 seconds)
+Part 1: Understanding Financial Aid
  * FAFSA Basics:
 
  * Complete the FAFSA every year starting Dec 1st.
@@ -26,7 +26,7 @@ Part 1: Understanding Financial Aid (30-40 seconds)
 
  * COA = tuition + living expenses; it's a budget estimate, not your actual bill.
 
-Part 2: Types of Financial Aid (20-30 seconds)
+Part 2: Types of Financial Aid
  * Grants = free money (need-based).
 
  * Scholarships = free money (merit-based).
@@ -35,7 +35,7 @@ Part 2: Types of Financial Aid (20-30 seconds)
 
  * Work-Study = campus jobs to earn money while studying.
 
-Part 3: Special Programs (20-30 seconds)
+Part 3: Special Programs
  * Check out state specific programs
  * Example Michigan Achievement Scholarship: Up to $5,500/year for eligible students.
 
@@ -50,7 +50,7 @@ Part 4: Paying the Bill
  * Payment deadline = December 13.
  * Options: Pay in full, or Enroll in the 4-payment deferment plan ($40 fee per semester).
 
-Part 5:Tips (15-20 seconds)
+Part 5:Tips
  * Manage Loans Wisely:
 
  * Pay interest early.
@@ -61,7 +61,7 @@ Part 5:Tips (15-20 seconds)
 
  * Pay more than the minimum if possible.
 
-Conclusion (10-15 seconds)
+Conclusion
  * Encourage action:
 "Stay ahead by applying early, managing your money smartly, and asking for help if you need it."
 
