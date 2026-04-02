@@ -28,17 +28,16 @@ MODULE_NUMBER = {
 }
 
 
-def chunk_text(text, enc):
+def chunk_text(text,enc):
     tokens = enc.encode(text)
     chunks = []
-    start = 0
+    start = 0 
     while start < len(tokens):
         end = start + CHUNK_TOKENS
         chunks.append(enc.decode(tokens[start:end]))
-        if end >= len(tokens):
-            break
-        start += CHUNK_TOKENS - OVERLAP_TOKENS  # slide forward with overlap
-    return chunks
+        if end >= len(tokens): break
+        start += CHUNK_TOKENS - OVERLAP_TOKENS
+    return chunks 
 
 
 def strip_header(text):
@@ -94,7 +93,7 @@ def build_chunks():
 
         for i, text in enumerate(windows):
             all_chunks.append({
-                "id": str(uuid.uuid4()),
+                "id": str(uuid.uuid5(uuid.NAMESPACE_DNS, f"{file_name}:{i}")),
                 "module_number": module_num,
                 "module": meta["module"],
                 "lesson": meta["lesson"],
