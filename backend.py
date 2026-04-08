@@ -1,4 +1,5 @@
 from typing import TypedDict
+from langgraph.graph import StateGraph, START, END
 
 # State
 class BotState(TypedDict):
@@ -8,34 +9,59 @@ class BotState(TypedDict):
     ferpa_blocked : bool
     response: str | None
     rag_chunks: list[dict]
-    intent: str | None #Boundary,Content
+    intent: str | None
 
 
-# Static responses
-FERPA_RESPONSE = (
-    "To protect your privacy under FERPA and GVSU policy, I can't process messages "
-    "that contain personal identifiers, grades, or financial aid details. Please "
-    "rephrase without that information - I'm happy to help with any financial "
-    "education topic!"
-)
+def onboarding(state:BotState):
+    pass
 
+def ferpa_sanitizer(state:BotState):
+    pass
 
-# FERPA patterns
-FERPA_PATTERNS = [
-    re.compile(r"@gvsu\.edu", re.IGNORECASE),
-    re.compile(r"\bG\d{6}\b"),                          # G-Number
-    re.compile(r"\b\d{3}-\d{2}-\d{4}\b"),               # SSN
-    re.compile(r"\b(?:\d[ -]?){13,16}\b"),               # credit/debit card number
-    re.compile(r"\bmy\s+(GPA|financial\s+aid|scholarship|FAFSA)\b", re.IGNORECASE),
-    re.compile(r"\bI\s+(got|received|have)\s+an?\s+[A-F][+\-]?\b", re.IGNORECASE),
-]
+def intent_router(state:BotState):
+    pass
 
+def rag_node(state:BotState):
+    pass
 
+def persona_adapter(state:BotState):
+    pass
 
+def boundary_node(state:BotState):
+    pass
 
+def route_after_ferpa(state:BotState):
+    pass
 
+def route_intent(state:BotState):
+    pass
 
+#Graph
+graph = StateGraph(BotState)
 
+graph.add_node('onboarding', onboarding)
+graph.add_node('ferpa_sanitizer', ferpa_sanitizer)
+graph.add_node('intent_router', intent_router)
+graph.add_node('rag_node', rag_node)
+graph.add_node('persona_adapter', persona_adapter)
+graph.add_node('boundary_node', boundary_node)
 
+graph.add_edge(START, 'onboarding')
+graph.add_edge('onboarding','ferpa_sanitizer')
 
+graph.add_conditional_edges('ferpa_sanitizer', route_after_ferpa, {
+    "blocked":      END,
+    "route_intent": "intent_router",
+})
 
+graph.add_conditional_edges("intent_router", route_intent, {
+    "concept":   "rag_node",
+    "boundary":  "boundary_node",
+})
+
+graph.add_edge("rag_node",        "persona_adapter")
+graph.add_edge("persona_adapter", END)
+graph.add_edge("boundary_node",   END)
+
+compiled = graph.compile()
+compiled.get_graph().print_ascii()
