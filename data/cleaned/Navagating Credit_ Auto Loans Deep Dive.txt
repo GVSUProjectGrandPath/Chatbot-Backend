@@ -1,0 +1,86 @@
+Module: Navigating Credit
+Lesson: Auto Loans Deep Dive
+────────────────────────────────────────
+
+Auto Loans Deep Dive
+ Introduction
+* Overview of why understanding auto loans is important.
+ * Instead of just an overview of why understanding auto loans is important, consider briefly touching on the impact of auto loans on one's financial future, credit score, and how they can influence major life decisions (e.g., purchasing a home, saving for retirement). This would give more context for why understanding auto loans goes beyond just buying a car.
+* Key topics: leasing vs. buying, financing options, and what to consider when shopping for a vehicle.
+ Purchasing vs. Leasing a Vehicle
+* Buying (Financing)
+ * Pros
+ * You own the car once the loan is paid off. Which also means more room in your budget when you don’t have a payment anymore
+ * Higher monthly payments but long-term savings.
+ * Discuss how financing affects your credit score and how the interest paid over the term of the loan can add up.
+ * You might also touch on the flexibility of owning a vehicle outright compared to leasing (e.g., no mileage restrictions or wear-and-tear limitations).
+ * Cons
+ * Usually (it’s been a little different lately between supply chain shortages in COVID and tarrifs) cars don’t retain value so not an investment like a house which goes up in value
+ * You are responsible for all maintenance and repairs, eventually car will no longer be worth repairs and need to be replaced
+* Leasing
+ * Pro: Lower monthly payments, but you don’t own the car.
+ * Explain the concept of a "lease buyout" option at the end of the term and what it entails.
+ * Con: Restrictions on mileage and wear-and-tear.
+ * Pro: Ideal for those who prefer upgrading every few years.
+ * Pro: Newer vehicle means less maintenance and repair cost
+ * Con: Always have a monthly payment
+ Financing: Dealership vs. Financial Institution
+* Financing Through a Dealership
+ * Convenient but may come with higher interest rates.
+ * Dealer incentives and promotions can sometimes be beneficial.
+ * Can check your rates from many different financial institutions at once, so helpful with rate shopping
+ * Potential bias: the financial institution that holds the loan will pay a commission to the dealership for bringing in a new loan, so if one institution has better commission deals, they may try to guide you to choose that one
+* Financing Through a Bank or Credit Union
+ * Typically offers lower interest rates.
+ * Requires pre-approval but gives more negotiation power at the dealership.
+ * Convenient to have loan at the same place you have your regular account
+ * Con: they will approve you up to a certain amount and if you end up selecting a vehicle that is more (even slightly) they will need to re-evaluate the loan application, which can add time
+ Key Considerations When Shopping for a Vehicle
+* New vs. Used:
+ * New cars have warranties but depreciate quickly.
+ * Used cars are more affordable but may have maintenance concerns.
+ * Certified Pre-Owned: in the middle price wise because they are used, but typically well maintained, newer vehicles with a warranty from the dealership
+* Dealership vs. Private Seller:
+ * Dealerships offer certified pre-owned options but may be more expensive.
+ * Private sellers may offer lower prices but require careful inspections.
+* Down Payment & Loan Term:
+ * A larger down payment lowers your loan amount and monthly payments.
+ * At a dealership, can use a trade in of your old car toward a downpayment, but if you have a loan on the old car still and the loan is more than the dealership is willing to pay for the car, they will try to get you to roll in what you still owe into the new loan. This can make the loan principal and the payments higher and means you are going into the loan with negative equity (meaning the loan is for more than the car is worth.)
+ * Example: New loan is $10,000. You owe $5,000 on your old loan but the dealership only wants to offer you $4,000 for the old car. They will give $5,000 to your lender to pay off your old loan and then set up the new loan for $11,000.
+ * Down payments are generally not required for an auto loan, but a good way to reduce payments if you have money to put down up front
+ * A shorter loan term (36-48 months) saves on interest but increases payments.
+ * A longer loan term (60-72 months) lowers payments but costs more in interest.
+ * Generally there are no fees for paying off a loan early, but a lease is for a set amount of time like renting an apartment, so could be penalties for ending the lease early.
+ Conclusion & Final Takeaways
+* Recap: Leasing vs. buying, financing options, and key vehicle shopping considerations.
+* General rule: Aim for at least a 10-20% down payment for lower loan costs.
+* Final takeaway: "The best financing option depends on your budget, how long you plan to keep the car, and your long-term financial goals!”
+
+Let me ask you this question. Are you thinking about buying a car or any major purchase? Do you know that it’s not just about the vehicle or the item but it’s about making smart financial moves that can shape your future.
+Join me and let’s break it down with a car as an example where we will get to know the difference between buying and leasing.
+Buying a car which is also called financing means you will own it once the loan is paid off. The monthly payments are usually higher than leasing, but over time you save more, and eventually you drive payment-free. Also, owning gives you flexibility with no mileage limits, no wear-and-tear penalties. Just remember: cars lose value fast, and you’re on the hook for all repairs.
+Leasing, on the other hand, means lower monthly payments, and you're usually driving a newer car. It’s great if you like upgrading often or want lower repair costs. But you won’t own the car, there are mileage restrictions, and you’ll always have a car payment.
+Now let’s talk about financing. Dealerships are convenient and offer special promotions, but they sometimes come with higher interest rates. You can as well check with your bank or credit union. Here, you’ll likely get a lower rate, especially with pre-approval, which also gives you more bargaining power when you walk into a dealership.
+Bear in mind again that when shopping for a vehicle, you’ve got choices. New cars have warranties but lose value fast whiles used cars cost less but may need more maintenance. A certified pre-owned vehicle is a solid middle ground. It is usually less expensive but still reliable and backed by a warranty.
+Furthermore, you would have to consider your down payment and loan term. Putting money down upfront lowers your loan and monthly costs. A shorter loan which could be for 3–4 years means higher payments, but you pay less interest while a longer loan from 5–6 years reduces monthly payments, but you’ll pay more over time.
+
+My final words to you on auto loans is that, your best option with any decision you take should depend on your budget, how long you plan to keep the car, and your overall financial goals.
+
+ Key Takeaways:
+* Buying vs. Leasing:
+
+ * Buying = ownership, more upfront cost, long-term savings.
+
+ * Leasing = lower payments, no ownership, restrictions apply.
+
+ * Financing Sources:
+
+ * Dealerships offer ease and promos but often higher rates.
+
+ * Banks/Credit Unions = lower rates, better control.
+
+ * Vehicle Shopping Tips:
+
+ * Compare new, used, and certified pre-owned.
+
+ * Larger down payment equals smaller loan and shorter loan term equals less interest.
