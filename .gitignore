@@ -2,30 +2,4 @@
 .env
 .env.*
 
-# Claude
-.claude
-Claude.md
 
-# Notes
-notes
-
-# Python
-__pycache__/
-*.py[cod]
-*.pyo
-.venv/
-venv/
-*.egg-info/
-dist/
-build/
-.python-version
-
-# uv
-.uv/
-
-# Jupyter
-.ipynb_checkpoints/
-
-# OS
-.DS_Store
-Thumbs.db
