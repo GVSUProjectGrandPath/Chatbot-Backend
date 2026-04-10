@@ -18,6 +18,7 @@ venv/
 *.egg-info/
 dist/
 build/
+.python-version
 
 # uv
 .uv/
