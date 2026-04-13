@@ -22,5 +22,3 @@ def ferpa_sanitizer(message):
         if pattern.search(message):
             return {"ferpa_blocked": True, "response": FERPA_RESPONSE}
     return {"ferpa_blocked": False}
-
-print(ferpa_sanitizer("Hi This is Puneeth and my G-number is G0257128"))
