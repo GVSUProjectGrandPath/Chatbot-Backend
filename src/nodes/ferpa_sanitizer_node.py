@@ -1,4 +1,5 @@
 import re
+from src.states.state import BotState
 
 FERPA_RESPONSE = (
     "To protect your privacy under FERPA and GVSU policy, I can't process messages "
@@ -80,6 +81,22 @@ def ferpa_sanitizer(message):
         if pattern.search(message):
             return "Yes" #{"ferpa_blocked": True, "response": FERPA_RESPONSE}
     return "No" #{"ferpa_blocked": False}
+
+
+# LangGraph node — wraps the pattern checker to operate on BotState
+def ferpa_sanitizer_node(state: BotState) -> dict:
+    messages = state.get("messages") or []
+    last_user_msg = next(
+        (m["content"] for m in reversed(messages) if m.get("role") == "user"),
+        ""
+    )
+    if ferpa_sanitizer(last_user_msg) == "Yes":
+        return {"ferpa_blocked": True, "response": FERPA_RESPONSE}
+    return {"ferpa_blocked": False}
+
+# Conditional routing function used in graph_builder
+def route_after_ferpa(state: BotState) -> str:
+    return "blocked" if state.get("ferpa_blocked") else "route_intent"
 
 
 if __name__ == "__main__":
