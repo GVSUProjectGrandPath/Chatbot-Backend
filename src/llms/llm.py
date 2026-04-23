@@ -18,6 +18,13 @@ class LLM:
         self.api_version = "2024-02-01"
         self.temperature = 0.7
 
+    def client(self):
+        client = AzureOpenAI(
+        azure_endpoint=self.azure_endpoint,
+        api_key=self.azure_openai_api_key,
+        api_version=self.api_version,
+        )
+
     def chat_llm(self):
         chat_llm = AzureChatOpenAI(
             azure_endpoint=self.azure_endpoint,
