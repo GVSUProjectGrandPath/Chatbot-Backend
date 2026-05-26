@@ -18,7 +18,10 @@ RE_COMMENT_REF = re.compile(r"\[[a-z]\]")
 RE_SEPARATOR = re.compile(r"^[_\-=]{3,}\s*$")
 RE_COMMENT_THREAD = re.compile(r".+(reacted with|replied|commented|added a comment).+", re.IGNORECASE)
 RE_SCRIPT_HEADER = re.compile(r"^\s*(Script\s*[:–-]?|Phone Video Script\s*[-–:]?)\s*$", re.IGNORECASE)
+RE_SCRIPT_SECTION = re.compile(r"^\s*Script\s+\d+\s*$", re.IGNORECASE)  # "Script 1", "Script 2" etc — label only, keep content
 RE_REFERENCES = re.compile(r"^\s*References?:?\s*$", re.IGNORECASE)
+# Final Script sections are character dialogue used for video production — not educational content
+RE_FINAL_SCRIPT = re.compile(r"^\s*Final\s+Script\s*[:–-]?\s*$", re.IGNORECASE)
 RE_ARTIFACT = re.compile(r"would you like any (modifications|changes).+", re.IGNORECASE)
 RE_CONVERSATIONAL = re.compile(
     r"^\s*(sounds?\s+good|looks?\s+good|great|nice|good\s+point|approved|lgtm|makes?\s+sense)[!.]?\s*$",
@@ -35,7 +38,13 @@ def clean_text(raw):
     for line in lines:
         if RE_REFERENCES.match(line):
             skip_rest = True
+        if RE_FINAL_SCRIPT.match(line):
+            skip_rest = True
+        if RE_SCRIPT_HEADER.match(line):
+            skip_rest = True
         if skip_rest:
+            continue
+        if RE_SCRIPT_SECTION.match(line):
             continue
         if RE_COMMENT_THREAD.search(line):
             continue
@@ -44,8 +53,6 @@ def clean_text(raw):
         if RE_CONVERSATIONAL.match(line):
             continue
         if RE_SEPARATOR.match(line):
-            continue
-        if RE_SCRIPT_HEADER.match(line):
             continue
 
         line = RE_TIMESTAMPS.sub("", line)

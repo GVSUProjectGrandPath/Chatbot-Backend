@@ -17,6 +17,6 @@ Start by listing your income and expenses, then use SUM functions and filters to
    * Security and data privacy protections.
 These features help streamline budgeting while keeping you informed.
 3. Budgeting as an Active Process (30 sec)
- Budgeting isn’t just about setting numbers and forgetting them. Life changes—income shifts, unexpected expenses arise, and priorities evolve. Regularly review and adjust your budget to stay on track and meet your financial goals. Consider a monthly check-in to make necessary updates.
+ Budgeting isn’t just about setting numbers and forgetting them. Life changesincome shifts, unexpected expenses arise, and priorities evolve. Regularly review and adjust your budget to stay on track and meet your financial goals. Consider a monthly check-in to make necessary updates.
 Conclusion (30 sec)
  Budgeting is a skill that helps you take control of your finances. Whether using a spreadsheet or a digital tool, the key is consistency and adaptability. Keep tracking, adjusting, and refining your budget to achieve financial success!

@@ -30,7 +30,7 @@
 * Recap: Installment loans = fixed repayment, lines of credit = flexible borrowing.
 * Understand key terms like principal, interest rate, and term.
 * Know the difference between secured vs. unsecured loans.
-* Final takeaway: "Choosing the right loan depends on your needs—fixed payments for big purchases, flexible credit for ongoing expenses!”
+* Final takeaway: "Choosing the right loan depends on your needsfixed payments for big purchases, flexible credit for ongoing expenses!”
 
 
 Script
@@ -76,7 +76,7 @@ Character 2:
 Character 1:
  "Do installment loans have fixed interest?"
 Character 2:
- "Usually. It means your payment stays the same. But lines of credit often have variable rates, so your payment can change—up or down."
+ "Usually. It means your payment stays the same. But lines of credit often have variable rates, so your payment can changeup or down."
 ________________
 
 
@@ -86,9 +86,9 @@ Character 2:
  "There are two big loan types to know:
 Collateralized (Secured) and Unsecured (Personal) loans."
 Character 1:
- "Wait—like, I give them my stuff?"
+ "Waitlike, I give them my stuff?"
 Character 2:
- "Kinda. With collateralized loans, you back the loan with an asset—like your house or car. If you default, they can repossess it. So, you usually get lower interest rates."
+ "Kinda. With collateralized loans, you back the loan with an assetlike your house or car. If you default, they can repossess it. So, you usually get lower interest rates."
 Character 1:
  "And unsecured?"
 Character 2:
@@ -106,7 +106,7 @@ Character 2:
 
    * Know your terms.
 
-   * And know whether the loan’s secured or not—it affects your rate and your risk."
+   * And know whether the loan’s secured or notit affects your rate and your risk."
 
 Character 1 (smiling):
  "Okay, that actually makes sense now. I’m ready to borrow smarter."

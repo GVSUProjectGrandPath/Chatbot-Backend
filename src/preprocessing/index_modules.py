@@ -12,7 +12,7 @@ CLEANED_DIR = "data/cleaned"
 MANIFEST = "data/video_manifest.csv"
 CHUNKS_OUT = "data/chunks/chunks.json"
 
-# 400 tokens felt like the right balance — big enough for context, small enough for precision
+#configs
 CHUNK_TOKENS = 400
 OVERLAP_TOKENS = 50  # overlap so we don't cut off mid-thought between chunks
 ENCODING = "cl100k_base"  # same tokenizer used by text-embedding-3-small
@@ -42,7 +42,7 @@ def chunk_text(text,enc):
 
 def strip_header(text):
     # clean_data.py prepends a Module/Lesson/separator header to every file
-    # we don't want that in the chunks — strip it before chunking
+    # we don't want that in the chunks  strip it before chunking
     lines = text.splitlines()
     header_done = False
     stripped = []
@@ -118,6 +118,17 @@ def save_chunks(chunks):
     print(f"Saved → {CHUNKS_OUT}")
 
 
+def delete_index_if_exists(endpoint, key, index_name):
+    from azure.search.documents.indexes import SearchIndexClient
+    from azure.core.credentials import AzureKeyCredential
+
+    client = SearchIndexClient(endpoint=endpoint, credential=AzureKeyCredential(key))
+    existing = [idx.name for idx in client.list_indexes()]
+    if index_name in existing:
+        client.delete_index(index_name)
+        print(f"  Deleted existing index '{index_name}'.")
+
+
 def create_index_if_missing(endpoint, key, index_name):
     from azure.search.documents.indexes import SearchIndexClient
     from azure.search.documents.indexes.models import (
@@ -143,7 +154,7 @@ def create_index_if_missing(endpoint, key, index_name):
         SimpleField(name="chunk_index", type=SearchFieldDataType.Int32),
         SimpleField(name="chunk_count", type=SearchFieldDataType.Int32),
         SearchableField(name="text", type=SearchFieldDataType.String),
-        # vector field — 1536 dims matches text-embedding-3-small output
+        # vector field  1536 dims matches text-embedding-3-small output
         SearchField(
             name="text_vector",
             type=SearchFieldDataType.Collection(SearchFieldDataType.Single),
@@ -164,7 +175,7 @@ def create_index_if_missing(endpoint, key, index_name):
     print(f"  Created index '{index_name}'.")
 
 
-def upload_to_azure(chunks):
+def upload_to_azure(chunks, reset=False):
     from dotenv import load_dotenv
     load_dotenv()
 
@@ -176,7 +187,11 @@ def upload_to_azure(chunks):
     search_key = os.environ["AZURE_SEARCH_API_KEY"]
     index_name = os.environ.get("AZURE_SEARCH_INDEX_NAME", "finlit-modules")
 
-    # create the index schema if this is the first run
+    # wipe index first to avoid stale chunks from previous runs accumulating
+    if reset:
+        delete_index_if_exists(search_endpoint, search_key, index_name)
+
+    # create the index schema if this is the first run (or after a reset)
     create_index_if_missing(search_endpoint, search_key, index_name)
 
     openai_client = AzureOpenAI(
@@ -192,7 +207,7 @@ def upload_to_azure(chunks):
         credential=AzureKeyCredential(search_key),
     )
 
-    # batch 100 at a time — Azure embedding API handles up to 2048 inputs but 100 feels safe
+    # batch 100 at a time  Azure embedding API handles up to 2048 inputs but 100 feels safe
     BATCH = 100
     uploaded = 0
 
@@ -213,10 +228,12 @@ def upload_to_azure(chunks):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--upload", action="store_true")
+    parser.add_argument("--upload", action="store_true", help="Upload chunks to Azure AI Search")
+    parser.add_argument("--reset", action="store_true", help="Delete and recreate the index before uploading (clears stale docs)")
     args = parser.parse_args()
 
     chunks = build_chunks()
     save_chunks(chunks)
 
-    upload_to_azure(chunks)
+    if args.upload:
+        upload_to_azure(chunks, reset=args.reset)

@@ -84,11 +84,11 @@ Conclusion (10-15 seconds)
 
 
 Script:
-Hey! Let’s talk about payment apps like Venmo and Cash App—how they work and how to use them safely.
+Hey! Let’s talk about payment apps like Venmo and Cash Apphow they work and how to use them safely.
 You link your bank or debit card, and then you can send or receive money instantly using someone’s username or QR code. They’re super convenient for things like splitting bills or quick payments.
 The pros? They’re fast, easy to use, and track your transactions for you.
 The cons? There might be fees for instant transfers, and using a credit card can lead to interest charges. Some apps make transactions public by default, and if you send money to the wrong person, it’s usually hard to get it back.
-Watch out for scams—like fake buyers, “accidental” payments, or phishing texts. Always double-check usernames and only send money to people you know.
+Watch out for scamslike fake buyers, “accidental” payments, or phishing texts. Always double-check usernames and only send money to people you know.
 Bottom line: Payment apps are super useful, but only if you stay alert and use them wisely.
 
 

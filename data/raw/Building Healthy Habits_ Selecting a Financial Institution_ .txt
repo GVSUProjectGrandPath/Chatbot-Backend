@@ -6,7 +6,7 @@ ________________
 
 1. Types of Financial Institutions: Banks vs. Credit Unions
 * Banks: For-profit institutions that offer a wide range of services, often with many locations and advanced technology. They typically have higher fees and interest rates on loans.
-* Credit Unions: Non-profit institutions owned by members. They usually offer lower fees, better interest rates, and personalized service—but may have fewer locations and stricter membership requirements.
+* Credit Unions: Non-profit institutions owned by members. They usually offer lower fees, better interest rates, and personalized servicebut may have fewer locations and stricter membership requirements.
 ________________
 
 
