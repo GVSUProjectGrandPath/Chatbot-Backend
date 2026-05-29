@@ -1,3 +1,9 @@
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+    "pytest-dotenv>=0.5.2",
+]
+
 [project]
 name = "finlit-bot"
 version = "0.1.0"
@@ -7,16 +13,23 @@ requires-python = ">=3.11"
 dependencies = [
     "azure-core==1.30.2",
     "azure-search-documents==11.6.0b8",
-    "dotenv>=0.9.9",
     "fastapi==0.115.0",
-    "grandalf>=0.8",
     "ipykernel>=7.2.0",
     "langchain==0.3.7",
     "langchain-community==0.3.7",
     "langchain-openai==0.2.9",
-    "langgraph==0.2.55",
+    "openai>=1.0.0",
+    "pandas>=2.3.3",
     "pydantic==2.9.2",
     "python-dotenv==1.0.1",
+    "python-json-logger>=2.0.7",
     "tiktoken>=0.12.0",
     "uvicorn==0.30.6",
 ]
+
+[tool.pyrefly]
+project_includes = ["."]
+
+[tool.pyright]
+pythonVersion = "3.11"
+include = ["app"]
