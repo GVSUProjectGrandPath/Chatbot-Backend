@@ -100,7 +100,7 @@ async def chat(body: ChatRequest):
     request_id_var.set(str(uuid.uuid4()))
 
     # FERPA guard runs before the chain — blocked messages never reach Azure
-    if ferpa_sanitizer(body.message) == "Yes":
+    if ferpa_sanitizer(body.message):
         logger.warning("ferpa_blocked", extra=get_extra(session_id=body.session_id))
         return {"session_id": body.session_id, "response": FERPA_RESPONSE, "ferpa_blocked": True}
 

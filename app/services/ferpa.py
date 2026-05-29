@@ -78,8 +78,8 @@ def ferpa_sanitizer(message):
 
     for pattern in FERPA_PATTERNS:
         if pattern.search(message):
-            return "Yes"
-    return "No"
+            return True
+    return False
 
 
 if __name__ == "__main__":
