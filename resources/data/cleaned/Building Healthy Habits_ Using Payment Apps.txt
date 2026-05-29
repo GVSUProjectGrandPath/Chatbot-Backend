@@ -1,0 +1,66 @@
+Module: Building Healthy Habits
+Lesson: Using Payment Apps
+────────────────────────────────────────
+
+Using Payment Apps
+Here’s a clear and engaging 2-3 minute video outline based on your new topic:
+
+Video Title:
+Payment Apps 101: How They Work, Pros & Cons, and Avoiding Scams
+
+Introduction
+* Greet and introduce the topic:
+"Hi everyone! Today we’re breaking down how payment apps like Venmo and Cash App work, what you need to watch out for, and how to stay safe."
+
+Part 1: How Payment Apps Work
+ * Basic Function:
+
+ * Link your bank account, debit, or credit card to the app.
+
+ * Send or receive money instantly with just a username or QR code.
+
+ * Examples:
+
+ * Venmo: Often used for splitting bills.
+
+ * Cash App: Popular for both personal payments and business transactions.
+
+Part 2: Benefits of Payment Apps
+ * Convenience: Fast and easy way to send/receive money.
+
+ * Accessibility: Most apps are free to use and work with smartphones.
+
+ * Record-Keeping: Built-in payment history helps track spending.
+
+Part 3: Drawbacks of Payment Apps
+ * Fees:
+
+ * Instant transfers to your bank might have a small fee.
+ * If you connect your credit card instead of a checking account, transfers from the credit card count as cash advances - this is when you withdraw cash from your credit card instead of making a purchase. The interest on cash advances begins accruing immediately, so even if you pay off the balance in full each month, you will still be charged interest for the cash advance
+
+ * Privacy and Security:
+
+ * Transactions might be public by default (e.g., Venmo’s feed).
+ * Because you are entering your banking information into a third party site, be sure to review their security practices and follow safe password and authentication practices for your account
+
+ * Limited Protections:
+
+ * If you send money to the wrong person, it’s often hard to get it back.
+
+Part 4: Common Payment App Scams
+ * Scams to Watch Out For:
+
+ * Fake buyers/sellers: Requesting payment outside official platforms. Make sure the product or service you are paying for is real.
+
+ * "Accidental" payments: Scammers sending money and asking for it back before their original payment is reversed.
+ * If you think it is a legitimate accident, wait 3 or more business days before returning to make sure it clears their account before returning.
+
+ * Phishing texts/emails: Fake notifications asking for login info.
+
+ * Tip:
+
+ * Only send money to people you know and double-check usernames carefully.
+
+Conclusion
+ * Recap key points:
+"Payment apps are super handy, but only when you use them carefully. Stay smart, stay secure!"

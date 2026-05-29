@@ -1,0 +1,32 @@
+Module: Money Management
+Lesson: Income Taxes
+────────────────────────────────────────
+
+Income Taxes
+ Introduction
+* The importance of understanding income taxes and how they impact your finances.
+* Overview of key topics: HR forms, tax terms, deadlines, tax brackets, filing resources, and payment options.
+ Completing Standard HR Forms (W-4 & I-9)
+* W-4 Form – Determines federal tax withholding from your paycheck.
+ * How to fill it out correctly based on dependents and income.
+ * Adjusting withholdings to avoid large tax bills or refunds.
+* I-9 Form – Verifies employment eligibility in the U.S.
+ * Required documents: Passport, Social Security card, driver’s license, or birth certificate.
+ * University or employer resources for assistance.
+ Key Tax Terms, Brackets, and Deadlines
+* Tax Brackets – Understanding progressive tax rates.
+ * How income is taxed in different brackets, not a flat percentage.
+* Important Deadlines –
+ * January 31 – Employers send W-2 forms.
+ * April 15 – Federal tax filing deadline (unless extended).
+ * October 15 – Extension deadline (if requested).
+ Resources for Filing & Seeking Assistance
+* VITA (Volunteer Income Tax Assistance) – Free tax prep for students & low-income individuals.
+* Other filing resources: IRS Free File, TurboTax, H&R Block, university tax workshops.
+ Special Tax Forms & Payment Options
+* 1098-T Form (Tuition Statement) – Helps students or parents claim education-related tax credits.
+* IRS Installment Agreements – Payment plans for those who owe taxes but can’t pay in full.
+ Conclusion & Next Steps
+* Recap key points: HR forms, tax terms, deadlines, resources, and payment plans.
+* Encourage early preparation and seeking help when needed.
+* Call to action: “Take control of your taxesknow your forms, use resources like VITA (The IRS Volunteer Income Tax Assistance), and file on time!”

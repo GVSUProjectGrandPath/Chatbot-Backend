@@ -1,0 +1,37 @@
+Module: Planning for the Future
+Lesson: Online Financial Safety
+────────────────────────────────────────
+
+Planning for the Future – Online Financial Safety
+1. Introduction: The Importance of Online Financial Safety (1:00 min)
+* Digital Financial Transactions:
+ * With the rise of online banking, shopping, and financial management, safeguarding personal financial information has become essential.
+* Potential Risks:
+ * Cyber threats such as identity theft, phishing, and financial fraud pose significant risks to individuals.
+2. Best Practices for Online Financial Safety (3:00 min)
+* Use Strong and Unique Passwords:
+ * Create complex passwords incorporating a mix of letters, numbers, and symbols. Avoid using easily guessable information like birthdays or common phrases.
+* Enable Multi-Factor Authentication (MFA):
+ * Activate MFA on financial accounts to add an extra layer of security, requiring additional verification steps beyond just a password.
+* Maintain Updated Security Software:
+ * Ensure antivirus and anti-malware programs are current to protect against emerging threats. Regularly update operating systems and applications.
+* Be Cautious with Public Wi-Fi:
+ * Avoid conducting financial transactions over public Wi-Fi networks, which may be unsecured and susceptible to interception.
+* Recognize and Avoid Phishing Attempts:
+ * Be vigilant about unsolicited emails or messages requesting personal information. Verify the authenticity of such communications before responding or clicking on links.
+* Monitor Financial Accounts Regularly:
+ * Frequently review bank statements and credit reports to detect unauthorized activities early.
+* Secure Personal Devices:
+ * Use passwords, passphrases, or biometrics to protect mobile devices and computers. Avoid using public or shared devices for accessing financial accounts.
+* Utilize Secure Connections:
+ * Ensure websites are secure by looking for 'https' in the URL before entering sensitive information.
+* Be Mindful of Social Media Sharing:
+ * Limit the amount of personal information shared on social platforms to reduce the risk of social engineering attacks.
+* Use Trusted Financial Apps:
+ * Download financial applications only from reputable sources, and keep them updated to benefit from the latest security features.
+3. Takeaway: Proactive Measures for Financial Security (1:00 min)
+* Continuous Vigilance:
+ * Stay informed about the latest cyber threats and adjust security practices accordingly.
+* Educate and Empower:
+ * Share knowledge about online financial safety with peers and family to foster a community of security-aware individuals.
+By implementing these best practices, individuals can significantly reduce the risk of cyber threats and protect their financial well-being in the digital landscape.​

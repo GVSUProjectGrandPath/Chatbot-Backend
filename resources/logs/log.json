@@ -1,0 +1,49 @@
+{"asctime": "2026-05-27 14:05:19,070", "levelname": "INFO", "message": "session_started", "request_id": "no-request", "session_id": "9f118f02-7d73-4779-a717-5b16672a6d45"}
+{"asctime": "2026-05-27 14:07:17,513", "levelname": "INFO", "message": "session_started", "request_id": "no-request", "session_id": "e6d822ff-b6ae-4fe4-96be-926ea74841fd"}
+{"asctime": "2026-05-27 14:07:37,567", "levelname": "INFO", "message": "session_started", "request_id": "no-request", "session_id": "cbf4f362-3d29-4762-b0be-94234369c050"}
+{"asctime": "2026-05-27 14:07:38,644", "levelname": "INFO", "message": "session_started", "request_id": "no-request", "session_id": "10c4f441-d026-4b7b-a904-2ee3b1394731"}
+{"asctime": "2026-05-28 11:37:15,626", "levelname": "INFO", "message": "Fetching session history", "request_id": "no-request"}
+{"asctime": "2026-05-28 11:37:15,627", "levelname": "INFO", "message": "Creating new ChatMessageHistory", "request_id": "no-request"}
+{"asctime": "2026-05-28 11:37:17,333", "levelname": "INFO", "message": "Formatting 5 retrieved chunks", "request_id": "no-request"}
+{"asctime": "2026-05-28 11:37:35,698", "levelname": "INFO", "message": "Fetching session history", "request_id": "no-request"}
+{"asctime": "2026-05-28 11:37:36,399", "levelname": "INFO", "message": "Formatting 5 retrieved chunks", "request_id": "no-request"}
+{"asctime": "2026-05-28 11:38:36,238", "levelname": "INFO", "message": "Fetching session history", "request_id": "no-request"}
+{"asctime": "2026-05-28 11:38:36,239", "levelname": "INFO", "message": "Creating new ChatMessageHistory", "request_id": "no-request"}
+{"asctime": "2026-05-28 11:38:37,292", "levelname": "INFO", "message": "Formatting 5 retrieved chunks", "request_id": "no-request"}
+{"asctime": "2026-05-28 11:39:04,858", "levelname": "INFO", "message": "Fetching session history", "request_id": "no-request"}
+{"asctime": "2026-05-28 11:39:05,388", "levelname": "INFO", "message": "Formatting 5 retrieved chunks", "request_id": "no-request"}
+{"asctime": "2026-05-28 11:41:09,299", "levelname": "INFO", "message": "Fetching session history", "request_id": "no-request"}
+{"asctime": "2026-05-28 11:41:10,289", "levelname": "INFO", "message": "Formatting 5 retrieved chunks", "request_id": "no-request"}
+{"asctime": "2026-05-28 11:41:52,324", "levelname": "INFO", "message": "Fetching session history", "request_id": "no-request"}
+{"asctime": "2026-05-28 11:41:52,846", "levelname": "INFO", "message": "Formatting 5 retrieved chunks", "request_id": "no-request"}
+{"asctime": "2026-05-28 11:49:11,809", "levelname": "INFO", "message": "Fetching session history", "request_id": "no-request"}
+{"asctime": "2026-05-28 11:49:11,809", "levelname": "INFO", "message": "Creating new ChatMessageHistory", "request_id": "no-request"}
+{"asctime": "2026-05-28 11:49:12,359", "levelname": "INFO", "message": "Formatting 5 retrieved chunks", "request_id": "no-request"}
+{"asctime": "2026-05-28 11:52:46,272", "levelname": "INFO", "message": "Fetching session history", "request_id": "no-request"}
+{"asctime": "2026-05-28 11:52:46,595", "levelname": "INFO", "message": "Formatting 5 retrieved chunks", "request_id": "no-request"}
+{"asctime": "2026-05-28 11:57:32,510", "levelname": "INFO", "message": "Fetching session history", "request_id": "no-request"}
+{"asctime": "2026-05-28 11:57:32,513", "levelname": "INFO", "message": "Creating new ChatMessageHistory", "request_id": "no-request"}
+{"asctime": "2026-05-28 11:57:32,839", "levelname": "INFO", "message": "Formatting 5 retrieved chunks", "request_id": "no-request"}
+{"asctime": "2026-05-28 12:00:06,159", "levelname": "INFO", "message": "Fetching session history", "request_id": "no-request"}
+{"asctime": "2026-05-28 12:00:06,160", "levelname": "INFO", "message": "Creating new ChatMessageHistory", "request_id": "no-request"}
+{"asctime": "2026-05-28 12:00:06,590", "levelname": "INFO", "message": "Formatting 5 retrieved chunks", "request_id": "no-request"}
+{"asctime": "2026-05-28 12:02:31,373", "levelname": "INFO", "message": "Fetching session history", "request_id": "no-request"}
+{"asctime": "2026-05-28 12:02:31,374", "levelname": "INFO", "message": "Creating new ChatMessageHistory", "request_id": "no-request"}
+{"asctime": "2026-05-28 12:02:32,775", "levelname": "INFO", "message": "Formatting 5 retrieved chunks", "request_id": "no-request"}
+{"asctime": "2026-05-28 12:03:56,306", "levelname": "INFO", "message": "Fetching session history", "request_id": "no-request"}
+{"asctime": "2026-05-28 12:03:56,984", "levelname": "INFO", "message": "Formatting 5 retrieved chunks", "request_id": "no-request"}
+{"asctime": "2026-05-28 12:06:00,990", "levelname": "INFO", "message": "Fetching session history", "request_id": "no-request"}
+{"asctime": "2026-05-28 12:06:01,581", "levelname": "INFO", "message": "Formatting 5 retrieved chunks", "request_id": "no-request"}
+{"asctime": "2026-05-29 09:29:20,088", "levelname": "INFO", "message": "Fetching session history", "request_id": "no-request"}
+{"asctime": "2026-05-29 09:29:20,090", "levelname": "INFO", "message": "Creating new ChatMessageHistory", "request_id": "no-request"}
+{"asctime": "2026-05-29 09:29:21,012", "levelname": "INFO", "message": "Formatting 5 retrieved chunks", "request_id": "no-request"}
+{"asctime": "2026-05-29 09:31:23,886", "levelname": "INFO", "message": "Fetching session history", "request_id": "no-request"}
+{"asctime": "2026-05-29 09:31:24,394", "levelname": "INFO", "message": "Formatting 5 retrieved chunks", "request_id": "no-request"}
+{"asctime": "2026-05-29 10:32:29,471", "levelname": "INFO", "message": "Fetching session history", "request_id": "no-request"}
+{"asctime": "2026-05-29 10:32:29,472", "levelname": "INFO", "message": "Creating new ChatMessageHistory", "request_id": "no-request"}
+{"asctime": "2026-05-29 10:32:30,375", "levelname": "INFO", "message": "Formatting 5 retrieved chunks", "request_id": "no-request"}
+{"asctime": "2026-05-29 10:32:58,765", "levelname": "INFO", "message": "Fetching session history", "request_id": "no-request"}
+{"asctime": "2026-05-29 10:32:59,328", "levelname": "INFO", "message": "Formatting 5 retrieved chunks", "request_id": "no-request"}
+{"asctime": "2026-05-29 10:33:42,628", "levelname": "INFO", "message": "Fetching session history", "request_id": "no-request"}
+{"asctime": "2026-05-29 10:33:42,629", "levelname": "INFO", "message": "Creating new ChatMessageHistory", "request_id": "no-request"}
+{"asctime": "2026-05-29 10:33:43,303", "levelname": "INFO", "message": "Formatting 5 retrieved chunks", "request_id": "no-request"}
