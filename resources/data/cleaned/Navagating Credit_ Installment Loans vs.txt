@@ -1,0 +1,37 @@
+Module: Navigating Credit
+Lesson: Installment Loans
+────────────────────────────────────────
+
+Installment Loans vs. Lines of Credit
+ Introduction
+* An overview of why understanding different types of credit is essential.
+* Key focus areas: differences between installment loans and lines of credit, key terms, and collateralized vs. personal loans.
+ Closed-End vs. Open-End Loans
+* Closed-End Loans (Installment Loans)
+ * Borrow a fixed amount and repay it over time in set payments.
+ * Examples: Auto loans, student loans, mortgages.
+* Open-End Loans (Lines of Credit)
+ * Borrow as needed, up to a limit, and repay flexibly.
+ * Examples: Credit cards, and home equity lines of credit (HELOCs).
+ Key Loan Terms & Definitions
+* Important terms:
+ * Principal – The original amount borrowed.
+ * Interest Rate – The cost of borrowing, expressed as a percentage.
+ * Term – The length of time to repay the loan.
+ * Minimum Payment – The smallest amount due (more relevant for lines of credit).
+* Fixed vs. Variable Interest Rates:
+ * Installment loans usually have fixed rates (same payment every month).
+ * Lines of credit often have variable rates (payments change over time).
+ Collateralized Loans vs. Personal Loans
+* Collateralized Loans – Secured by an asset.
+ * If you fail to pay, the lender can take the asset (house, car).
+ * The lender prefers not to go this route because they never make the full money back from a repossession or foreclosure, but it helps reduce their loss so they offer better rates for collateralized loans
+ * Examples: Mortgages, auto loans, secured personal loans.
+* Personal (Unsecured) Loans – No collateral required.
+ * Higher interest rates due to more risk for lenders.
+ * Examples: Credit cards, student loans, personal lines of credit.
+ Conclusion & Key Takeaways
+* Recap: Installment loans = fixed repayment, lines of credit = flexible borrowing.
+* Understand key terms like principal, interest rate, and term.
+* Know the difference between secured vs. unsecured loans.
+* Final takeaway: "Choosing the right loan depends on your needsfixed payments for big purchases, flexible credit for ongoing expenses!”

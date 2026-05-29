@@ -1,0 +1,22 @@
+﻿Methods and Tools
+Introduction (30 sec)
+ Welcome! In this quick module, we’ll cover how to use spreadsheets for budgeting, what to look for in digital budgeting tools, and why budgeting is an ongoing process.
+1. Using Spreadsheets for Budgeting (45 sec)
+ Spreadsheets are a powerful and flexible tool for budgeting. You can:
+* Create income and expense categories.
+* Use formulas to calculate totals and track spending.
+* Set conditional formatting to highlight overspending
+* Create charts to visualize trends.
+Start by listing your income and expenses, then use SUM functions and filters to organize your data.
+2. Features to Look for in Digital Budgeting Tools (45 sec)
+ If you prefer digital budgeting tools, look for features such as:
+   * Expense categorization and automation.
+   * Goal-setting and savings tracking.
+   * Alerts for overspending or unusual transactions.
+   * Customizable reports and insights.
+   * Security and data privacy protections.
+These features help streamline budgeting while keeping you informed.
+3. Budgeting as an Active Process (30 sec)
+ Budgeting isn’t just about setting numbers and forgetting them. Life changesincome shifts, unexpected expenses arise, and priorities evolve. Regularly review and adjust your budget to stay on track and meet your financial goals. Consider a monthly check-in to make necessary updates.
+Conclusion (30 sec)
+ Budgeting is a skill that helps you take control of your finances. Whether using a spreadsheet or a digital tool, the key is consistency and adaptability. Keep tracking, adjusting, and refining your budget to achieve financial success!

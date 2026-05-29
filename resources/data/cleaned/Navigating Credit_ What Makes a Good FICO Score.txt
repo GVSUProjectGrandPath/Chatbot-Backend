@@ -1,0 +1,33 @@
+Module: Navigating Credit
+Lesson: What Makes a Good FICO Score
+────────────────────────────────────────
+
+What Makes a Good FICO Score
+ Introduction
+* Importance of understanding your FICO score and how it impacts financial opportunities.
+* Overview of key topics: how scores are calculated, key factors affecting your credit, what’s on your report, and what a good score looks like for a college student.
+ How FICO Scores Are Calculated
+* Each credit bureau (Equifax, Experian, TransUnion) uses slightly different formulas.
+ * Exact formulas are trade secrets, but general factors are known.
+* FICO scores range from 300 to 850, with higher scores indicating lower credit risk.
+ Most Important Factors for Building Credit
+* Key factors that impact your score:
+ * Payment history (35%) – Pay bills on time!
+ * Credit utilization (30%) – Keep balances low compared to your credit limit.
+ * Tip: Keep at least 50% of card limit available
+ * Length of credit history (15%) – The longer, the better.
+ * Credit mix (10%) – Variety of accounts (credit cards, student loans, etc.).
+ * New credit inquiries (10%) – Too many hard inquiries can lower your score.
+ * Tip: For auto and home loans, they expect you to rate shop, so credit pulls for those loans within a 14 day window count as one pull
+* The most important thing for college students is on-time payments and low credit utilization.
+ What’s on Your Credit Report (Besides Loans)?
+* Other reported items:
+ * Credit cards, student loans, rental history (sometimes), and even utility bills.
+* Missed payments, collections, and hard inquiries stay on your report for years.
+ What Is a Good FICO Score for a College Student?
+* Unlike adults with mortgages and car loans, most students have limited credit history.
+* A good college student FICO score is typically 650-720high enough to qualify for credit cards and low-interest loans.
+ Conclusion & Next Steps
+* Recap: Scores vary by bureau, key factors like payment history and utilization, and what’s on your report.
+* Encourage checking credit reports regularly at AnnualCreditReport.com and using free monitoring apps.
+* Final takeaway: "A good FICO score starts with small, smart habitspay on time, use credit wisely, and build for the future!”
