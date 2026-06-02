@@ -9,7 +9,7 @@ request_id_var: ContextVar[str] = ContextVar("request_id")
 logger = logging.getLogger("FinLit-Logger")
 logger.setLevel(logging.INFO)
 
-log_dir = Path(__file__).parent.parent.parent / "logs"
+log_dir = Path(__file__).parent.parent.parent / "resources" / "logs"
 log_dir.mkdir(parents=True, exist_ok=True)
 
 file_handler = logging.FileHandler(filename=f"{log_dir}/log.json")
