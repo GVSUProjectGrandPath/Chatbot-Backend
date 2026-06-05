@@ -29,6 +29,8 @@ dependencies = [
 
 [tool.pyrefly]
 project_includes = ["."]
+# Resolve imports from the repo root (the package is `app/`, not the legacy `src/` layout pyrefly auto-infers)
+search_path = ["."]
 
 [tool.pyright]
 pythonVersion = "3.11"

@@ -84,7 +84,12 @@ def build_chain(avatar_key: str):
             "Use the following course material to ground your response. "
             "Cite the module/lesson when it adds clarity, but don't force it.\n\n"
             f"{inputs['context']}\n\n"
-            "Keep your response concise — 3 to 4 sentences maximum. No bullet lists, no headers."
+            "Format ALL of your responses using HTML. "
+            "Use tags like <p>, <strong>, <em>, <ul>, <ol>, <li>, <br>, and <h4> where appropriate. "
+            "When using <ul> or <ol>, add padding-left:20px to the list via a style attribute "
+            "(e.g. <ul style=\"padding-left:20px\">). "
+            "Do NOT include <html>, <head>, or <body> tags — only the inner content HTML. "
+            "Keep responses clear, well-structured, and concise and. - 3 to 4 sentences maximum."
         )
         return (
             [SystemMessage(content=system_content)]

@@ -1,49 +1,488 @@
-{"asctime": "2026-05-27 14:05:19,070", "levelname": "INFO", "message": "session_started", "request_id": "no-request", "session_id": "9f118f02-7d73-4779-a717-5b16672a6d45"}
-{"asctime": "2026-05-27 14:07:17,513", "levelname": "INFO", "message": "session_started", "request_id": "no-request", "session_id": "e6d822ff-b6ae-4fe4-96be-926ea74841fd"}
-{"asctime": "2026-05-27 14:07:37,567", "levelname": "INFO", "message": "session_started", "request_id": "no-request", "session_id": "cbf4f362-3d29-4762-b0be-94234369c050"}
-{"asctime": "2026-05-27 14:07:38,644", "levelname": "INFO", "message": "session_started", "request_id": "no-request", "session_id": "10c4f441-d026-4b7b-a904-2ee3b1394731"}
-{"asctime": "2026-05-28 11:37:15,626", "levelname": "INFO", "message": "Fetching session history", "request_id": "no-request"}
-{"asctime": "2026-05-28 11:37:15,627", "levelname": "INFO", "message": "Creating new ChatMessageHistory", "request_id": "no-request"}
-{"asctime": "2026-05-28 11:37:17,333", "levelname": "INFO", "message": "Formatting 5 retrieved chunks", "request_id": "no-request"}
-{"asctime": "2026-05-28 11:37:35,698", "levelname": "INFO", "message": "Fetching session history", "request_id": "no-request"}
-{"asctime": "2026-05-28 11:37:36,399", "levelname": "INFO", "message": "Formatting 5 retrieved chunks", "request_id": "no-request"}
-{"asctime": "2026-05-28 11:38:36,238", "levelname": "INFO", "message": "Fetching session history", "request_id": "no-request"}
-{"asctime": "2026-05-28 11:38:36,239", "levelname": "INFO", "message": "Creating new ChatMessageHistory", "request_id": "no-request"}
-{"asctime": "2026-05-28 11:38:37,292", "levelname": "INFO", "message": "Formatting 5 retrieved chunks", "request_id": "no-request"}
-{"asctime": "2026-05-28 11:39:04,858", "levelname": "INFO", "message": "Fetching session history", "request_id": "no-request"}
-{"asctime": "2026-05-28 11:39:05,388", "levelname": "INFO", "message": "Formatting 5 retrieved chunks", "request_id": "no-request"}
-{"asctime": "2026-05-28 11:41:09,299", "levelname": "INFO", "message": "Fetching session history", "request_id": "no-request"}
-{"asctime": "2026-05-28 11:41:10,289", "levelname": "INFO", "message": "Formatting 5 retrieved chunks", "request_id": "no-request"}
-{"asctime": "2026-05-28 11:41:52,324", "levelname": "INFO", "message": "Fetching session history", "request_id": "no-request"}
-{"asctime": "2026-05-28 11:41:52,846", "levelname": "INFO", "message": "Formatting 5 retrieved chunks", "request_id": "no-request"}
-{"asctime": "2026-05-28 11:49:11,809", "levelname": "INFO", "message": "Fetching session history", "request_id": "no-request"}
-{"asctime": "2026-05-28 11:49:11,809", "levelname": "INFO", "message": "Creating new ChatMessageHistory", "request_id": "no-request"}
-{"asctime": "2026-05-28 11:49:12,359", "levelname": "INFO", "message": "Formatting 5 retrieved chunks", "request_id": "no-request"}
-{"asctime": "2026-05-28 11:52:46,272", "levelname": "INFO", "message": "Fetching session history", "request_id": "no-request"}
-{"asctime": "2026-05-28 11:52:46,595", "levelname": "INFO", "message": "Formatting 5 retrieved chunks", "request_id": "no-request"}
-{"asctime": "2026-05-28 11:57:32,510", "levelname": "INFO", "message": "Fetching session history", "request_id": "no-request"}
-{"asctime": "2026-05-28 11:57:32,513", "levelname": "INFO", "message": "Creating new ChatMessageHistory", "request_id": "no-request"}
-{"asctime": "2026-05-28 11:57:32,839", "levelname": "INFO", "message": "Formatting 5 retrieved chunks", "request_id": "no-request"}
-{"asctime": "2026-05-28 12:00:06,159", "levelname": "INFO", "message": "Fetching session history", "request_id": "no-request"}
-{"asctime": "2026-05-28 12:00:06,160", "levelname": "INFO", "message": "Creating new ChatMessageHistory", "request_id": "no-request"}
-{"asctime": "2026-05-28 12:00:06,590", "levelname": "INFO", "message": "Formatting 5 retrieved chunks", "request_id": "no-request"}
-{"asctime": "2026-05-28 12:02:31,373", "levelname": "INFO", "message": "Fetching session history", "request_id": "no-request"}
-{"asctime": "2026-05-28 12:02:31,374", "levelname": "INFO", "message": "Creating new ChatMessageHistory", "request_id": "no-request"}
-{"asctime": "2026-05-28 12:02:32,775", "levelname": "INFO", "message": "Formatting 5 retrieved chunks", "request_id": "no-request"}
-{"asctime": "2026-05-28 12:03:56,306", "levelname": "INFO", "message": "Fetching session history", "request_id": "no-request"}
-{"asctime": "2026-05-28 12:03:56,984", "levelname": "INFO", "message": "Formatting 5 retrieved chunks", "request_id": "no-request"}
-{"asctime": "2026-05-28 12:06:00,990", "levelname": "INFO", "message": "Fetching session history", "request_id": "no-request"}
-{"asctime": "2026-05-28 12:06:01,581", "levelname": "INFO", "message": "Formatting 5 retrieved chunks", "request_id": "no-request"}
-{"asctime": "2026-05-29 09:29:20,088", "levelname": "INFO", "message": "Fetching session history", "request_id": "no-request"}
-{"asctime": "2026-05-29 09:29:20,090", "levelname": "INFO", "message": "Creating new ChatMessageHistory", "request_id": "no-request"}
-{"asctime": "2026-05-29 09:29:21,012", "levelname": "INFO", "message": "Formatting 5 retrieved chunks", "request_id": "no-request"}
-{"asctime": "2026-05-29 09:31:23,886", "levelname": "INFO", "message": "Fetching session history", "request_id": "no-request"}
-{"asctime": "2026-05-29 09:31:24,394", "levelname": "INFO", "message": "Formatting 5 retrieved chunks", "request_id": "no-request"}
-{"asctime": "2026-05-29 10:32:29,471", "levelname": "INFO", "message": "Fetching session history", "request_id": "no-request"}
-{"asctime": "2026-05-29 10:32:29,472", "levelname": "INFO", "message": "Creating new ChatMessageHistory", "request_id": "no-request"}
-{"asctime": "2026-05-29 10:32:30,375", "levelname": "INFO", "message": "Formatting 5 retrieved chunks", "request_id": "no-request"}
-{"asctime": "2026-05-29 10:32:58,765", "levelname": "INFO", "message": "Fetching session history", "request_id": "no-request"}
-{"asctime": "2026-05-29 10:32:59,328", "levelname": "INFO", "message": "Formatting 5 retrieved chunks", "request_id": "no-request"}
-{"asctime": "2026-05-29 10:33:42,628", "levelname": "INFO", "message": "Fetching session history", "request_id": "no-request"}
-{"asctime": "2026-05-29 10:33:42,629", "levelname": "INFO", "message": "Creating new ChatMessageHistory", "request_id": "no-request"}
-{"asctime": "2026-05-29 10:33:43,303", "levelname": "INFO", "message": "Formatting 5 retrieved chunks", "request_id": "no-request"}
+{
+    "asctime": "2026-05-27 14:05:19,070",
+    "levelname": "INFO",
+    "message": "session_started",
+    "request_id": "no-request",
+    "session_id": "9f118f02-7d73-4779-a717-5b16672a6d45"
+}
+{
+    "asctime": "2026-05-27 14:07:17,513",
+    "levelname": "INFO",
+    "message": "session_started",
+    "request_id": "no-request",
+    "session_id": "e6d822ff-b6ae-4fe4-96be-926ea74841fd"
+}
+{
+    "asctime": "2026-05-27 14:07:37,567",
+    "levelname": "INFO",
+    "message": "session_started",
+    "request_id": "no-request",
+    "session_id": "cbf4f362-3d29-4762-b0be-94234369c050"
+}
+{
+    "asctime": "2026-05-27 14:07:38,644",
+    "levelname": "INFO",
+    "message": "session_started",
+    "request_id": "no-request",
+    "session_id": "10c4f441-d026-4b7b-a904-2ee3b1394731"
+}
+{
+    "asctime": "2026-05-28 11:37:15,626",
+    "levelname": "INFO",
+    "message": "Fetching session history",
+    "request_id": "no-request"
+}
+{
+    "asctime": "2026-05-28 11:37:15,627",
+    "levelname": "INFO",
+    "message": "Creating new ChatMessageHistory",
+    "request_id": "no-request"
+}
+{
+    "asctime": "2026-05-28 11:37:17,333",
+    "levelname": "INFO",
+    "message": "Formatting 5 retrieved chunks",
+    "request_id": "no-request"
+}
+{
+    "asctime": "2026-05-28 11:37:35,698",
+    "levelname": "INFO",
+    "message": "Fetching session history",
+    "request_id": "no-request"
+}
+{
+    "asctime": "2026-05-28 11:37:36,399",
+    "levelname": "INFO",
+    "message": "Formatting 5 retrieved chunks",
+    "request_id": "no-request"
+}
+{
+    "asctime": "2026-05-28 11:38:36,238",
+    "levelname": "INFO",
+    "message": "Fetching session history",
+    "request_id": "no-request"
+}
+{
+    "asctime": "2026-05-28 11:38:36,239",
+    "levelname": "INFO",
+    "message": "Creating new ChatMessageHistory",
+    "request_id": "no-request"
+}
+{
+    "asctime": "2026-05-28 11:38:37,292",
+    "levelname": "INFO",
+    "message": "Formatting 5 retrieved chunks",
+    "request_id": "no-request"
+}
+{
+    "asctime": "2026-05-28 11:39:04,858",
+    "levelname": "INFO",
+    "message": "Fetching session history",
+    "request_id": "no-request"
+}
+{
+    "asctime": "2026-05-28 11:39:05,388",
+    "levelname": "INFO",
+    "message": "Formatting 5 retrieved chunks",
+    "request_id": "no-request"
+}
+{
+    "asctime": "2026-05-28 11:41:09,299",
+    "levelname": "INFO",
+    "message": "Fetching session history",
+    "request_id": "no-request"
+}
+{
+    "asctime": "2026-05-28 11:41:10,289",
+    "levelname": "INFO",
+    "message": "Formatting 5 retrieved chunks",
+    "request_id": "no-request"
+}
+{
+    "asctime": "2026-05-28 11:41:52,324",
+    "levelname": "INFO",
+    "message": "Fetching session history",
+    "request_id": "no-request"
+}
+{
+    "asctime": "2026-05-28 11:41:52,846",
+    "levelname": "INFO",
+    "message": "Formatting 5 retrieved chunks",
+    "request_id": "no-request"
+}
+{
+    "asctime": "2026-05-28 11:49:11,809",
+    "levelname": "INFO",
+    "message": "Fetching session history",
+    "request_id": "no-request"
+}
+{
+    "asctime": "2026-05-28 11:49:11,809",
+    "levelname": "INFO",
+    "message": "Creating new ChatMessageHistory",
+    "request_id": "no-request"
+}
+{
+    "asctime": "2026-05-28 11:49:12,359",
+    "levelname": "INFO",
+    "message": "Formatting 5 retrieved chunks",
+    "request_id": "no-request"
+}
+{
+    "asctime": "2026-05-28 11:52:46,272",
+    "levelname": "INFO",
+    "message": "Fetching session history",
+    "request_id": "no-request"
+}
+{
+    "asctime": "2026-05-28 11:52:46,595",
+    "levelname": "INFO",
+    "message": "Formatting 5 retrieved chunks",
+    "request_id": "no-request"
+}
+{
+    "asctime": "2026-05-28 11:57:32,510",
+    "levelname": "INFO",
+    "message": "Fetching session history",
+    "request_id": "no-request"
+}
+{
+    "asctime": "2026-05-28 11:57:32,513",
+    "levelname": "INFO",
+    "message": "Creating new ChatMessageHistory",
+    "request_id": "no-request"
+}
+{
+    "asctime": "2026-05-28 11:57:32,839",
+    "levelname": "INFO",
+    "message": "Formatting 5 retrieved chunks",
+    "request_id": "no-request"
+}
+{
+    "asctime": "2026-05-28 12:00:06,159",
+    "levelname": "INFO",
+    "message": "Fetching session history",
+    "request_id": "no-request"
+}
+{
+    "asctime": "2026-05-28 12:00:06,160",
+    "levelname": "INFO",
+    "message": "Creating new ChatMessageHistory",
+    "request_id": "no-request"
+}
+{
+    "asctime": "2026-05-28 12:00:06,590",
+    "levelname": "INFO",
+    "message": "Formatting 5 retrieved chunks",
+    "request_id": "no-request"
+}
+{
+    "asctime": "2026-05-28 12:02:31,373",
+    "levelname": "INFO",
+    "message": "Fetching session history",
+    "request_id": "no-request"
+}
+{
+    "asctime": "2026-05-28 12:02:31,374",
+    "levelname": "INFO",
+    "message": "Creating new ChatMessageHistory",
+    "request_id": "no-request"
+}
+{
+    "asctime": "2026-05-28 12:02:32,775",
+    "levelname": "INFO",
+    "message": "Formatting 5 retrieved chunks",
+    "request_id": "no-request"
+}
+{
+    "asctime": "2026-05-28 12:03:56,306",
+    "levelname": "INFO",
+    "message": "Fetching session history",
+    "request_id": "no-request"
+}
+{
+    "asctime": "2026-05-28 12:03:56,984",
+    "levelname": "INFO",
+    "message": "Formatting 5 retrieved chunks",
+    "request_id": "no-request"
+}
+{
+    "asctime": "2026-05-28 12:06:00,990",
+    "levelname": "INFO",
+    "message": "Fetching session history",
+    "request_id": "no-request"
+}
+{
+    "asctime": "2026-05-28 12:06:01,581",
+    "levelname": "INFO",
+    "message": "Formatting 5 retrieved chunks",
+    "request_id": "no-request"
+}
+{
+    "asctime": "2026-05-29 09:29:20,088",
+    "levelname": "INFO",
+    "message": "Fetching session history",
+    "request_id": "no-request"
+}
+{
+    "asctime": "2026-05-29 09:29:20,090",
+    "levelname": "INFO",
+    "message": "Creating new ChatMessageHistory",
+    "request_id": "no-request"
+}
+{
+    "asctime": "2026-05-29 09:29:21,012",
+    "levelname": "INFO",
+    "message": "Formatting 5 retrieved chunks",
+    "request_id": "no-request"
+}
+{
+    "asctime": "2026-05-29 09:31:23,886",
+    "levelname": "INFO",
+    "message": "Fetching session history",
+    "request_id": "no-request"
+}
+{
+    "asctime": "2026-05-29 09:31:24,394",
+    "levelname": "INFO",
+    "message": "Formatting 5 retrieved chunks",
+    "request_id": "no-request"
+}
+{
+    "asctime": "2026-05-29 10:32:29,471",
+    "levelname": "INFO",
+    "message": "Fetching session history",
+    "request_id": "no-request"
+}
+{
+    "asctime": "2026-05-29 10:32:29,472",
+    "levelname": "INFO",
+    "message": "Creating new ChatMessageHistory",
+    "request_id": "no-request"
+}
+{
+    "asctime": "2026-05-29 10:32:30,375",
+    "levelname": "INFO",
+    "message": "Formatting 5 retrieved chunks",
+    "request_id": "no-request"
+}
+{
+    "asctime": "2026-05-29 10:32:58,765",
+    "levelname": "INFO",
+    "message": "Fetching session history",
+    "request_id": "no-request"
+}
+{
+    "asctime": "2026-05-29 10:32:59,328",
+    "levelname": "INFO",
+    "message": "Formatting 5 retrieved chunks",
+    "request_id": "no-request"
+}
+{
+    "asctime": "2026-05-29 10:33:42,628",
+    "levelname": "INFO",
+    "message": "Fetching session history",
+    "request_id": "no-request"
+}
+{
+    "asctime": "2026-05-29 10:33:42,629",
+    "levelname": "INFO",
+    "message": "Creating new ChatMessageHistory",
+    "request_id": "no-request"
+}
+{
+    "asctime": "2026-05-29 10:33:43,303",
+    "levelname": "INFO",
+    "message": "Formatting 5 retrieved chunks",
+    "request_id": "no-request"
+}
+{
+    "asctime": "2026-06-03 11:17:08,766",
+    "levelname": "INFO",
+    "message": "Fetching session history",
+    "request_id": "no-request"
+}
+{
+    "asctime": "2026-06-03 11:17:08,768",
+    "levelname": "INFO",
+    "message": "Creating new ChatMessageHistory",
+    "request_id": "no-request"
+}
+{
+    "asctime": "2026-06-03 11:17:10,030",
+    "levelname": "INFO",
+    "message": "Formatting 5 retrieved chunks",
+    "request_id": "no-request"
+}
+{
+    "asctime": "2026-06-03 11:17:17,155",
+    "levelname": "INFO",
+    "message": "Fetching session history",
+    "request_id": "no-request"
+}
+{
+    "asctime": "2026-06-03 11:17:17,579",
+    "levelname": "INFO",
+    "message": "Formatting 5 retrieved chunks",
+    "request_id": "no-request"
+}
+{
+    "asctime": "2026-06-03 17:44:22,614",
+    "levelname": "INFO",
+    "message": "chat_request_started",
+    "request_id": "68bcb560-6b76-46d4-a84d-807129287e98",
+    "session_id": "sess-A",
+    "avatar": "owl"
+}
+{
+    "asctime": "2026-06-03 17:44:22,618",
+    "levelname": "INFO",
+    "message": "Fetching session history",
+    "request_id": "68bcb560-6b76-46d4-a84d-807129287e98"
+}
+{
+    "asctime": "2026-06-03 17:44:22,618",
+    "levelname": "INFO",
+    "message": "Creating new ChatMessageHistory",
+    "request_id": "68bcb560-6b76-46d4-a84d-807129287e98"
+}
+{
+    "asctime": "2026-06-03 17:44:24,581",
+    "levelname": "INFO",
+    "message": "Formatting 5 retrieved chunks",
+    "request_id": "68bcb560-6b76-46d4-a84d-807129287e98"
+}
+{
+    "asctime": "2026-06-03 17:44:28,494",
+    "levelname": "INFO",
+    "message": "chat_request_ended",
+    "request_id": "68bcb560-6b76-46d4-a84d-807129287e98",
+    "session_id": "sess-A"
+}
+{
+    "asctime": "2026-06-03 17:44:28,506",
+    "levelname": "WARNING",
+    "message": "ferpa_blocked",
+    "request_id": "e73d2672-b395-40df-b57b-7aa59fcd181e",
+    "session_id": "sess-A"
+}
+{
+    "asctime": "2026-06-03 17:44:37,971",
+    "levelname": "INFO",
+    "message": "chat_request_started",
+    "request_id": "1849f2e3-89bb-4454-a19c-7eab44e548e2",
+    "session_id": "sess-MEM",
+    "avatar": "squirrel"
+}
+{
+    "asctime": "2026-06-03 17:44:37,972",
+    "levelname": "INFO",
+    "message": "Fetching session history",
+    "request_id": "1849f2e3-89bb-4454-a19c-7eab44e548e2"
+}
+{
+    "asctime": "2026-06-03 17:44:37,972",
+    "levelname": "INFO",
+    "message": "Creating new ChatMessageHistory",
+    "request_id": "1849f2e3-89bb-4454-a19c-7eab44e548e2"
+}
+{
+    "asctime": "2026-06-03 17:44:38,588",
+    "levelname": "INFO",
+    "message": "Formatting 5 retrieved chunks",
+    "request_id": "1849f2e3-89bb-4454-a19c-7eab44e548e2"
+}
+{
+    "asctime": "2026-06-03 17:44:42,111",
+    "levelname": "INFO",
+    "message": "chat_request_ended",
+    "request_id": "1849f2e3-89bb-4454-a19c-7eab44e548e2",
+    "session_id": "sess-MEM"
+}
+{
+    "asctime": "2026-06-03 17:44:42,127",
+    "levelname": "INFO",
+    "message": "chat_request_started",
+    "request_id": "647b8f02-18bf-4b2f-91fd-33f60e5beb91",
+    "session_id": "sess-MEM",
+    "avatar": "squirrel"
+}
+{
+    "asctime": "2026-06-03 17:44:42,128",
+    "levelname": "INFO",
+    "message": "Fetching session history",
+    "request_id": "647b8f02-18bf-4b2f-91fd-33f60e5beb91"
+}
+{
+    "asctime": "2026-06-03 17:44:42,478",
+    "levelname": "INFO",
+    "message": "Formatting 5 retrieved chunks",
+    "request_id": "647b8f02-18bf-4b2f-91fd-33f60e5beb91"
+}
+{
+    "asctime": "2026-06-03 17:44:45,798",
+    "levelname": "INFO",
+    "message": "chat_request_ended",
+    "request_id": "647b8f02-18bf-4b2f-91fd-33f60e5beb91",
+    "session_id": "sess-MEM"
+}
+{
+    "asctime": "2026-06-03 17:46:00,851",
+    "levelname": "INFO",
+    "message": "chat_request_started",
+    "request_id": "c3c6ebe9-1f6d-40e6-a792-d5bca422c6c4",
+    "session_id": "abcs",
+    "avatar": "panda"
+}
+{
+    "asctime": "2026-06-03 17:46:00,852",
+    "levelname": "INFO",
+    "message": "Fetching session history",
+    "request_id": "c3c6ebe9-1f6d-40e6-a792-d5bca422c6c4"
+}
+{
+    "asctime": "2026-06-03 17:46:00,852",
+    "levelname": "INFO",
+    "message": "Creating new ChatMessageHistory",
+    "request_id": "c3c6ebe9-1f6d-40e6-a792-d5bca422c6c4"
+}
+{
+    "asctime": "2026-06-03 17:46:01,564",
+    "levelname": "INFO",
+    "message": "Formatting 5 retrieved chunks",
+    "request_id": "c3c6ebe9-1f6d-40e6-a792-d5bca422c6c4"
+}
+{
+    "asctime": "2026-06-03 17:46:03,388",
+    "levelname": "INFO",
+    "message": "chat_request_ended",
+    "request_id": "c3c6ebe9-1f6d-40e6-a792-d5bca422c6c4",
+    "session_id": "abcs"
+}
+{
+    "asctime": "2026-06-03 17:46:27,285",
+    "levelname": "INFO",
+    "message": "chat_request_started",
+    "request_id": "9159524d-3a47-4e9b-bd49-44d93aea2a95",
+    "session_id": "abcs",
+    "avatar": "panda"
+}
+{
+    "asctime": "2026-06-03 17:46:27,286",
+    "levelname": "INFO",
+    "message": "Fetching session history",
+    "request_id": "9159524d-3a47-4e9b-bd49-44d93aea2a95"
+}
+{
+    "asctime": "2026-06-03 17:46:28,012",
+    "levelname": "INFO",
+    "message": "Formatting 5 retrieved chunks",
+    "request_id": "9159524d-3a47-4e9b-bd49-44d93aea2a95"
+}
+{
+    "asctime": "2026-06-03 17:46:29,793",
+    "levelname": "INFO",
+    "message": "chat_request_ended",
+    "request_id": "9159524d-3a47-4e9b-bd49-44d93aea2a95",
+    "session_id": "abcs"
+}
