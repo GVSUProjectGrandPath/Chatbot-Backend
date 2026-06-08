@@ -3,9 +3,11 @@
 __pycache__/
 uv.lock
 test/
-Additional-Docs/
+Additional-Docs/*
 .*
 test/*
 
 uv.lock
+.python-version
+
 .python-version
