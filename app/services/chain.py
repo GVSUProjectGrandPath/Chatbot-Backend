@@ -37,7 +37,7 @@ def retrieve(query: str, top_k: int = 5) -> list[dict]:
         top=top_k,
     )
     return [
-        {"text": r["text"], "lesson": r["lesson"], "module": r["module"], "score": r["@search.score"]}
+        {"text": r["text"], "lesson": r["lesson"], "module": r["module"], "source_url": r.get("source_url", ""), "score": r["@search.score"]}
         for r in results
     ]
 
@@ -47,11 +47,24 @@ def format_chunks(chunks: list[dict]) -> str:
     logger.info(f"Formatting {len(chunks)} retrieved chunks", extra=get_extra())
     if not chunks:
         return "No specific course material was retrieved for this query."
+
+    # Chunk text blocks — no URLs here to avoid repeating the same URL for chunks from the same lesson
     parts = [
         f"[{i}] {c.get('module', '')} — {c.get('lesson', '')}\n{c.get('text', '')}"
         for i, c in enumerate(chunks, 1)
     ]
-    return "\n\n".join(parts)
+
+    # Deduplicated sources: one URL per unique lesson, preserving first-seen order
+    seen = {}
+    for c in chunks:
+        key = (c.get("module", ""), c.get("lesson", ""))
+        if key not in seen and c.get("source_url"):
+            seen[key] = c["source_url"]
+
+    source_lines = [f"- {mod} / {les}: {url}" for (mod, les), url in seen.items()]
+    sources_block = "Sources:\n" + "\n".join(source_lines)
+
+    return "\n\n".join(parts) + "\n\n" + sources_block
 
 
 def build_chain(avatar_key: str):
@@ -90,7 +103,7 @@ def build_chain(avatar_key: str):
             "and bullet or numbered lists for any enumerated items. "
             "Use line breaks between sections for readability. "
             "Do not use code blocks. "
-            "When referencing course material, use Markdown hyperlinks to link directly to the relevant module resource. "
+            "When referencing course material, use the URLs from the Sources list at the end of the context to create Markdown hyperlinks — format them as [Lesson Name](url). "
             "Keep responses clear, well-structured, and concise — 3 to 4 sentences maximum."
         )
         return (
