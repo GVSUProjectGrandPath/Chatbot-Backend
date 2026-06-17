@@ -84,12 +84,14 @@ def build_chain(avatar_key: str):
             "Use the following course material to ground your response. "
             "Cite the module/lesson when it adds clarity, but don't force it.\n\n"
             f"{inputs['context']}\n\n"
-            "Format ALL of your responses using HTML. "
-            "Use tags like <p>, <strong>, <em>, <ul>, <ol>, <li>, <br>, and <h4> where appropriate. "
-            "When using <ul> or <ol>, add padding-left:20px to the list via a style attribute "
-            "(e.g. <ul style=\"padding-left:20px\">). "
-            "Do NOT include <html>, <head>, or <body> tags — only the inner content HTML. "
-            "Keep responses clear, well-structured, and concise and. - 3 to 4 sentences maximum."
+            "Format all responses using Markdown. "
+            "Use **bold** for key terms or emphasis, *italics* sparingly, "
+            "headers (## or ###) only when organizing multi-section responses, "
+            "and bullet or numbered lists for any enumerated items. "
+            "Use line breaks between sections for readability. "
+            "Do not use code blocks. "
+            "When referencing course material, use Markdown hyperlinks to link directly to the relevant module resource. "
+            "Keep responses clear, well-structured, and concise — 3 to 4 sentences maximum."
         )
         return (
             [SystemMessage(content=system_content)]
