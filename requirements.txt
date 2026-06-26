@@ -8,6 +8,8 @@ aiohttp==3.14.0
     #   langchain-community
 aiosignal==1.4.0
     # via aiohttp
+annotated-doc==0.0.4
+    # via typer
 annotated-types==0.7.0
     # via pydantic
 anyio==4.13.0
@@ -25,6 +27,13 @@ azure-core==1.30.2
     #   finlit-bot
 azure-search-documents==11.6.0b8
     # via finlit-bot
+blis==1.3.3
+    # via thinc
+catalogue==2.0.10
+    # via
+    #   spacy
+    #   srsly
+    #   thinc
 certifi==2026.5.20
     # via
     #   httpcore
@@ -34,16 +43,34 @@ charset-normalizer==3.4.7
     # via requests
 click==8.4.1
     # via uvicorn
+cloudpathlib==0.24.0
+    # via weasel
 colorama==0.4.6 ; sys_platform == 'win32'
     # via
     #   click
     #   tqdm
+    #   typer
+    #   wasabi
+confection==1.3.3
+    # via
+    #   spacy
+    #   thinc
+    #   weasel
+cymem==2.0.13
+    # via
+    #   preshed
+    #   spacy
+    #   thinc
 dataclasses-json==0.6.7
     # via langchain-community
 distro==1.9.0
     # via openai
+en-core-web-sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl
+    # via finlit-bot
 fastapi==0.115.0
     # via finlit-bot
+filelock==3.29.4
+    # via tldextract
 frozenlist==1.8.0
     # via
     #   aiohttp
@@ -60,6 +87,7 @@ httpx==0.28.1
     # via
     #   langsmith
     #   openai
+    #   weasel
 httpx-sse==0.4.3
     # via langchain-community
 idna==3.18
@@ -67,9 +95,12 @@ idna==3.18
     #   anyio
     #   httpx
     #   requests
+    #   tldextract
     #   yarl
 isodate==0.7.2
     # via azure-search-documents
+jinja2==3.1.6
+    # via spacy
 jiter==0.15.0
     # via openai
 jsonpatch==1.33
@@ -97,18 +128,32 @@ langsmith==0.1.147
     #   langchain
     #   langchain-community
     #   langchain-core
+markdown-it-py==4.2.0
+    # via rich
+markupsafe==3.0.3
+    # via jinja2
 marshmallow==3.26.2
     # via dataclasses-json
+mdurl==0.1.2
+    # via markdown-it-py
 multidict==6.7.1
     # via
     #   aiohttp
     #   yarl
+murmurhash==1.0.15
+    # via
+    #   preshed
+    #   spacy
+    #   thinc
 mypy-extensions==1.1.0
     # via typing-inspect
 numpy==1.26.4
     # via
+    #   blis
     #   langchain
     #   langchain-community
+    #   spacy
+    #   thinc
 openai==1.109.1
     # via
     #   finlit-bot
@@ -119,6 +164,17 @@ packaging==24.2
     # via
     #   langchain-core
     #   marshmallow
+    #   spacy
+    #   thinc
+    #   weasel
+phonenumbers==9.0.33
+    # via presidio-analyzer
+preshed==3.0.13
+    # via
+    #   spacy
+    #   thinc
+presidio-analyzer==2.2.362
+    # via finlit-bot
 propcache==0.5.2
     # via
     #   aiohttp
@@ -131,11 +187,17 @@ pydantic==2.9.2
     #   langchain-core
     #   langsmith
     #   openai
+    #   presidio-analyzer
     #   pydantic-settings
+    #   spacy
+    #   thinc
+    #   weasel
 pydantic-core==2.23.4
     # via pydantic
 pydantic-settings==2.14.1
     # via langchain-community
+pygments==2.20.0
+    # via rich
 python-dotenv==1.0.1
     # via
     #   finlit-bot
@@ -147,26 +209,57 @@ pyyaml==6.0.3
     #   langchain
     #   langchain-community
     #   langchain-core
+    #   presidio-analyzer
 regex==2026.5.9
-    # via tiktoken
+    # via
+    #   presidio-analyzer
+    #   tiktoken
 requests==2.34.2
     # via
     #   azure-core
     #   langchain
     #   langchain-community
     #   langsmith
+    #   requests-file
     #   requests-toolbelt
+    #   spacy
     #   tiktoken
+    #   tldextract
+requests-file==3.0.1
+    # via tldextract
 requests-toolbelt==1.0.0
     # via langsmith
+rich==15.0.0
+    # via typer
+setuptools==82.0.1
+    # via
+    #   spacy
+    #   thinc
+shellingham==1.5.4
+    # via typer
 six==1.17.0
     # via azure-core
+smart-open==7.6.1
+    # via weasel
 sniffio==1.3.1
     # via openai
+spacy==3.8.14
+    # via
+    #   finlit-bot
+    #   presidio-analyzer
+spacy-legacy==3.0.12
+    # via spacy
+spacy-loggers==1.0.5
+    # via spacy
 sqlalchemy==2.0.35
     # via
     #   langchain
     #   langchain-community
+srsly==2.5.3
+    # via
+    #   spacy
+    #   thinc
+    #   weasel
 starlette==0.38.6
     # via fastapi
 tenacity==9.1.4
@@ -174,12 +267,22 @@ tenacity==9.1.4
     #   langchain
     #   langchain-community
     #   langchain-core
+thinc==8.3.13
+    # via spacy
 tiktoken==0.13.0
     # via
     #   finlit-bot
     #   langchain-openai
+tldextract==5.3.1
+    # via presidio-analyzer
 tqdm==4.68.0
-    # via openai
+    # via
+    #   openai
+    #   spacy
+typer==0.26.7
+    # via
+    #   spacy
+    #   weasel
 typing-extensions==4.15.0
     # via
     #   aiohttp
@@ -203,5 +306,14 @@ urllib3==2.7.0
     # via requests
 uvicorn==0.30.6
     # via finlit-bot
+wasabi==1.1.3
+    # via
+    #   spacy
+    #   thinc
+    #   weasel
+weasel==1.0.0
+    # via spacy
+wrapt==2.2.2
+    # via smart-open
 yarl==1.24.2
     # via aiohttp
