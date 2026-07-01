@@ -54,7 +54,8 @@ async def chat(body: ChatRequest):
     if input_block is not None:
         return {"message": input_block, "ferpa_blocked": True}
 
-    # build_chain falls back to the panda persona for any unknown avatar key
+    # avatar is a required field the frontend always sends; build_chain raises if it's ever
+    # an unrecognized key, which the try/except below turns into a 502
     logger.info("chat_request_started", extra=get_extra(session_id=body.session_id, avatar=body.avatar))
 
     # session_id (frontend-owned) is the conversation/history key for the chain
