@@ -117,10 +117,10 @@ def build_chain(avatar_key: str):
     Build a streaming-capable RunnableWithMessageHistory for the given avatar.
     Avatar persona (system prompt + tone) is baked in at build time — one chain per avatar.
     """
-    # avatar_key is always sent by the frontend and always one of the 8 known keys —
-    # an unrecognized key means something upstream is broken, so this raises KeyError
+    #  # avatar_key is always sent by the frontend and always one of the 8 known keys
+    # An unrecognized key means something upstream is broken, so this still raises KeyError
     # rather than silently substituting a persona. main.py's try/except turns that into a 502.
-    persona = AVATARS[avatar_key]
+    persona = AVATARS[avatar_key.lower()]
 
     # Weave the avatar name into the persona's opening sentence instead of a separate
     # sentence, so we don't say "student" twice back to back.
