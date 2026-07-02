@@ -9,7 +9,8 @@ from app.services.guardrails import ferpa_sanitizer, FERPA_RESPONSE, aguard_inpu
 from app.services.chain import build_chain
 from app.services.logger import logger, request_id_var, get_extra
 
-ALLOWED_ORIGINS = ["*"]
+# LearnWorlds widget is the only caller of /chat
+ALLOWED_ORIGINS = ["https://www.rep4finlit.org"]
 
 app = FastAPI(title="FinLit-Backend-API")
 
