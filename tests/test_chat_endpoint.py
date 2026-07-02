@@ -3,6 +3,7 @@ from unittest.mock import AsyncMock, MagicMock, patch
 from fastapi.testclient import TestClient
 
 from app.main import app
+from app.services.chain import build_chain
 from app.services.guardrails import FERPA_RESPONSE
 
 #Creating a clone of the fastapi app
@@ -76,3 +77,11 @@ def test_chat_returns_502_on_chain_failure():
         response = client.post("/chat", json={**BASE_BODY, "message": "What is compound interest?"})
 
     assert response.status_code == 502
+
+
+# Avatar casing — the live LearnWorlds widget sends the capitalized display name
+# (e.g. "Squirrel"), while AVATARS keys in avatars.py are lowercase. build_chain()
+# must normalize casing itself or every real request 502s on a KeyError.
+
+def test_build_chain_accepts_widget_avatar_casing():
+    build_chain("Squirrel")
