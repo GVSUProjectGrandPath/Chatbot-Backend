@@ -5,11 +5,15 @@ from langchain_core.runnables import RunnableParallel, RunnableLambda
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.messages import trim_messages, SystemMessage, HumanMessage
 from langchain_core.runnables.history import RunnableWithMessageHistory
-from langchain_community.chat_message_histories import ChatMessageHistory
+# langchain_core's InMemoryChatMessageHistory is the same class langchain_community
+# re-exports as ChatMessageHistory — using core avoids an extra dependency.
+from langchain_core.chat_history import InMemoryChatMessageHistory as ChatMessageHistory
 
 from app.services.llm import CHAT_LLM, OPENAI_CLIENT, SEARCH_CLIENT, EMBED_DEPLOYMENT
 from app.services.avatars import AVATARS
 from app.services.logger import logger, get_extra
+# get_tracer() returns the app-wide OTel tracer; no-op when tracing is disabled
+from app.services.tracing import get_tracer
 
 REWRITE_PROMPT = (
     "Given the conversation history and a follow-up question, rewrite the follow-up "
@@ -39,42 +43,68 @@ def embed(text: str) -> list[float]:
 
 
 def rewrite_query(question: str, session_id: str) -> str:
-    # If no history yet, nothing to rewrite
-    history = get_session_history(session_id).messages
-    if not history:
-        return question
+    # Span captures the original question and the rewritten version side-by-side,
+    # making it easy to spot when the rewriter changes intent or adds unnecessary words.
+    with get_tracer().start_as_current_span("rag.query_rewrite") as span:
+        span.set_attribute("gen_ai.input.question", question)
 
-    # Only use the last 4 messages (2 turns) — enough context, cheap to process
-    recent = history[-4:]
-    history_text = "\n".join(
-        f"{'Student' if isinstance(m, HumanMessage) else 'Bot'}: {m.content}"
-        for m in recent
-    )
-    prompt = REWRITE_PROMPT.format(history=history_text, question=question)
-    response = CHAT_LLM.invoke([HumanMessage(content=prompt)])
-    rewritten = response.content.strip()
-    logger.info(f"Query rewrite: '{question}' -> '{rewritten}'", extra=get_extra())
-    return rewritten
+        # If no history yet, nothing to rewrite
+        history = get_session_history(session_id).messages
+        if not history:
+            span.set_attribute("rewrite.skipped", True)
+            return question
+
+        # Only use the last 4 messages (2 turns) — enough context, cheap to process
+        recent = history[-4:]
+        history_text = "\n".join(
+            f"{'Student' if isinstance(m, HumanMessage) else 'Bot'}: {m.content}"
+            for m in recent
+        )
+        prompt = REWRITE_PROMPT.format(history=history_text, question=question)
+        response = CHAT_LLM.invoke([HumanMessage(content=prompt)])
+        rewritten = response.content.strip()
+
+        # Record both the original and rewritten question so we can evaluate rewrite quality
+        span.set_attribute("rewrite.skipped", False)
+        span.set_attribute("gen_ai.output.rewritten_question", rewritten)
+        logger.info(f"Query rewrite: '{question}' -> '{rewritten}'", extra=get_extra())
+        return rewritten
 
 
 def retrieve(query: str, top_k: int = 5) -> list[dict]:
-    vector = embed(query)
-    results = SEARCH_CLIENT.search(
-        search_text=query,
-        vector_queries=[VectorizedQuery(vector=vector, k_nearest_neighbors=top_k, fields="text_vector")],
-        select=["text", "lesson", "module", "source_url"],
-        top=top_k,
-    )
-    return [
-        {
-            "text": r["text"],
-            "lesson": r["lesson"],
-            "module": r["module"],
-            "source_url": r.get("source_url", ""),
-            "score": r["@search.score"],
-        }
-        for r in results
-    ]
+    # Span records what query hit Azure AI Search and what came back — module names,
+    # lesson names, and relevance scores — so we can diagnose retrieval quality
+    # without having to re-run queries manually.
+    with get_tracer().start_as_current_span("rag.retrieval") as span:
+        span.set_attribute("retrieval.query", query)
+        span.set_attribute("retrieval.top_k", top_k)
+
+        vector = embed(query)
+        results = SEARCH_CLIENT.search(
+            search_text=query,
+            vector_queries=[VectorizedQuery(vector=vector, k_nearest_neighbors=top_k, fields="text_vector")],
+            select=["text", "lesson", "module", "source_url"],
+            top=top_k,
+        )
+        chunks = [
+            {
+                "text": r["text"],
+                "lesson": r["lesson"],
+                "module": r["module"],
+                "source_url": r.get("source_url", ""),
+                "score": r["@search.score"],
+            }
+            for r in results
+        ]
+
+        span.set_attribute("retrieval.result_count", len(chunks))
+        # Summarise retrieved chunks as a single attribute — module, lesson, and score
+        # per chunk — so the AI Foundry UI shows what the LLM was given to work with.
+        span.set_attribute(
+            "retrieval.chunks",
+            str([{"module": c["module"], "lesson": c["lesson"], "score": round(c["score"], 4)} for c in chunks]),
+        )
+        return chunks
 
 
 def format_chunks(chunks: list[dict]) -> str:
@@ -106,6 +136,10 @@ def build_chain(avatar_key: str):
     """
     Build a streaming-capable RunnableWithMessageHistory for the given avatar.
     Avatar persona (system prompt + tone) is baked in at build time — one chain per avatar.
+
+    The LLM call inside this chain is auto-instrumented by the OpenAI SDK instrumentation
+    that setup_tracing() activates, so the full system prompt (including retrieved chunks)
+    and the model's response appear in AI Foundry Tracing automatically.
     """
     persona = AVATARS.get(avatar_key) or AVATARS["panda"]
 
