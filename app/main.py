@@ -9,7 +9,8 @@ from app.services.guardrails import ferpa_sanitizer, FERPA_RESPONSE, aguard_inpu
 from app.services.chain import build_chain
 from app.services.logger import logger, request_id_var, get_extra
 
-ALLOWED_ORIGINS = ["*"]
+# LearnWorlds widget is the only caller of /chat
+ALLOWED_ORIGINS = ["https://www.rep4finlit.org"]
 
 app = FastAPI(title="FinLit-Backend-API")
 
@@ -54,7 +55,8 @@ async def chat(body: ChatRequest):
     if input_block is not None:
         return {"message": input_block, "ferpa_blocked": True}
 
-    # build_chain falls back to the panda persona for any unknown avatar key
+    # avatar is a required field the frontend always sends; build_chain raises if it's ever
+    # an unrecognized key, which the try/except below turns into a 502
     logger.info("chat_request_started", extra=get_extra(session_id=body.session_id, avatar=body.avatar))
 
     # session_id (frontend-owned) is the conversation/history key for the chain
