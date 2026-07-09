@@ -10,6 +10,7 @@ load_dotenv()
 ENDPOINT         = os.getenv("AZURE_OPENAI_ENDPOINT")
 API_KEY          = os.getenv("AZURE_OPENAI_API_KEY")
 API_VERSION      = "2024-02-01"
+
 CHAT_DEPLOYMENT  = os.getenv("AZURE_OPENAI_CHAT_DEPLOYMENT", "gpt-4o-mini")
 EMBED_DEPLOYMENT = os.getenv("AZURE_OPENAI_EMBEDDING_DEPLOYMENT", "text-embedding-3-small")
 SEARCH_ENDPOINT  = os.getenv("AZURE_SEARCH_ENDPOINT")
