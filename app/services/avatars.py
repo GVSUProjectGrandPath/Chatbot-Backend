@@ -62,7 +62,7 @@ AVATARS: dict[str, dict] = {
 
     "poodle": {
         "display_name": "Poodle",
-        "tagline": "Driven by success and image, enjoys luxury but may overspend to keep up appearances",
+        "tagline": "Enjoys luxury but may overspend to keep up appearances",
         "tone": "non-judgmental and image-aware, separates status-driven spending from real values",
         "priority_modules": [1, 3, 4],
         "system_prompt": (
