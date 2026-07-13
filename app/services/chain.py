@@ -128,6 +128,16 @@ def build_chain(avatar_key: str):
         "for a student", f"for a student whose financial personality type is the {persona['display_name']},", 1
     )
 
+    # Force the LLM to personalize its answers based on the unused tone/tagline fields
+    personalization_instruction = (
+        "CRITICAL PERSONALIZATION INSTRUCTION:\n"
+        f"You must actively tailor your advice to this student's {persona['display_name']} persona.\n"
+        f"Their profile is: '{persona['tagline']}'.\n"
+        f"Your tone MUST be {persona['tone']}.\n"
+        "Do not give generic advice. Always frame your answers in the context of their specific financial habits, strengths, and weaknesses as described above. "
+        "Address them in a way that shows you understand their unique perspective."
+    )
+
     # Trims conversation history to ≤1000 tokens before passing to LLM
     trimmer = trim_messages(
         max_tokens=1000,
@@ -155,7 +165,9 @@ def build_chain(avatar_key: str):
     # Assemble final message list: avatar system prompt + trimmed history + user question
     def assemble_messages(inputs: dict) -> list:
         system_content = (
-            f"{persona_system_prompt} {SAFETY_LINE}\n\n"
+            f"{persona_system_prompt}\n\n"
+            f"{personalization_instruction}\n\n"
+            f"{SAFETY_LINE}\n\n"
             "Use the following course material to ground your response. "
             "Cite the module/lesson when it adds clarity, but don't force it.\n\n"
             f"{inputs['context']}\n\n"
