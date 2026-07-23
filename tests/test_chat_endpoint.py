@@ -1,3 +1,5 @@
+import json
+from types import SimpleNamespace
 from unittest.mock import AsyncMock, MagicMock, patch
 
 from fastapi.testclient import TestClient
@@ -79,9 +81,50 @@ def test_chat_returns_502_on_chain_failure():
     assert response.status_code == 502
 
 
-# Avatar casing — the live LearnWorlds widget sends the capitalized display name
-# (e.g. "Squirrel"), while AVATARS keys in avatars.py are lowercase. build_chain()
-# must normalize casing itself or every real request 502s on a KeyError.
+# Streaming regression — the untagged query-rewrite call must not leak into the streamed answer.
+
+REWRITE_LEAK = "What can you do to help me grow my savings over time?"
+FINAL_ANSWER = "You could look into a high-yield savings account."
+
+
+async def _fake_stream_events(*args, **kwargs):
+    # Query-rewrite model call — untagged, exactly as the real rewrite invoke is.
+    yield {"event": "on_chat_model_stream", "tags": [],
+           "data": {"chunk": SimpleNamespace(content=REWRITE_LEAK)}}
+    yield {"event": "on_chat_model_end", "tags": [],
+           "data": {"output": SimpleNamespace(usage_metadata={"total_tokens": 11})}}
+    # Final-answer model call — tagged so main.py streams only these tokens.
+    yield {"event": "on_chat_model_stream", "tags": ["final_response"],
+           "data": {"chunk": SimpleNamespace(content="You could look into ")}}
+    yield {"event": "on_chat_model_stream", "tags": ["final_response"],
+           "data": {"chunk": SimpleNamespace(content="a high-yield savings account.")}}
+    yield {"event": "on_chat_model_end", "tags": ["final_response"],
+           "data": {"output": SimpleNamespace(usage_metadata={"total_tokens": 42})}}
+
+
+def test_stream_does_not_leak_rewritten_query():
+    fake_chain = MagicMock()
+    fake_chain.astream_events = MagicMock(side_effect=_fake_stream_events)
+
+    with (
+        patch("app.main.aguard_input", new=AsyncMock(return_value=None)),
+        patch("app.main.aguard_output", new=AsyncMock(side_effect=lambda question, answer, session_id="": answer)),
+        patch("app.main.build_chain", return_value=fake_chain),
+    ):
+        response = client.post("/chat/stream", json={**BASE_BODY, "message": "how about growing it?"})
+
+    assert response.status_code == 200
+    events = [json.loads(line) for line in response.text.splitlines() if line.strip()]
+    streamed = "".join(e["content"] for e in events if e["type"] == "token")
+
+    # The rewrite must never reach the student; only the tagged final answer streams.
+    assert REWRITE_LEAK not in streamed
+    assert streamed == FINAL_ANSWER
+    # Stream still terminates cleanly for the frontend.
+    assert any(e["type"] == "done" for e in events)
+
+
+# Avatar casing — the widget sends the capitalized display name (e.g. "Squirrel") but AVATARS keys are lowercase, so build_chain() must normalize casing or every real request 502s on a KeyError.
 
 def test_build_chain_accepts_widget_avatar_casing():
     build_chain("Squirrel")
