@@ -30,7 +30,8 @@ CHAT_LLM = AzureChatOpenAI(
     azure_deployment=CHAT_DEPLOYMENT,
     api_version=API_VERSION,
     temperature=0.7,
-    # max_tokens=300,
+    # Backstop only — the per-avatar response_shape is the real length control; 320 fits the longest shape (Owl ~180 words) with headroom.
+    max_tokens=320,
     model="gpt-4o-mini",  # needed so tiktoken picks the right encoding for trim_messages
 )
 
