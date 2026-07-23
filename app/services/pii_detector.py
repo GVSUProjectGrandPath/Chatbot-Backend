@@ -45,8 +45,7 @@ ENABLED_ENTITIES = [
 HIGH_CONFIDENCE = 0.85
 BORDERLINE_LOW = 0.50
 
-# Build the engine once at import time — spaCy model load (~1-3s) pays the cost on cold start,
-# not on every request.
+# Build the engine once at import time so the spaCy model load (~1-3s) hits cold start, not every request.
 registry = RecognizerRegistry()
 registry.load_predefined_recognizers()
 registry.add_recognizer(gvsu_id_recognizer)
