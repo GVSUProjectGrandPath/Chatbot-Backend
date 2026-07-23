@@ -32,13 +32,13 @@ Sent if the output guardrail determines the streamed response should be replaced
 ```
 
 #### 3. Error
-Sent if the streaming process fails unexpectedly.
+Sent if the streaming process fails unexpectedly. This is **not** terminal on its own — a `done` event always follows, so the frontend can finalize on `done` regardless of whether an error occurred.
 ```json
 {"type": "error", "content": "string"}
 ```
 
 #### 4. Termination (Final message)
-Sent once the stream is complete.
+Sent once the stream is complete, on **every** exit path (normal completion, FERPA block, input block, and after an error). The frontend should treat `done` as the single universal signal to finalize the UI.
 ```json
 {"type": "done", "ferpa_blocked": boolean}
 ```
