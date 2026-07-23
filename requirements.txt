@@ -2,7 +2,7 @@
 #    uv export --no-dev --no-emit-project --no-hashes --format requirements-txt -o requirements.txt
 aiohappyeyeballs==2.6.2
     # via aiohttp
-aiohttp==3.14.0
+aiohttp==3.13.5
     # via
     #   langchain
     #   langchain-community
@@ -17,16 +17,42 @@ anyio==4.13.0
     #   httpx
     #   openai
     #   starlette
+asgiref==3.11.1
+    # via opentelemetry-instrumentation-asgi
 attrs==26.1.0
     # via aiohttp
+azure-ai-agents==1.1.0
+    # via azure-ai-projects
+azure-ai-projects==1.0.0
+    # via finlit-bot
 azure-common==1.1.28
     # via azure-search-documents
 azure-core==1.30.2
     # via
+    #   azure-ai-agents
+    #   azure-ai-projects
+    #   azure-core-tracing-opentelemetry
+    #   azure-identity
+    #   azure-monitor-opentelemetry
+    #   azure-monitor-opentelemetry-exporter
     #   azure-search-documents
+    #   azure-storage-blob
     #   finlit-bot
+    #   msrest
+azure-core-tracing-opentelemetry==1.0.0b13
+    # via azure-monitor-opentelemetry
+azure-identity==1.17.1
+    # via
+    #   azure-monitor-opentelemetry-exporter
+    #   finlit-bot
+azure-monitor-opentelemetry==1.8.9
+    # via finlit-bot
+azure-monitor-opentelemetry-exporter==1.0.0b54
+    # via azure-monitor-opentelemetry
 azure-search-documents==11.6.0b8
     # via finlit-bot
+azure-storage-blob==12.28.0
+    # via azure-ai-projects
 blis==1.3.3
     # via thinc
 catalogue==2.0.10
@@ -38,7 +64,10 @@ certifi==2026.5.20
     # via
     #   httpcore
     #   httpx
+    #   msrest
     #   requests
+cffi==2.0.0 ; platform_python_implementation != 'PyPy'
+    # via cryptography
 charset-normalizer==3.4.7
     # via requests
 click==8.4.1
@@ -56,6 +85,12 @@ confection==1.3.3
     #   spacy
     #   thinc
     #   weasel
+cryptography==49.0.0
+    # via
+    #   azure-identity
+    #   azure-storage-blob
+    #   msal
+    #   pyjwt
 cymem==2.0.13
     # via
     #   preshed
@@ -90,7 +125,7 @@ httpx==0.28.1
     #   weasel
 httpx-sse==0.4.3
     # via langchain-community
-idna==3.18
+idna==3.16
     # via
     #   anyio
     #   httpx
@@ -98,7 +133,12 @@ idna==3.18
     #   tldextract
     #   yarl
 isodate==0.7.2
-    # via azure-search-documents
+    # via
+    #   azure-ai-agents
+    #   azure-ai-projects
+    #   azure-search-documents
+    #   azure-storage-blob
+    #   msrest
 jinja2==3.1.6
     # via spacy
 jiter==0.15.0
@@ -136,6 +176,14 @@ marshmallow==3.26.2
     # via dataclasses-json
 mdurl==0.1.2
     # via markdown-it-py
+msal==1.37.0
+    # via
+    #   azure-identity
+    #   msal-extensions
+msal-extensions==1.3.1
+    # via azure-identity
+msrest==0.7.1
+    # via azure-monitor-opentelemetry-exporter
 multidict==6.7.1
     # via
     #   aiohttp
@@ -154,16 +202,116 @@ numpy==1.26.4
     #   langchain-community
     #   spacy
     #   thinc
+oauthlib==3.3.1
+    # via requests-oauthlib
 openai==1.109.1
     # via
     #   finlit-bot
     #   langchain-openai
+opentelemetry-api==1.43.0
+    # via
+    #   azure-core-tracing-opentelemetry
+    #   azure-monitor-opentelemetry-exporter
+    #   opentelemetry-instrumentation
+    #   opentelemetry-instrumentation-asgi
+    #   opentelemetry-instrumentation-dbapi
+    #   opentelemetry-instrumentation-django
+    #   opentelemetry-instrumentation-fastapi
+    #   opentelemetry-instrumentation-flask
+    #   opentelemetry-instrumentation-logging
+    #   opentelemetry-instrumentation-openai-v2
+    #   opentelemetry-instrumentation-psycopg2
+    #   opentelemetry-instrumentation-requests
+    #   opentelemetry-instrumentation-urllib
+    #   opentelemetry-instrumentation-urllib3
+    #   opentelemetry-instrumentation-wsgi
+    #   opentelemetry-sdk
+    #   opentelemetry-semantic-conventions
+    #   opentelemetry-util-genai
+opentelemetry-instrumentation==0.64b0
+    # via
+    #   opentelemetry-instrumentation-asgi
+    #   opentelemetry-instrumentation-dbapi
+    #   opentelemetry-instrumentation-django
+    #   opentelemetry-instrumentation-fastapi
+    #   opentelemetry-instrumentation-flask
+    #   opentelemetry-instrumentation-logging
+    #   opentelemetry-instrumentation-openai-v2
+    #   opentelemetry-instrumentation-psycopg2
+    #   opentelemetry-instrumentation-requests
+    #   opentelemetry-instrumentation-urllib
+    #   opentelemetry-instrumentation-urllib3
+    #   opentelemetry-instrumentation-wsgi
+    #   opentelemetry-util-genai
+opentelemetry-instrumentation-asgi==0.64b0
+    # via opentelemetry-instrumentation-fastapi
+opentelemetry-instrumentation-dbapi==0.64b0
+    # via opentelemetry-instrumentation-psycopg2
+opentelemetry-instrumentation-django==0.64b0
+    # via azure-monitor-opentelemetry
+opentelemetry-instrumentation-fastapi==0.64b0
+    # via azure-monitor-opentelemetry
+opentelemetry-instrumentation-flask==0.64b0
+    # via azure-monitor-opentelemetry
+opentelemetry-instrumentation-logging==0.64b0
+    # via azure-monitor-opentelemetry
+opentelemetry-instrumentation-openai-v2==2.4b0
+    # via finlit-bot
+opentelemetry-instrumentation-psycopg2==0.64b0
+    # via azure-monitor-opentelemetry
+opentelemetry-instrumentation-requests==0.64b0
+    # via azure-monitor-opentelemetry
+opentelemetry-instrumentation-urllib==0.64b0
+    # via azure-monitor-opentelemetry
+opentelemetry-instrumentation-urllib3==0.64b0
+    # via azure-monitor-opentelemetry
+opentelemetry-instrumentation-wsgi==0.64b0
+    # via
+    #   opentelemetry-instrumentation-django
+    #   opentelemetry-instrumentation-flask
+opentelemetry-resource-detector-azure==0.1.5
+    # via azure-monitor-opentelemetry
+opentelemetry-sdk==1.43.0
+    # via
+    #   azure-monitor-opentelemetry
+    #   azure-monitor-opentelemetry-exporter
+    #   opentelemetry-resource-detector-azure
+opentelemetry-semantic-conventions==0.64b0
+    # via
+    #   opentelemetry-instrumentation
+    #   opentelemetry-instrumentation-asgi
+    #   opentelemetry-instrumentation-dbapi
+    #   opentelemetry-instrumentation-django
+    #   opentelemetry-instrumentation-fastapi
+    #   opentelemetry-instrumentation-flask
+    #   opentelemetry-instrumentation-logging
+    #   opentelemetry-instrumentation-openai-v2
+    #   opentelemetry-instrumentation-requests
+    #   opentelemetry-instrumentation-urllib
+    #   opentelemetry-instrumentation-urllib3
+    #   opentelemetry-instrumentation-wsgi
+    #   opentelemetry-sdk
+    #   opentelemetry-util-genai
+opentelemetry-util-genai==0.4b0
+    # via opentelemetry-instrumentation-openai-v2
+opentelemetry-util-http==0.64b0
+    # via
+    #   opentelemetry-instrumentation-asgi
+    #   opentelemetry-instrumentation-django
+    #   opentelemetry-instrumentation-fastapi
+    #   opentelemetry-instrumentation-flask
+    #   opentelemetry-instrumentation-requests
+    #   opentelemetry-instrumentation-urllib
+    #   opentelemetry-instrumentation-urllib3
+    #   opentelemetry-instrumentation-wsgi
 orjson==3.11.9 ; platform_python_implementation != 'PyPy'
     # via langsmith
 packaging==24.2
     # via
     #   langchain-core
     #   marshmallow
+    #   opentelemetry-instrumentation
+    #   opentelemetry-instrumentation-flask
     #   spacy
     #   thinc
     #   weasel
@@ -179,6 +327,10 @@ propcache==0.5.2
     # via
     #   aiohttp
     #   yarl
+psutil==7.2.2
+    # via azure-monitor-opentelemetry-exporter
+pycparser==3.0 ; implementation_name != 'PyPy' and platform_python_implementation != 'PyPy'
+    # via cffi
 pydantic==2.9.2
     # via
     #   fastapi
@@ -194,10 +346,12 @@ pydantic==2.9.2
     #   weasel
 pydantic-core==2.23.4
     # via pydantic
-pydantic-settings==2.14.1
+pydantic-settings==2.14.2
     # via langchain-community
 pygments==2.20.0
     # via rich
+pyjwt==2.13.0
+    # via msal
 python-dotenv==1.0.1
     # via
     #   finlit-bot
@@ -220,13 +374,18 @@ requests==2.34.2
     #   langchain
     #   langchain-community
     #   langsmith
+    #   msal
+    #   msrest
     #   requests-file
+    #   requests-oauthlib
     #   requests-toolbelt
     #   spacy
     #   tiktoken
     #   tldextract
 requests-file==3.0.1
     # via tldextract
+requests-oauthlib==2.0.0
+    # via msrest
 requests-toolbelt==1.0.0
     # via langsmith
 rich==15.0.0
@@ -239,7 +398,7 @@ shellingham==1.5.4
     # via typer
 six==1.17.0
     # via azure-core
-smart-open==7.6.1
+smart-open==8.0.0
     # via weasel
 sniffio==1.3.1
     # via openai
@@ -275,24 +434,30 @@ tiktoken==0.13.0
     #   langchain-openai
 tldextract==5.3.1
     # via presidio-analyzer
-tqdm==4.68.0
+tqdm==4.67.3
     # via
     #   openai
     #   spacy
-typer==0.26.7
+typer==0.26.8
     # via
     #   spacy
     #   weasel
 typing-extensions==4.15.0
     # via
-    #   aiohttp
     #   aiosignal
     #   anyio
+    #   azure-ai-agents
+    #   azure-ai-projects
     #   azure-core
+    #   azure-identity
     #   azure-search-documents
+    #   azure-storage-blob
     #   fastapi
     #   langchain-core
     #   openai
+    #   opentelemetry-api
+    #   opentelemetry-sdk
+    #   opentelemetry-semantic-conventions
     #   pydantic
     #   pydantic-core
     #   sqlalchemy
@@ -314,6 +479,10 @@ wasabi==1.1.3
 weasel==1.0.0
     # via spacy
 wrapt==2.2.2
-    # via smart-open
+    # via
+    #   opentelemetry-instrumentation
+    #   opentelemetry-instrumentation-dbapi
+    #   opentelemetry-instrumentation-urllib3
+    #   smart-open
 yarl==1.24.2
     # via aiohttp

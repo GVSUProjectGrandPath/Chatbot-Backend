@@ -31,6 +31,14 @@ dependencies = [
     "python-json-logger>=2.0.7",
     "tiktoken>=0.12.0",
     "uvicorn==0.30.6",
+    # Azure AI Foundry tracing — AIProjectClient fetches the project's App Insights connection string
+    "azure-ai-projects>=1.0.0",
+    # DefaultAzureCredential — uses managed identity on App Service, az login locally
+    "azure-identity>=1.15.0",
+    # configure_azure_monitor() — OTel SDK + exporter that ships spans to the Foundry Tracing UI
+    "azure-monitor-opentelemetry>=1.6.0",
+    # Auto-instruments the openai SDK so every LLM call is a span with the raw prompt/response
+    "opentelemetry-instrumentation-openai-v2>=2.0b0",
 ]
 
 [tool.pytest.ini_options]
