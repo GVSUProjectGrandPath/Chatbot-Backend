@@ -9,7 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, StringConstraints
 
 from app.services.guardrails import ferpa_sanitizer, FERPA_RESPONSE, aguard_input, aguard_output
-from app.services.chain import build_chain
+from app.services.chain import build_chain, sync_guarded_history
 from app.services.logger import logger, request_id_var, get_extra
 
 # LearnWorlds widget is the only caller of /chat
@@ -74,7 +74,12 @@ async def chat(body: ChatRequest):
 
     # Output guardrail - catches personalized advice / off-scope answers before they reach the student.
     # Deterministic-first, so a clean answer adds no extra LLM call.
-    message = await aguard_output(body.message, message, session_id=body.session_id)
+    raw_message = message
+    message = await aguard_output(body.message, raw_message, session_id=body.session_id)
+
+    # If the guardrail rewrote the reply, sync history so a follow-up can't reference the ungated original.
+    if message != raw_message:
+        sync_guarded_history(body.session_id, message)
 
     logger.info("chat_request_ended", extra=get_extra(session_id=body.session_id))
     return {"message": message, "ferpa_blocked": False}
@@ -118,13 +123,16 @@ async def chat_stream(body: ChatRequest):
             ):
                 kind = ev["event"]
 
-                if kind == "on_chat_model_stream":
+                # Only the final-answer call is tagged; skip the untagged query-rewrite tokens.
+                is_final = "final_response" in ev.get("tags", [])
+
+                if kind == "on_chat_model_stream" and is_final:
                     token = ev['data']['chunk'].content
                     if token:
                         full_response += token
                         yield json.dumps({"type": "token", "content": token}) + "\n"
 
-                elif kind == "on_chat_model_end":
+                elif kind == "on_chat_model_end" and is_final:
                     try:
                         msg = ev['data'].get('output')
                         if hasattr(msg, "usage_metadata") and msg.usage_metadata:
@@ -134,13 +142,16 @@ async def chat_stream(body: ChatRequest):
         except Exception:
             logger.exception("chat_stream_failed", extra=get_extra(session_id=session_key))
             yield json.dumps({"type": "error", "content": "The assistant is temporarily unavailable. Please try again."}) + "\n"
+            # Emit the terminal "done" so a frontend that finalizes on "done" doesn't hang on errors.
+            yield json.dumps({"type": "done", "ferpa_blocked": False}) + "\n"
             return
 
         # 4. Output Guardrail (Runs after stream finishes)
         final_guarded = await aguard_output(body.message, full_response, session_id=session_key)
-        
+
         if final_guarded != full_response:
-            # If blocked by the judge, send a "replace" event so frontend overwrites the streamed text
+            # Blocked by the judge: replace the streamed text and sync history so follow-ups can't reference the original.
+            sync_guarded_history(session_key, final_guarded)
             yield json.dumps({"type": "replace", "content": final_guarded}) + "\n"
 
         yield json.dumps({"type": "done", "ferpa_blocked": False}) + "\n"

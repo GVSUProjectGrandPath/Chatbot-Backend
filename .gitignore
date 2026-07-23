@@ -1,6 +1,9 @@
 .env
 .env.*
 __pycache__/
+
+# Auto-generated runtime request logs; regenerated on every run, not source.
+resources/logs/log.json
 uv.lock
 test/
 Additional-Docs/*
