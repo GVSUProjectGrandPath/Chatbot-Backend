@@ -31,6 +31,7 @@ dependencies = [
     "python-json-logger>=2.0.7",
     "tiktoken>=0.12.0",
     "uvicorn==0.30.6",
+    "slowapi==0.1.9",
     # Azure AI Foundry tracing — AIProjectClient fetches the project's App Insights connection string
     "azure-ai-projects>=1.0.0",
     # DefaultAzureCredential — uses managed identity on App Service, az login locally

@@ -41,8 +41,7 @@ def chunk_text(text,enc):
 
 
 def strip_header(text):
-    # clean_data.py prepends a Module/Lesson/separator header to every file
-    # we don't want that in the chunks  strip it before chunking
+    # Strip the Module/Lesson/separator header clean_data.py prepends to every file before chunking.
     lines = text.splitlines()
     header_done = False
     stripped = []

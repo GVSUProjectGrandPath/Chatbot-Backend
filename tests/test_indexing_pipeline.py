@@ -42,8 +42,7 @@ def enc():
 
 @pytest.fixture(scope="module")
 def chunks():
-    # build_chunks() reads from data/cleaned/ and data/video_manifest.csv
-    # must run from project root so relative paths resolve
+    # build_chunks() reads data/cleaned/ and data/video_manifest.csv, so run from project root for relative paths to resolve.
     original_dir = os.getcwd()
     os.chdir(os.path.join(os.path.dirname(__file__), ".."))
     result = build_chunks()
@@ -172,8 +171,7 @@ class TestBuildChunks:
             assert 0 in indices, f"Lesson '{lesson}' has no chunk_index=0"
 
     def test_chunk_count_is_positive(self, chunks):
-        # chunk_count is set per source file, not per lesson name
-        # (lesson names can repeat across modules, chunk_count reflects per-file count)
+        # chunk_count is per source file, not per lesson name (lesson names can repeat across modules).
         for chunk in chunks:
             assert chunk["chunk_count"] > 0, (
                 f"Lesson '{chunk['lesson']}' chunk_index={chunk['chunk_index']} has chunk_count=0"

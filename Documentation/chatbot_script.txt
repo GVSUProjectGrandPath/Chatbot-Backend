@@ -1,0 +1,1960 @@
+<script>
+   document.addEventListener("DOMContentLoaded", function () {
+   const leftImages = document.querySelectorAll('.switch_leftImages img');
+   const middleImages = document.querySelectorAll('.switch_middleImages img');
+   const rightImages = document.querySelectorAll('.switch_rightImages img');
+   let leftImageindex = 2;
+   let middleImageindex = 2;
+   let rightImageindex = 2;
+     
+   const polaCamera = document.querySelector('.polaroidCamera');
+   const shopperOctop = document.querySelector('.shopperOctoCard');
+   const cardGroup = document.querySelector('.cardGroup');
+   const stratOctop = document.querySelector('.stratOctoCard');
+   const shieldOctop = document.querySelector('.shieldOctoCard');
+   const wrapper = document.querySelector('.imageWrapper');
+   const certText = document.querySelector('#studentText');
+   const certTextContainer = document.querySelector('#textBox');
+   let notWrapped = true;
+     
+   function updateWindowSize() {
+      const height = window.innerHeight;
+      const width = window.innerWidth;
+      if (width < 937) {
+         certTextContainer.remove()
+         notWrapped = false;
+         wrapper.appendChild(certTextContainer)
+      } else if (notWrapped === false) {
+         certTextContainer.remove()
+         notWrapped = true;
+         cardGroup.appendChild(certTextContainer)
+      } else {
+         notWrapped = true;
+      }
+   }
+
+   window.addEventListener('resize', updateWindowSize);
+   updateWindowSize();
+     
+   function cycleImages(images, index) {
+   	images[index].classList.remove('active');
+
+  	// If at the last image, jump back to index 2 (skipping the first and second images, which we don't need anymore)
+  	index = (index === images.length - 1) ? 2 : index + 1;
+
+  	images[index].classList.add('active');
+  	return index;
+   }
+      
+   setInterval(() => {
+      leftImageindex = cycleImages(leftImages, leftImageindex);
+      middleImageindex = cycleImages(middleImages, middleImageindex);
+  	  rightImageindex = cycleImages(rightImages, rightImageindex);
+      }, 4250);
+   });
+</script>
+
+<script>
+  const lst_1 = document.querySelector('.col_1').children;
+  let visible_1 = 0;
+  const lst_2 = document.querySelector('.col_2').children;
+  let visible_2 = 1;
+  const lst_3 = document.querySelector('.col_3').children;
+  let visible_3 = 2;
+
+  const leftButton = document.querySelector('.left_arrow_button');
+  const rightButton = document.querySelector('.right_arrow_button');
+
+  let debounce = false;
+
+  // Helper: resolve when an element's current animation finishes
+  function waitAnimationEnd(el) {
+    return new Promise((resolve) => {
+      // If the element has no animation, resolve immediately
+      const cs = getComputedStyle(el);
+      if (!cs.animationName || cs.animationName === 'none') return resolve();
+      el.addEventListener('animationend', resolve, { once: true });
+    });
+  }
+
+  async function stepRight() {
+    if (debounce) return;
+    debounce = true;
+
+    const a1 = lst_1.item(visible_1 % 8);
+    const a2 = lst_2.item(visible_2 % 8);
+    const a3 = lst_3.item(visible_3 % 8);
+    const a3next = lst_3.item((visible_3 + 1) % 8);
+
+    // kick off animations
+    a1.style.animation = 'leaveLeft .25s ease-in-out';
+    a2.style.animation = 'moveLeft .25s ease-in-out';
+    a3.style.animation = 'moveLeft .25s ease-in-out';
+    a3next.style.opacity = 1;
+    a3next.style.animation = 'comeLeft .25s ease-in-out';
+
+    // wait for them to finish instead of setTimeout
+    await Promise.all([
+      waitAnimationEnd(a1),
+      waitAnimationEnd(a2),
+      waitAnimationEnd(a3),
+      waitAnimationEnd(a3next),
+    ]);
+
+    // swap visibility
+    lst_1.item((visible_1 + 1) % 8).style.opacity = 1;
+    lst_2.item((visible_2 + 1) % 8).style.opacity = 1;
+
+    a1.style.opacity = 0;
+    a2.style.opacity = 0;
+    a3.style.opacity = 0;
+
+    // reset animations so next run can re-apply them cleanly
+    a1.style.animation = 'none';
+    a2.style.animation = 'none';
+    a3.style.animation = 'none';
+    a3next.style.animation = 'none';
+
+    // advance indices
+    visible_1 = (visible_1 + 1) % 8;
+    visible_2 = (visible_2 + 1) % 8;
+    visible_3 = (visible_3 + 1) % 8;
+
+    debounce = false;
+  }
+
+  async function stepLeft() {
+    if (debounce) return;
+    debounce = true;
+
+    const a1 = lst_1.item(visible_1 % 8);
+    const a2 = lst_2.item(visible_2 % 8);
+    const a3 = lst_3.item(visible_3 % 8);
+    const a1prev = lst_1.item((visible_1 + 7) % 8);
+
+    a1.style.animation = 'moveRight .25s ease-in-out';
+    a2.style.animation = 'moveRight .25s ease-in-out';
+    a3.style.animation = 'leaveRight .25s ease-in-out';
+    a1prev.style.opacity = 1;
+    a1prev.style.animation = 'comeRight .25s ease-in-out';
+
+    await Promise.all([
+      waitAnimationEnd(a1),
+      waitAnimationEnd(a2),
+      waitAnimationEnd(a3),
+      waitAnimationEnd(a1prev),
+    ]);
+
+    lst_3.item((visible_3 + 7) % 8).style.opacity = 1;
+    lst_2.item((visible_2 + 7) % 8).style.opacity = 1;
+
+    a1.style.opacity = 0;
+    a2.style.opacity = 0;
+    a3.style.opacity = 0;
+
+    a1.style.animation = 'none';
+    a2.style.animation = 'none';
+    a3.style.animation = 'none';
+    a1prev.style.animation = 'none';
+
+    visible_1 = (visible_1 + 7) % 8;
+    visible_2 = (visible_2 + 7) % 8;
+    visible_3 = (visible_3 + 7) % 8;
+
+    debounce = false;
+  }
+
+  rightButton.addEventListener('click', stepRight);
+  leftButton.addEventListener('click', stepLeft);
+</script>
+
+<!-- CALEB'S Chatbot LearnWorlds GUI Implementation -->
+
+<!-- Everything in the body tag is on LearnWorlds the html, head, and other tags are just to be able 
+ to work at the GUI locally instead of only on LearnWorlds -->
+
+<!-- For the HTML portion I'll use comments explaining some stuff and comments to mark the start and end of sections that are important enough -->
+
+<!-- IMPORTS -->
+	<!-- text symbols/icons using "phosphor". phosphor is being used whenever there is an <i> tag. it will have the class "ph-<something>" -->
+	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css"/>
+	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/fill/style.css"/>
+	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/bold/style.css"/>
+	<!-- https://icon-sets.iconify.design/ -->
+
+	<!-- script to clean the LLM html formatted response of any harmful things such as a harmful <script> tag -->
+	<script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.4/dist/purify.min.js"></script>
+
+	<!-- markdown import do marked.parse(text) to use -->
+	<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+	<!-- Standard Rep4FinLit Poppins font -->
+	<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+<!-- END IMPORTS -->
+
+<!-- unopened-chat -->
+<button id="unopened-chat" class="hidden" onClick = "chatBot()">
+	<div id="message-symbol" style="width: 44px; height: 32px; background-color: white; border-radius: 8px; padding: 0; margin: 0; display: flex; justify-content: center; align-items: center; gap: 2px;">
+      <div class="circle"></div>
+      <div class="circle"></div>
+      <div class="circle"></div>
+  	</div>
+    <div id="message-symbol-tail" style="position: absolute; height: 10px; width: 8px; border-bottom-right-radius: 100%; background-color: white; bottom: 20px; left: 25px;"></div>
+</button>
+<!-- END unopened-chat -->
+
+
+<!-- opened chat -->
+<div id="chat-container" class="hidden">
+	<div id="resize">
+		<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none" /><path fill="currentColor" d="m10.59 12l4-4H11V6h7v7h-2V9.41l-4 4V16h8V4H8v8zM22 2v16H12v4H2V12h4V2zM10 14H4v6h6z" />
+	</svg>
+
+	</div>
+  	<!-- animal choice --> 
+  	<div id="animal-choice">
+      	<div id="question-container">
+          	<div style="display: flex; flex-direction: row; width: 100%; padding: 0px 10px; align-items: center;">
+              <div class="logo">
+                  <h1 >FinLit Rep4® Bot</h1>
+                  <h2>Your Financial Assistant</h2>
+              </div>
+              <button class="close-chat" onClick ="chatBot()" style="margin-left: auto; padding: auto 5px;"><i class="ph-bold ph-x"></i></button>
+            </div>
+      		<h1 id="animal-question">Which Money Mindset Animal are You?</h1>
+			<h2 id="quiz-link">Don't know your Animal? Take the quiz <a href="https://quiz.rep4finlit.org/" target="_blank" style="text-decoration: underline; color: var(--purple-color);">here</a></h2>
+      	</div>
+
+		<!-- animals-4rows -->
+		<!-- Default animal display of 2 animals per row (alternate display is later with 2 rows of 4 animals) -->
+      	<div id="animals-4rows" class="animals">
+			<!-- Image source links are hosted on LearnWorlds -->
+          	<div class="animal-row">
+            	<img id= "default-animal" class="animal Squirrel" onClick="selectAnimal(this)" src="https://lwfiles.mycourse.app/6759d5489b4fa1f235381f70-public/fc03ee57461416c10e083865fcc3e6f4.png">
+            	<img class="animal Rabbit" onClick="selectAnimal(this)" src="https://lwfiles.mycourse.app/6759d5489b4fa1f235381f70-public/0e085720420940b17bffd4a3f0419cc1.png">
+          	</div>
+
+          	<div class="animal-row">
+            	<img class="animal Octopus" onClick="selectAnimal(this)" src="https://lwfiles.mycourse.app/6759d5489b4fa1f235381f70-public/5c0a7d7bd7e10ebd31492c6c00119505.png">
+            	<img class="animal Panda" onClick="selectAnimal(this)" src="https://lwfiles.mycourse.app/6759d5489b4fa1f235381f70-public/28913e2dcb49252975a6f20c76341ed9.png">
+          	</div>
+
+          	<div class="animal-row">
+            	<img class="animal Armadillo" onClick="selectAnimal(this)" src="https://lwfiles.mycourse.app/6759d5489b4fa1f235381f70-public/19a8fc0ed47d8d7f7043f4000ed0e3b5.png">
+            	<img class="animal Poodle" onClick="selectAnimal(this)" src="https://lwfiles.mycourse.app/6759d5489b4fa1f235381f70-public/f3f3b8d63ca3eee73c0782abbe2f25c0.png">
+         	 </div>
+
+         	 <div class="animal-row">
+            	<img class="animal Owl" onClick="selectAnimal(this)" src="https://lwfiles.mycourse.app/6759d5489b4fa1f235381f70-public/469b5dcb8fc92cf35422bb36ab843b3e.png">
+            	<img class="animal Bee" onClick="selectAnimal(this)" src="https://lwfiles.mycourse.app/6759d5489b4fa1f235381f70-public/5dcd3605e0edd7bf81cc0c85278560d3.png">
+          	</div>
+        </div>
+		<!-- END animals-4rows -->
+
+		<!-- animal-2rows -->
+		<!-- Displays when the user 1. has a smaller screen and 2. has more width than height on said screen -->
+		 	<!-- It makes the animal photos into 2 rows as appose to 4 rows which utilizes width more than height -->	 
+		<div id="animals-2rows" class="animals">
+			<div class="animal-row">
+				<img class="animal Squirrel" onClick="selectAnimal(this)" src="https://lwfiles.mycourse.app/6759d5489b4fa1f235381f70-public/fc03ee57461416c10e083865fcc3e6f4.png">
+            	<img class="animal Octopus" onClick="selectAnimal(this)" src="https://lwfiles.mycourse.app/6759d5489b4fa1f235381f70-public/5c0a7d7bd7e10ebd31492c6c00119505.png">
+				<img class="animal Armadillo" onClick="selectAnimal(this)" src="https://lwfiles.mycourse.app/6759d5489b4fa1f235381f70-public/19a8fc0ed47d8d7f7043f4000ed0e3b5.png">
+				<img class="animal Owl" onClick="selectAnimal(this)" src="https://lwfiles.mycourse.app/6759d5489b4fa1f235381f70-public/469b5dcb8fc92cf35422bb36ab843b3e.png">
+			</div>
+
+			<div class="animal-row">
+				<img class="animal Rabbit" onClick="selectAnimal(this)" src="https://lwfiles.mycourse.app/6759d5489b4fa1f235381f70-public/0e085720420940b17bffd4a3f0419cc1.png">
+				<img class="animal Panda" onClick="selectAnimal(this)" src="https://lwfiles.mycourse.app/6759d5489b4fa1f235381f70-public/28913e2dcb49252975a6f20c76341ed9.png">
+				<img class="animal Poodle" onClick="selectAnimal(this)" src="https://lwfiles.mycourse.app/6759d5489b4fa1f235381f70-public/f3f3b8d63ca3eee73c0782abbe2f25c0.png">
+				<img class="animal Bee" onClick="selectAnimal(this)" src="https://lwfiles.mycourse.app/6759d5489b4fa1f235381f70-public/5dcd3605e0edd7bf81cc0c85278560d3.png">
+			</div>
+		</div>
+		<!-- END animal-2rows -->
+
+		<div id="animal-confirmation" class="hidden">
+			<img id="selected-animal" class="animal" src="https://lwfiles.mycourse.app/6759d5489b4fa1f235381f70-public/fc03ee57461416c10e083865fcc3e6f4.png">
+			<div id="animal-description-container">
+				<h1 id="animal-name"></h1>
+				<p id="animal-description"></p>
+				<div class="button-row">
+					<button id="back-button" onClick="selectAnimal(this)">Back</button>
+					<button id="confirm-animal" onClick="confirmAnimalSelection()">Confirm</button>
+				</div>
+			</div>
+		</div>
+  	</div>
+  	<!-- END animal choice -->
+ 
+	<!-- Chat interface -->
+	<div id="chat-content" class="hidden">
+
+			<!-- tool-menu -->
+      		<div id="tools-menu">
+          	<div id="tools-content">
+				<!-- displays the tool's symbol the user is currently using at the top of the tools menu-->
+          		<div id="current-tool" class="tool">
+                  	<p>Current tool</p>
+                  	<div id="current-tool-symbol" class="symbol"><i class="ph ph-gear" style="text-align: center;"></i></div>
+              		<button id="close-tools" onClick ="tools()"><i class="ph-bold ph-x"></i></button>
+              	</div> 
+              
+              	<!-- tools -->
+                <div id="none" class="tool" onClick="tool=selectTool(this)"><p>No Tool</p>
+                	<div class="symbol" style="background-color: var(--purple-color);">
+                      	<i class="ph ph-gear" style="text-align: center;"></i>
+                  	</div>
+              	</div>
+
+              	<div id="build-a-budget" class="tool" onClick="tool=selectTool(this)"><p>Build a Budget</p>
+                	<div class="symbol" style="background-color: var(--blue-color);">
+                      	<i class="ph ph-article" style="text-align: center;"></i>
+                  	</div>
+              	</div>
+
+              	<div id="plan-for-a-purchase" class="tool" onClick="tool=selectTool(this)"><p>Plan for a Purchase</p>
+                	<div class="symbol" style="background-color: var(--salmon-color);">
+                      	<i class="ph ph-shopping-cart-simple" style="text-align: center;"></i>
+                  	</div>
+              	</div>
+
+              	<div id="check-credit-score" class="tool" onClick="tool=selectTool(this)"><p>Check Credit Score</p>
+                	<div class="symbol" style="background-color: var(--teal-color);">
+                      	<i class="ph ph-credit-card" style="text-align: center;"></i>
+                  	</div>
+              	</div>
+
+              	<div id="calculate-loan" class="tool" onClick="tool=selectTool(this)"><p>Calculate Loan</p>
+                	<div class="symbol" style="background-color: var(--brown-color);">
+                      	<i class="ph ph-calculator" style="text-align: center;"></i>
+                  	</div>
+              	</div>
+
+              	<div id="manage-debt" class="tool" onClick="tool=selectTool(this)"><p>Manage Debt</p>
+                	<div class="symbol" style="background-color: grey;">
+                    	<i class="ph ph-trend-up" style="text-align: center;"></i>
+                	</div>
+              	</div>
+              	<!-- END tools -->
+            </div>
+            </div>
+			<!-- END tool-menu -->
+      
+     	<!-- top bar -->
+  		<div id="top-bar">
+          	<div class="logo" style="display: flex; flex-direction: column; justify-content: center;">
+            	<h1>FinLit Rep4® Bot</h1>
+              	<h2>Your Financial Assistant</h2>
+          	</div>
+          
+          	<div class="button-row" style="flex: 1; justify-content: flex-end">
+				<!-- 3 buttons in top bar
+					1. tools-button - opens tool-menu for user to select a different tool 
+					2. reset-chat - resets the chat deleting all current messages and letting the user reselect their money mindset animal
+					3. close-chat - closes the chatbot (hides opened chatbot GUI and shows unopened chatbot GUI)
+				-->
+              	<div id="tools-button" onClick="tools()">
+                	<i class="ph ph-gear" style="text-align: center;"></i>
+            	</div>
+				<button id="reset-chat" onClick="resetChat()"><i class="ph-bold ph-arrows-clockwise"></i></button>
+              	<button class="close-chat" onClick ="chatBot()"><i class="ph-bold ph-x"></i></button>
+            </div>
+    	</div>
+    	<!-- END top bar -->
+      
+
+      	<!-- messages -->
+		<div id="messages-container">
+			<div id="messages">
+				<img id="chosen-animal" src=""> <!-- putting chosen animal in the messages div was just the best location has nothing to do with being a message -->
+
+				<!-- message divs will be added when the user sends a message -->
+				<div id="starting-message" class="message bot">Hi! I'm Rep4®FinLit Bot, your financial literacy assistant. You can chat with me about anything financial related and I will respond with trusted information from our learning modules.</div>
+			</div>
+		</div>
+      	<!-- END messages -->
+		
+		<!-- button that appears when the user is scrolled up in the chat history when clicked scrolls all the way down -->
+      	<button id="scroll-to-bottom-button" onClick="scrollToBottom()"><i class="ph-bold ph-arrow-down"></i></button>
+        
+      	<!-- input menu -->
+    	<div id="input-container">
+      		<textarea id="chat-input" placeholder="Ask anything..."></textarea> <!-- Ask anything is replaced with animal specific messages-->
+          	<button id="send-button" onClick="sendMessage(event)">Send <i class="ph-bold ph-paper-plane-right"></i></button>
+    	</div>
+      	<!-- END input menu -->
+
+  	</div>
+	<!-- END Chat interface -->
+
+</div>
+<!-- END opened chat -->
+
+
+<style>
+	/* I use #region and #endregion because on VS code (and I assume most IDEs)
+		it lets you expand and collapse sections you define. it also just helps general organization*/
+
+	/* #region CSS reset — strips browser defaults that interfere with the chat UI */
+		*, *::before, *::after {
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+		}
+
+		body {
+			margin: 0;
+			padding: 0;
+		}
+
+		h1, h2, h3, h4, h5, h6 {
+			font-size: inherit;
+			font-weight: inherit;
+		}
+
+		button {
+			border: none;
+			background: none;
+			cursor: pointer;
+			will-change: transform;
+			backface-visibility: hidden;
+		} 
+
+		a {
+			text-decoration: none;
+			transition: background-color 0.2s ease
+		}
+	/* #endregion CSS reset */
+
+
+
+	/* #region CSS defaults and variables */
+
+		/* global Poppins font */
+		* {
+			font-family: 'Poppins', sans-serif;
+		}
+
+		/* color variables */
+		:root {
+			--blue-color: #5ac2e7;
+			--purple-color: #a52c86;
+			--salmon-color: #ff8674;
+			--yellow-color: #fedb01;
+			--teal-color: #44b59d;
+			--brown-color: #603d20;
+
+			/* em spacing based on the 16px default font (would use rem but learnworlds forces a small default font causing rem to be small) */
+			--chat-buttons: 1.875em;
+			--header-or-symbol: 1.5em;
+			--large-body: 1.125em;
+			--message-font: 1em;
+
+			--symbol-background: 1.2em;
+		}
+	/* #endregion CSS defaults and variables */
+
+
+  	/* ######################## */
+	/* #region unopened chatbot */
+  	/* ######################## */
+		#unopened-chat {
+			position: fixed;
+			width: 80px; height: 80px; bottom: 20px; right: 20px; z-index: 20;
+		
+			border-radius: 50%;
+			background-color: var(--blue-color);
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		
+			transition: opacity 350ms ease, background-color 0.5s ease;
+		}
+	
+		#unopened-chat:hover {
+			cursor: pointer;
+			background-color: var(--purple-color);
+		}
+	
+		.circle {
+			height: 6px;
+			width: 6px;
+			border-radius: 50%;
+			background-color: var(--blue-color);
+			transition: background-color 0.5s ease;
+		}
+	
+		#unopened-chat:hover .circle{
+			background-color: var(--purple-color);
+			animation: moveUpDown 0.65s ease-in-out;
+		}
+	
+		/* First circle bounce, then middle, then last one */
+		#unopened-chat:hover .circle:nth-child(1) {
+		animation-delay: 0s; 
+		}
+		#unopened-chat:hover .circle:nth-child(2) {
+		animation-delay: 0.2s; 
+		}
+		#unopened-chat:hover .circle:nth-child(3) {
+		animation-delay: 0.4s;
+		}
+	
+		@keyframes moveUpDown { /* for 3 dots animation on hover of closed chatbot */
+		0% { transform: translateY(0); }
+		50% { transform: translateY(-8px); }
+		100% { transform: translateY(0); }
+		}
+	/* ########################### */
+  	/* #endregion unopened chatbot */	
+	/* ########################### */
+  
+  	/* ###################### */ 
+	/* #region opened chatbot */  
+  	/* ###################### */ 
+
+		#chat-container {
+			font-size: 16px;
+			bottom: 20px; right: 20px; 
+			width: clamp(400px, 30vw, 500px); 
+			height: clamp(600px, 70vh, 700px);
+
+			display: flex;
+			flex-direction: column;
+			
+			z-index: 20;
+			border-radius: 20px;
+			/* border: 3px solid var(--blue-color); */
+		
+			transition: opacity 350ms ease;
+			position: fixed;
+			overflow: visible;
+		}
+
+		.logo {
+			display: flex; 
+			flex-direction: column; 
+			justify-content: center;
+		}
+
+		.logo h1 {
+			color: var(--brown-color); 
+			font-size: var(--large-body);
+			font-weight: bold;
+		}
+
+		.logo h2 {
+			color: var(--purple-color); 
+			font-size: 0.875em;
+		}
+	
+		/* #region animal choice */
+			#animal-choice {
+				position: relative;
+
+				display: flex;
+				align-items: center;
+				flex-direction: column;
+				height: 100%;
+
+
+				border: 3px solid var(--yellow-color);
+				outline: 3px solid var(--blue-color);
+				border-radius: 15px;
+				overflow: hidden;
+
+				transition: opacity 350ms ease;
+			}
+  
+			#question-container {
+				background-color: var(--yellow-color);
+				width: 100%;
+				margin: 0;
+				padding: 8px 3px;
+
+              	display: flex;
+              	flex-direction: column;
+              
+		        /* border-top-right-radius: 9px;
+				border-top-left-radius: 9px; */
+				border-bottom: 1px solid var(--brown-color);
+              
+        	    align-items: center;
+			}
+
+			#quiz-link {
+				color: var(--brown-color);
+				font-size: var(--message-font);
+				text-align: center;
+			}
+
+			#animal-question {
+		        text-align: center;
+              	color: var(--purple-color);
+				font-weight: 700;
+				font-size: var(--header-or-symbol);
+				line-height: 1;
+	
+				margin-top: 6px;
+	
+				background-color: rgb(0,0,0,0.1);
+				padding: 4px;
+				border-radius: 20px;
+				width: 90%;
+			}
+		
+			.animals {
+				position: relative;
+              	background: radial-gradient(circle, white 0%, var(--purple-color));
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+		        align-items: center;
+              
+              	height: 100%;
+		        width: 100%;
+			}
+		
+			#animals-2rows { 
+				display: none; 
+			}
+
+			.animal-row {
+				display: flex;
+				flex-direction: row;
+				width: 100%;
+				justify-content: center;
+
+				gap: 25px;
+			}
+		
+			.animal {
+				height: auto; 
+				width: 0px; /*clamp(0px, 20%, 10em); 6.5em*/
+				transition: transform 0.5s ease, opacity 0.5s ease;
+				will-change: transform;
+			}
+		
+			.animal:hover {
+				cursor: pointer;
+				transform: scale(1.1);
+			}
+
+			#animal-confirmation {
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				align-items: center;
+
+				font-size: 1.1em;
+				width: 80%;
+
+				position: absolute;
+				top: 26%;
+				left: 50%;
+				transform: translateX(-50%);
+				transition: opacity 350ms ease;
+			}
+
+			#selected-animal {
+				z-index: 1;
+			}
+
+			#animal-description-container {
+				background-color: white;
+				padding: 30px;
+				margin-top: -30px;
+				border-radius: 15px;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				gap: 5px;
+			}
+
+			#animal-name {
+				font-size: var(--header-or-symbol);
+				color: var(--purple-color);
+				font-weight: bold;
+			}
+
+			#animal-description {
+				color: var(--brown-color);
+			}
+
+			#animal-description-container .button-row {
+				justify-content: space-between;
+				width: 50%;
+			}
+
+			#back-button {
+				color: var(--purple-color);
+				border: solid 1px var(--purple-color);
+				font-weight: bold;
+				padding: 8px 10px;
+				border-radius: 8px;
+			}
+
+			#confirm-animal {
+				color: white;
+				background-color: var(--purple-color);
+				font-weight: bold;
+				padding: 8px 10px;
+				border-radius: 8px;
+			}
+
+		/* #endregion animal choice */
+
+		#chat-content {
+			width: 100%;
+			flex: 1;
+			min-height: 0;
+			
+			border-radius: 16px;
+			background-color: white;
+          	/* 
+          	Different values for background-image. (for animal images uncomment the other background stuff below background-image)
+          
+          	Animals:
+            	Past animals: url(https://lwfiles.mycourse.app/6759d5489b4fa1f235381f70-public/9cb0ce4e025b564eebc8cc9d1f3f5dd1.png);
+            	Future animals: url(https://lwfiles.mycourse.app/6759d5489b4fa1f235381f70-public/090f04a919afbceecbd3ce5792c895e3.png);
+          	gradients: 
+            	linear-gradient(to bottom left, white 45%, var(--purple-color));
+            	linear-gradient(to bottom left, white 45%, var(--teal-color));
+          		linear-gradient(to bottom left, white 45%, var(--salmon-color));
+          		linear-gradient(to bottom left, white 45%, var(--blue-color));
+          		linear-gradient(to bottom left, white 45%, var(--brown-color));
+          		linear-gradient(to bottom left, white 45%, var(--yellow-color));
+          	upside-down-gradients:
+          		linear-gradient(to top right, white 35%, var(--purple-color));
+          		linear-gradient(to top right, white 35%, var(--teal-color));
+          		linear-gradient(to bottom left, white 35%, var(--salmon-color));
+          		linear-gradient(to top right, white 35%, var(--blue-color));
+          		linear-gradient(to top right, white 35%, var(--brown-color));
+          		linear-gradient(to top right, white 35%, var(--yellow-color));
+          	Top to bot
+          		linear-gradient(to top, white 35%, var(--salmon-color));
+          		linear-gradient(to top, white 35%, var(--teal-color));
+          	bot to top
+          		linear-gradient(to bottom, white 45%, var(--salmon-color));
+          		linear-gradient(to bottom, white 45%, var(--teal-color));
+          	middle
+          		radial-gradient(circle, var(--salmon-color) 0%, white);
+          		radial-gradient(circle, var(--teal-color) 0%, white);
+          	edges
+          		radial-gradient(circle, white 0%, var(--salmon-color));
+          		radial-gradient(circle, white 0%, var(--teal-color));
+          	*/
+          	background-image: radial-gradient(circle, var(--teal-color) 0%, white);
+          	/*
+          	background-repeat: no-repeat;
+			background-position: center;
+          	background-size: contain;
+          	*/
+          	
+			border: 3px solid var(--yellow-color);
+			outline: 3px  solid var(--blue-color);
+			overflow: hidden;
+			
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+		
+			transition: opacity 350ms ease;
+		
+			position: absolute;
+			top: 0; left: 0; right: 0; bottom: 0;
+		}
+	
+	
+		/* #region top bar  */	
+			#top-bar {
+				width: 100%; height: 60px;
+				background-color: var(--yellow-color);
+				display: flex;
+				padding: 10px 16px;
+				border-bottom: 1px solid var(--brown-color);
+			
+				position: relative;
+			}
+
+			#resize {
+				color: var(--brown-color);
+				/* background-color: var(--brown-color); */
+				position: absolute;
+				top: 5px;
+				left: 3px;
+				z-index: 1;
+				font-weight: bold;
+				transform: rotate(-90deg);
+			}
+
+			#resize:hover {
+				cursor: nwse-resize;
+			}
+			
+			#tools-button {
+				width: var(--symbol-background); height: var(--symbol-background);
+			
+				background-color: var(--purple-color);
+				font-size: var(--chat-buttons);
+				color: var(--yellow-color);
+				
+				display: flex;
+				justify-content: center;
+				align-items: center;
+			
+				border-radius: 50%;
+			
+				transition: background-color 0.5s ease, transform 0.5s ease;
+				will-change: transform;
+			}
+		
+			#tools-button:hover {
+				cursor: pointer;
+				transform: scale(1.1);
+			}
+		
+		
+			/* #region tools menu  */
+    	    #tools-menu {
+				width: 100%; height: 100%;
+        	    position: absolute;
+				z-index: 3;
+			
+				background-color: rgb(0, 0, 0, 0.5); 
+				border-radius: 14px;
+			}
+	
+			#tools-content {
+				background: white;
+				
+				transition: opacity 0.5s ease;
+				
+				position: absolute;
+					
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+				
+				border: rgb(50, 50, 50, 1) solid 2px;
+				border-radius: 6px;
+				
+				display: flex;
+				flex-direction: column;
+				z-index: 1;
+			}
+			
+				#close-tools {
+					padding: 0;
+					margin: 0;
+
+					color: Dimgrey;
+					font-size: var(--header-or-symbol);
+				
+					transition: color 0.5s ease, transform 0.5s ease;
+					will-change: transform;
+                  	
+					display: flex;
+					justify-content: center;
+					align-items: center;
+				}
+  	
+  				#close-tools i {
+					font-weight: bold;
+  				}
+			
+				#close-tools:hover {
+					cursor: pointer;
+					color: black;
+				
+					transform: scale(1.1);
+				}
+			
+				.tool {
+					display: flex;
+					flex-direction: row;
+					align-items: center;
+					justify-content: center;
+		            gap: 5px;
+					padding: 5px;
+                  
+					font-family: sans-serif;
+					border-top: 1px solid rgb(0, 0, 0, 0.6);
+					width: 100%;
+				}
+  
+  				.tool p {
+  					font-family: sans-serif;
+					font-size: var(--large-body);
+					white-space: nowrap;
+  				}
+
+				.tool:hover {
+					cursor: pointer;
+					background-color: rgb(0, 0, 0, 0.2);
+				}
+  	
+                #current-tool {
+					border-top: 0px;
+					border-bottom: 2px solid rgb(0, 0, 0, 0.8);
+		        }  					
+				
+                #current-tool:hover { /* no hover effect on current tool */
+					background-color: initial;
+		            cursor: default;
+                }
+				
+				#none {
+					border-top: 0px;
+				}
+
+				#manage-debt {
+					border-radius: 0 0 4px 4px
+				}
+
+				#manage-debt:hover .symbol { /* prevent grey on grey with a white border seperation */
+					outline: 1px solid white;
+				}
+			
+				.symbol {
+					width: var(--symbol-background); height: var(--symbol-background);
+				
+					font-size: var(--header-or-symbol);
+					font-family: sans-serif;
+					color: white;
+
+					display: flex;
+					justify-content: center;
+					align-items: center;
+					margin-left: auto;
+				
+					border-radius: 50%;
+				}
+
+				#current-tool-symbol {
+					margin-left: 0;
+				}
+
+				#close-tools {
+					margin-left: auto;
+				}
+			/* #endregion tools menu */
+		
+            #reset-chat {
+				width: var(--symbol-background); height: var(--symbol-background);
+              	
+              	color: var(--yellow-color);
+              	transition: transform 0.5s ease;
+				will-change: transform;
+              	font-size: var(--chat-buttons);
+              	text-align: center;
+              	
+              	display: flex;
+              	justify-content: center;
+              	align-items: center;
+              
+              	background-color: var(--blue-color);
+                border-radius: 50%;
+            }	
+  
+            #reset-chat:hover {
+				cursor: pointer;
+				transform: scale(1.1);
+            }
+
+			.close-chat {
+				width: var(--symbol-background); height: var(--symbol-background);
+			
+				color: var(--brown-color);
+				transition: color 0.5s ease, transform 0.5s ease;
+				will-change: transform;
+
+				font-size: var(--chat-buttons);
+				text-align: center;
+			
+				display: flex;
+				justify-content: center;
+				align-items: center;
+			
+				background-color: rgba(0, 0, 0, 0.2);
+				border-radius: 50%;
+			}
+			
+			.close-chat:hover {
+				cursor: pointer;
+				color: var(--purple-color);
+				transform: scale(1.1);
+			}
+  
+            .close-chat i {
+				font-weight: 900;
+            }
+		
+			.button-row {
+				display: flex;
+				flex-direction: row;
+				align-items: center;
+				gap: 10px;
+				padding: 0;
+				margin: 0;
+			}
+		/* #endregion top bar */
+		
+	
+		/* #region messages */	
+		#messages-container { 
+		/* This primarily exists to make the scroll bar for messages isn't right next to the user messages */
+			overflow-y: auto;
+			height: 100%;
+			display: flex;
+			justify-content: center;
+			align-items: flex-start;
+		}
+
+			#messages {
+				width: 98%;
+				min-height: 0;
+			
+				display: flex;
+				flex-direction: column;
+				
+				padding-bottom: 150px;
+			}
+		
+
+			/* The 3 message classes
+				1. .message - applies to both bot and user messages sets font size, padding/margins, and other general formatting stuff
+				2. .user - applies to only user messsages making the background white, positioning the message to the right side, and making the message tail come from the bottom right
+				3. .bot - applies to only bot messages making the background blue, positioning the message to the left side, and makign the message tail come from the bottom left
+			*/
+			.message {
+				max-width: 75%;
+				padding: 10px 10px;
+				border-radius: 10px;
+				margin: 0px 10px;
+				margin-top: 6px;
+
+				font-size: var(--message-font);
+				word-wrap: break-word;
+			
+				border: 2px solid var(--brown-color);
+				color: var(--brown-color);
+			
+				line-height: 1.25;
+				animation: messageFadeIn 0.5s ease;
+			}
+		
+			@keyframes messageFadeIn {
+				from { opacity: 0; }
+				to { opacity: 1; }
+			}
+		
+			.user {
+				background-color: color-mix(in srgb, white 100%, transparent); /* change percentage for opac user message background */
+				margin-left: auto;  /* pushes to the right */
+				border-bottom-right-radius: 1px;
+
+				white-space: pre-wrap;
+			}
+
+			.bot {
+				background-color: color-mix(in srgb, var(--blue-color) 100%, transparent); /* change percentage for opac bot message background */
+				margin-right: auto;  /* pushes tom the left */
+				border-bottom-left-radius: 1px;
+
+				white-space: normal;
+			}  
+
+			.bot * {
+				margin: revert;
+				padding: revert;
+			}
+
+			.bot a {
+				color: var(--brown-color);
+				padding: 2px 6px;
+				background: color-mix(in srgb, var(--blue-color) 85%, black);
+				border-radius: 25px;
+				font-size: 0.75em;
+
+				/* white-space: nowrap; */
+			}
+
+			.bot a:hover {
+				text-decoration: none;
+				padding: 1px 5px;
+				border: solid white 1px;
+			}
+
+		/* #endregion messages */
+	
+		#scroll-to-bottom-button {
+			width: 1.5em; height: 1.5em;
+			background-color: var(--yellow-color);
+          		border-radius: 50%;
+			outline: 2px solid var(--brown-color);
+			opacity: 0;
+          
+			font-size: var(--header-or-symbol);
+			color: var(--brown-color);
+			
+			position: absolute;
+			bottom: 80px;
+			
+			transition: opacity 0.35s ease, filter 0.35s ease;
+
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+	
+		#scroll-to-bottom-button:hover {
+			cursor: pointer;
+			filter: brightness(0.95);
+		}
+  
+	    #scroll-to-bottom-button i {
+			font-weight: bold;
+        }
+		
+		#chosen-animal {
+			width: clamp(70px, 22%, 125px);
+			height: auto;
+			border-radius: 50%;
+			
+			position: absolute;
+			right: 8px;
+			bottom: 90px;
+          	z-index: 1;
+		}
+	
+		/* #region input menu */
+		#input-container {
+			margin: 0px 0px;
+			margin-bottom: 10px;
+			width: 95%;
+			align-content: flex-start;
+			justify-content: space-between;
+			
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			
+			padding-top: 1px;
+		}
+		
+		#chat-input {
+			padding: 8px 12px;
+			flex: 1;
+			outline: none;
+			border: 2px solid var(--brown-color);
+			border-radius: 20px;
+              
+			box-sizing: border-box;
+			min-height: 38px;
+			max-height: 110px;
+			height: auto;
+			line-height: 20px;
+			resize: none;
+			overflow-y: auto;
+			display: block;
+			margin: 0;
+			
+			transition: transform 0.5s ease, border 0.25s ease;
+			will-change: transform;
+		}
+
+		#chat-input::placeholder {
+			color: rgba(96, 61, 32, 0.6);
+			line-height: 20px;
+		}
+
+		#chat-input:focus {
+			/* outline: solid var(--purple-color) 2px; */
+			border: solid 2px var(--purple-color);
+			/* transform: scale(1.0125); */
+		}
+
+		#send-button {
+			background-color: var(--yellow-color);
+			color: var(--brown-color);
+			font-weight: 800;
+			border: 2px solid var(--brown-color);
+			border-radius: 20px;
+			padding: 0 12px;
+			font-size: 1em;
+			height: 40px;
+			
+			transition: transform 0.5s ease;
+			will-change: transform;
+		}
+		
+		#send-button:hover {
+			cursor: pointer;
+			transform: scale(1.05);
+		}
+  
+  		#send-button i {
+  			font-weight: bold;
+  		}
+		/* #endregion input menu */
+  
+	/* ######################### */ 
+	/* #endregion opened chatbot */  
+  	/* ######################### */ 
+</style>
+
+<style>
+	/* #region special classes */
+		.hidden {
+			pointer-events: none;
+			opacity: 0;
+		}  
+		
+		.module-link {
+			color: var(--brown-color);
+			padding: 2px 6px;
+			background: color-mix(in srgb, var(--blue-color) 85%, black);
+			border-radius: 25px;
+			white-space: nowrap;
+			font-size: 0.75em;
+		}
+	
+		.module-link:hover {
+			text-decoration: none;
+			background: color-mix(in srgb, var(--blue-color) 80%, black);
+		}
+	/* #endregion special classes */
+</style>
+
+<script>
+	// #####################
+	// ##### VARIABLES #####
+	// #####################
+
+	// unopened chat and opened chat
+	const unopenedChat = document.getElementById("unopened-chat")
+	const chatContainer = document.getElementById("chat-container")
+	const chatContent = document.getElementById("chat-content");
+
+	// animal choice variables
+	const animals = document.getElementsByClassName("animal");
+	const selectedAnimal = document.getElementById("selected-animal");
+	const animalChoice = document.getElementById("animal-choice");
+	const chosenAnimal = document.getElementById("chosen-animal")
+
+	// animal confirmation elements
+	const animalConfirmation = document.getElementById("animal-confirmation");
+	const animalName = document.getElementById("animal-name");
+	const animalDescription = document.getElementById("animal-description");
+
+	//resize
+	const resize = document.getElementById("resize");
+
+	// tools
+	const toolsButton  = document.getElementById("tools-button");
+    const toolsMenu = document.getElementById("tools-menu");
+
+	// chat input/messages
+	const chatInput = document.getElementById("chat-input");
+	const messages = document.getElementById("messages")
+	const scrollToBottomButton = document.getElementById('scroll-to-bottom-button');
+
+	// animal images and descriptions
+    const animalDict = {
+		// animal faces is a dict of lists of png urls
+    	// base face is 0; 1 is happy, 2 is laugh, 3 is confused, 4 is surprised
+        'Armadillo' : [
+            'https://lwfiles.mycourse.app/6759d5489b4fa1f235381f70-public/19a8fc0ed47d8d7f7043f4000ed0e3b5.png',
+            'https://lwfiles.mycourse.app/6759d5489b4fa1f235381f70-public/395f58d723fc4b6652945edcdafa3f52.png',
+            'https://lwfiles.mycourse.app/6759d5489b4fa1f235381f70-public/37277e8a1bddcbbf7be66e979f10067f.png',
+            'https://lwfiles.mycourse.app/6759d5489b4fa1f235381f70-public/fc5c3437d48798d268c6ec74188ce7e9.png',
+            'https://lwfiles.mycourse.app/6759d5489b4fa1f235381f70-public/0205457703f3d9c0b5870ea98cbd9327.png'
+            ],
+        'Bee' : [
+            'https://lwfiles.mycourse.app/6759d5489b4fa1f235381f70-public/5dcd3605e0edd7bf81cc0c85278560d3.png',
+            'https://lwfiles.mycourse.app/6759d5489b4fa1f235381f70-public/1e9a7dea56e29cfc886ace57a8162bcf.png',
+            'https://lwfiles.mycourse.app/6759d5489b4fa1f235381f70-public/d9c1e01852165bd24bd2ccd8376b7c04.png',
+            'https://lwfiles.mycourse.app/6759d5489b4fa1f235381f70-public/c971fe44445efef3e120739574bab361.png',
+            'https://lwfiles.mycourse.app/6759d5489b4fa1f235381f70-public/f503bb012fab632b3c2b53598c587c6c.png'
+            ],
+        'Octopus' : [
+            'https://lwfiles.mycourse.app/6759d5489b4fa1f235381f70-public/5c0a7d7bd7e10ebd31492c6c00119505.png',
+            'https://lwfiles.mycourse.app/6759d5489b4fa1f235381f70-public/446a2d381aa443ade9c537c543a38fa7.png',
+            'https://lwfiles.mycourse.app/6759d5489b4fa1f235381f70-public/d48020c44bcb9ad78ced1ef31f1b9893.png',
+            'https://lwfiles.mycourse.app/6759d5489b4fa1f235381f70-public/3cc6ae6a0a875000d8b8f55f59203c63.png',
+            'https://lwfiles.mycourse.app/6759d5489b4fa1f235381f70-public/8a920fcb50038fee37ce85565d891dc1.png'
+            ],
+        'Owl' : [
+            'https://lwfiles.mycourse.app/6759d5489b4fa1f235381f70-public/469b5dcb8fc92cf35422bb36ab843b3e.png',
+            'https://lwfiles.mycourse.app/6759d5489b4fa1f235381f70-public/88cf5fc1787e02c1e9fbd47d9a9228cc.png',
+            'https://lwfiles.mycourse.app/6759d5489b4fa1f235381f70-public/0022d5a8a87ba2820f17e144b2922ced.png',
+            'https://lwfiles.mycourse.app/6759d5489b4fa1f235381f70-public/8a047de6b866e8e9cfa095b604a747ea.png',
+            'https://lwfiles.mycourse.app/6759d5489b4fa1f235381f70-public/85abf182e81118808f49a08c82c5905d.png'
+            ],
+        'Panda' : [
+            'https://lwfiles.mycourse.app/6759d5489b4fa1f235381f70-public/28913e2dcb49252975a6f20c76341ed9.png',
+            'https://lwfiles.mycourse.app/6759d5489b4fa1f235381f70-public/49ea05d1c4e5d28092fe36fc8e2bd6ae.png',
+            'https://lwfiles.mycourse.app/6759d5489b4fa1f235381f70-public/f2ce20339b49f0b52623948779a94420.png',
+            'https://lwfiles.mycourse.app/6759d5489b4fa1f235381f70-public/0a239690edc673c22ef2ee15678a8f25.png',
+            'https://lwfiles.mycourse.app/6759d5489b4fa1f235381f70-public/661f04b5cd3759c96cc3029895c6a0f6.png'
+            ],
+        'Poodle' : [
+            'https://lwfiles.mycourse.app/6759d5489b4fa1f235381f70-public/f3f3b8d63ca3eee73c0782abbe2f25c0.png',
+            'https://lwfiles.mycourse.app/6759d5489b4fa1f235381f70-public/69faf25bfbff72936e9386d2898a74fd.png',
+            'https://lwfiles.mycourse.app/6759d5489b4fa1f235381f70-public/05be73db556bba44395e96ba49a92df3.png',
+            'https://lwfiles.mycourse.app/6759d5489b4fa1f235381f70-public/ca412298722376221e2e390efa346d44.png',
+            'https://lwfiles.mycourse.app/6759d5489b4fa1f235381f70-public/bbdc3f01c77e5119391ba8454a925c3e.png'
+            ],
+        'Rabbit' : [
+            'https://lwfiles.mycourse.app/6759d5489b4fa1f235381f70-public/0e085720420940b17bffd4a3f0419cc1.png',
+            'https://lwfiles.mycourse.app/6759d5489b4fa1f235381f70-public/0ff4d334277b11b3176e2c79b4df49d9.png',
+            'https://lwfiles.mycourse.app/6759d5489b4fa1f235381f70-public/0ff4d334277b11b3176e2c79b4df49d9.png',
+            'https://lwfiles.mycourse.app/6759d5489b4fa1f235381f70-public/99e04b54ca1dcb4a07ab8dea3aa78d67.png',
+            'https://lwfiles.mycourse.app/6759d5489b4fa1f235381f70-public/14feb8d96fe20ecc2da60352f1c870f3.png'
+            ],
+        'Squirrel' : [
+            'https://lwfiles.mycourse.app/6759d5489b4fa1f235381f70-public/fc03ee57461416c10e083865fcc3e6f4.png',
+            'https://lwfiles.mycourse.app/6759d5489b4fa1f235381f70-public/eb90834c4fd01bcd5b27b13a3872bd60.png',
+            'https://lwfiles.mycourse.app/6759d5489b4fa1f235381f70-public/f33505701151043d12e97b0061694891.png',
+            'https://lwfiles.mycourse.app/6759d5489b4fa1f235381f70-public/85e01cccc1bb5c93cb9f0db0d35b5d1b.png',
+            'https://lwfiles.mycourse.app/6759d5489b4fa1f235381f70-public/6df7da6bd05ccfab6f43456a103a2053.png'
+            ]
+    };
+
+	const descriptions = {
+        'Armadillo' : 'A cautious personality that protects itself from financial challenges but may struggle with debt due to avoidance of financial management.',
+        'Bee' : 'Highly competitive and hardworking, bees focus on wealth accumulation but risk burnout.',
+        'Octopus' : 'Curious and impulsive, this personality is skilled at bargain hunting but can be distracted by sales.',
+        'Owl' : 'Strategic and patient, owls prioritize long-term gains but must manage market volatility.',
+        'Panda' : 'Content with a simple, modest life, pandas may lack future financial preparation.',
+        'Poodle' : 'Outgoing and driven by success, poodles enjoy luxury but may overspend to maintain their lifestyle.',
+        'Rabbit' : 'Thrill-seeking and quick to act, rabbits enjoy high-risk moves but face potential financial losses.',
+        'Squirrel' : 'Focused on saving and security, squirrels might avoid taking necessary financial risks for growth.'
+    };
+
+	// get four rows div and two rows div
+	const four = document.getElementById("animals-4rows")
+	const two = document.getElementById("animals-2rows")
+
+	// the IF statement determines whether to display the chatbot or not,
+	//  It will not display the chatbot on self-asessments inside the modules and can be edited to not display on specific urls in the website
+
+  	// checks to show or hide chatbot
+  	if (window == window.top) { // Prevents previous issue of 2 chatbots appearing in modules
+      
+      const url = window.location.href
+      if (true) { // change if statements to prevent chatbot on specific URLs in rep4FinLit (add this for if statement url.startsWith("https://www.rep4finlit.org"))
+
+        checkQuizState();
+        setInterval(checkQuizState, 1000); //check periodically because the url does not change in the course when user enters the quiz
+      }
+    }
+  
+
+	// #####################
+  	// ##### FUNCTIONS #####
+	// #####################
+
+	function checkQuizState() { // we need to hide the chatbot when the user take a self-assessment so they can't ask for answers
+          try {
+            const iframe = document.getElementById('playerFrame')
+
+            if (!iframe) { // if there is no iframe we are not in the courses so there is no reason to hide the bot in the first place
+            	if (chatContainer.classList.contains("hidden")) {
+            		unopenedChat.classList.remove("hidden");
+              	}
+              return;
+            }
+
+            const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+            const quizActive = iframeDoc.querySelector('.slug-assessmentplayer-new'); // the .slug is a class that is on a quiz element whenever a quiz comes up
+			// so we can look for if there is an element with that class
+
+            if (quizActive == null) { // quiz is not active show chatbot
+              if (chatContainer.classList.contains("hidden")) {
+                unopenedChat.classList.remove("hidden");
+              }
+            } else { // quiz is active hide chatbot
+              unopenedChat.classList.add("hidden");
+              chatContainer.classList.add("hidden");
+            }
+          } catch (e) { 
+            console.log("Error occured when checking whether to hide or show bot (shows if not in quiz doesn't show in quiz)")
+          }
+    }
+
+
+	// resize chatbot
+	resize.addEventListener('mousedown', (mouseEvent) => {
+		mouseEvent.preventDefault();
+		
+		// borders
+		let minWidth = chatContainer.style.minWidth ? parseInt(chatContainer.style.minWidth) : 360;
+    	let minHeight = chatContainer.style.minHeight ? parseInt(chatContainer.style.minHeight) : 575;
+    	let maxWidth = window.innerWidth - 40;
+    	let maxHeight = window.innerHeight - 40;
+
+		// start position of the mouse cursor
+        const startX = mouseEvent.pageX;
+        const startY = mouseEvent.pageY;
+
+		// starting size and offsets of the bot pane window
+        const startWidth = chatContainer.offsetWidth;
+        const startHeight = chatContainer.offsetHeight;
+        const startLeft = chatContainer.offsetLeft;
+        const startTop = chatContainer.offsetTop;
+
+		const drag = (e) => {
+			const dx = e.pageX - startX;
+			const dy = e.pageY - startY;
+
+			let newWidth = startWidth - dx;
+			let newHeight = startHeight - dy;
+
+			// Clamp to min/max bounds
+			newWidth = Math.min(Math.max(newWidth, minWidth), maxWidth);
+			newHeight = Math.min(Math.max(newHeight, minHeight), maxHeight);
+
+			chatContainer.style.width = newWidth + 'px'; 
+			chatContainer.style.height = newHeight + 'px';
+
+			if (newWidth + 90  >= newHeight) { // swap to 2 rows width bigger
+				if (four.style.display != "none"){
+					four.style.display = "none"
+					two.style.display = "flex"
+				}
+			} else if (newWidth + 90 < newHeight)  { // swap to 4 rows height bigger
+				if (four.style.display != "flex") {
+					four.style.display = "flex"
+					two.style.display = "none"
+				}
+			}
+			setAnimalSize();
+		};
+			
+
+		const stopDrag = () => {
+            window.removeEventListener('mousemove', drag);
+            window.removeEventListener('mouseup', stopDrag);
+
+			chatContainer.style.bottom = "20px";
+			chatContainer.style.right = "20px";
+        };
+
+		window.addEventListener('mousemove', drag);
+        window.addEventListener('mouseup', stopDrag);
+	})
+
+
+	// open/close chatbot
+	function chatBot() { 
+      	if (chatContainer.classList.contains("hidden")) { // open chat
+    		unopenedChat.classList.add('hidden');
+			chatContainer.classList.remove('hidden');
+			chatInput.focus()
+        } else { // close chat
+          	chatContainer.classList.add('hidden');
+        	unopenedChat.classList.remove('hidden');
+        }
+    }
+
+	function setAnimalSize() {
+		// average of chatContainer width+height to for animal sizes
+		document.querySelectorAll(".animal").forEach(animal => {
+			animal.style.width = `${((chatContainer.offsetHeight + chatContainer.offsetWidth)/2)*0.19}px`;
+		});
+	}
+
+	function selectAnimal (element) {
+		// hide all animal that weren't chosen
+		const animalString = element.classList[1];
+		selectedAnimal.className = "";
+
+		if (element.classList.contains("animal")) {
+			selectedAnimal.src = element.src;
+			selectedAnimal.classList.toggle(animalString)
+			animalName.textContent = animalString;
+			animalDescription.textContent = descriptions[animalString];
+		}
+
+		for (i=0; i < animals.length; i++) {
+			animals[i].classList.toggle("hidden");
+		}
+		animalConfirmation.classList.toggle("hidden");
+	}
+
+	// NEED TO BE CHANGED TO FUNCTION WITH AN ANIMAL STRING NOT THE ELEMENT OBJECT
+  	function confirmAnimalSelection () { 
+      
+		// function was called from user selecting a money mindset animal
+      	if (chatContent.classList.contains("hidden")) {
+
+			// sets animal that was chosen to the animal display in the chat menu
+			chosenAnimal.src = selectedAnimal.src
+
+			// setting custom placeholder input box based on animal
+			if (selectedAnimal.classList.contains("Squirrel")) {
+				chatInput.placeholder = "now where did I bury that..."
+				animal = "Squirrel"
+			} else if (selectedAnimal.classList.contains("Rabbit")) {
+				chatInput.placeholder = "lets go down a rabbit hole..."
+				animal = "Rabbit"
+			} else if (selectedAnimal.classList.contains("Octopus")) {
+				chatInput.placeholder = "where'd my 8th arm go..."
+				animal = "Octopus"
+			} else if (selectedAnimal.classList.contains("Panda")) {
+				chatInput.placeholder = "dreaming of bamboo..."
+				animal = "Panda"
+			} else if (selectedAnimal.classList.contains("Armadillo")) {
+				chatInput.placeholder = "no one can see me in my shell..."
+				animal = "Armadillo"
+			} else if (selectedAnimal.classList.contains("Poodle")) {
+				chatInput.placeholder = "where did that squirrel go..."
+				animal = "Poodle"
+			} else if (selectedAnimal.classList.contains("Owl")) {
+				chatInput.placeholder = "*adjusts tiny spectacles*..."
+				animal = "Owl"
+			} else if (selectedAnimal.classList.contains("Bee")) {
+				chatInput.placeholder = "bzz bzz bzzz..."
+				animal = "Bee"
+			}
+
+			// set animal interface to hide and chat interface to show
+			animalChoice.classList.add('hidden')
+			chatContent.classList.remove('hidden')
+			chatInput.focus()
+        } else { // function was called by user resetting chat no need to set animal as user will be chosing a new animal
+			animalConfirmation.classList.toggle('hidden')
+			for (i=0; i < animals.length; i++) animals[i].classList.toggle("hidden");
+			
+
+          	chatContent.classList.add('hidden')
+        	animalChoice.classList.remove('hidden')
+			chatInput.focus()
+        }
+    }
+  
+	// open/close tools menu
+  	function tools() {
+      	if (toolsMenu.classList.contains("hidden")) { // open tools
+			toolsMenu.classList.remove('hidden');
+        } else { // close tools
+          	toolsMenu.classList.add('hidden');
+    	}
+    }
+  	
+	// user starts with no tools selected (variable keeps track of the tool string to send over to the backend)
+  	var tool = selectTool(document.getElementById("none")) 
+
+	//changes tools-button visually to the new tool symbol that was selected and changes current tool variable
+  	function selectTool(element) { 
+
+		// get the new visuals from the clicked on tool
+  		const new_symbol = element.querySelector('.symbol');
+    	const new_icon = element.querySelector('.symbol i');
+
+		// get toolsButton visuals that will be changing to the new visuals
+    	const toolsButtonIcon = toolsButton.querySelector('i');
+		
+		// get currentTool value inside of the tools menu dropdown 
+		// (just a visual inside of the drop down menu to tell the user within the menu what tool they are using)
+      	const currentTool = document.getElementById('current-tool-symbol')
+        const currentToolIcon = currentTool.querySelector('i');
+
+    	// set tool-button to new visuals
+    	toolsButton.style.backgroundColor = new_symbol.style.backgroundColor;
+    	toolsButtonIcon.className = new_icon.className;
+      	
+      	//set current-tool to new visuals
+    	currentTool.style.backgroundColor = new_symbol.style.backgroundColor;
+    	currentToolIcon.className = new_icon.className;
+      
+		// close the tool menu
+    	tools(); 
+      	
+		// selectTool is only called in the HTML onClick attribute on the tools elements. When it is called we set
+		// the tool value, via a return statement, that will be passed to the LLM when a message is sent like so tool=selectTool(element)
+      	if (element.id == "none") {
+      		return "" // when there is no tool python backend needs an empty value
+        }
+      	return element.id
+    }
+  
+	// resets chatbot deleting all messages, setting a new sessionId, and going back to animal choice menu
+  	function resetChat() {
+    	if (confirm('Are you sure you want to reset?\n\nThis will delete all your current chat history and allow you to switch to a different money mindset animal.')) {
+    		// do the reset
+
+          	// show animal GUI hide chat interface
+      		confirmAnimalSelection(document.getElementById("default-animal"));
+          
+          	// set new sessionId
+        	sessionId = crypto.randomUUID();
+    		sessionStorage.setItem("sessionId", sessionId);
+
+			// set input to nothing
+			chatInput.value = "";
+			adjustChatInputHeight();
+          
+          	// set tool to none
+          	const noTool = document.getElementById("none")
+          	tool = selectTool(noTool);
+
+			// trigger tools again to close menu if menu is now open from reset
+			if (!document.getElementById("tools-menu").classList.contains("hidden")){
+          		tools();
+			}
+          	// Delete all messages
+          	const elements = document.querySelectorAll('.message');
+          	for (let i = 0; i < elements.length; i++) {
+             	if (elements[i].id != "starting-message"){
+            		elements[i].remove();
+                }
+            }
+          
+          	// if scroll button was showing hide it now as there will only be the welcome message
+          	showScrollBottomButton()
+  		}
+    }
+  
+	const loadingMessage = `Thinking <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none" /><circle cx="4" cy="12" r="3" fill="currentColor"><animate id="SVG9IgbRbsl" attributeName="r" begin="0;SVGFUNpCWdG.end-0.25s" dur="0.75s" values="3;.2;3" /></circle><circle cx="12" cy="12" r="3" fill="currentColor"><animate attributeName="r" begin="SVG9IgbRbsl.end-0.6s" dur="0.75s" values="3;.2;3" /></circle><circle cx="20" cy="12" r="3" fill="currentColor"><animate id="SVGFUNpCWdG" attributeName="r" begin="SVG9IgbRbsl.end-0.45s" dur="0.75s" values="3;.2;3" />`;
+
+	// creates visual for bot or user message
+  	function createMessage(text, sender, updateBubble=null) { 
+
+		// create a new message a "bubble" and add message and the sender (bot or user specific styles) styling class for styling
+
+      	if (sender == "bot") { // bot response use typewriter animation
+			if (text == loadingMessage) {
+				const bubble = document.createElement("div")
+        		bubble.classList.add("message", sender)
+				bubble.innerHTML = text
+
+				// get random animal expression
+				chosenAnimal.src = animalDict[animal][Math.floor(Math.random() * 4) + 1];
+
+				// add bubble to messages container
+				messages.appendChild(bubble)
+				return bubble;
+			} else {
+				let i = 0;
+          		text = text.split(' ')
+				// interval calls one word at a time until the whole text is shown
+        		let interval = setInterval(() => { i=typeWriter(text, updateBubble, i, interval, () => {
+        			chosenAnimal.src = animalDict[animal][0];
+    			}); }, 75); //adjust number for speed at which text appears
+			}
+        } else { // user response no animation needed
+			const bubble = document.createElement("div")
+        	bubble.classList.add("message", sender)
+      		bubble.textContent = text
+			// add bubble to messages container
+			messages.appendChild(bubble)
+        }
+
+		// adjust scrollHeight for scroll-to-bottom-button
+    	messages.scrollTop = messages.scrollHeight
+
+		chatInput.focus()
+    }
+
+	// given a bots message return that bot's mesasge from 0 to index
+  	function typeWriter(text, bubble, index, interval, onComplete) { 
+
+      	if (index > text.length) { // text is all displayed end interval
+          	bubble.innerHTML = text.join(' ')  // set final nested HTML (no cursor)
+        	clearInterval(interval)
+
+			// change animal photo back to default when fully done
+			if (onComplete) onComplete();
+          	return
+        }
+      
+		// make module link appear in one interval instead of however many words is inside of the <a> tag
+        // if (text[index] == "<a"){ // module reference link
+        // 	while (!text[index].endsWith("</a>")) {
+        //     	index++; //makes a full reference link appears in the normal 50ms interval
+        //     }
+        // }
+      	index++; // add 1 to index moving to next word
+      
+        let string = text.slice(0, index).join(' ') // bring string together from 0 to index
+      	bubble.innerHTML = string + ' █'  // innerHTML renders HTML tags as text builds up
+
+      	showScrollBottomButton() // check if the most recent word added caused user to be far enough scrolled up for scroll down button to appear
+      	return index
+    }
+
+	// makes input taller if user typed a lot and smaller if user deletes text
+    chatInput.addEventListener("input", adjustChatInputHeight)
+	function adjustChatInputHeight() {
+        chatInput.style.height = "auto";
+        chatInput.style.height = Math.min(chatInput.scrollHeight, 110) + "px";
+        chatInput.style.overflowY = chatInput.scrollHeight > 110 ? "auto" : "hidden";
+        updateScrollButtonPosition();
+    };
+
+	// updates scroll to bottom button based on the height of the input box
+	function updateScrollButtonPosition() {
+		const inputContainer = document.getElementById("input-container");
+		scrollToBottomButton.style.bottom = (inputContainer.offsetHeight + 18) + "px";
+	}
+
+	// calls showScrollBottomButton whenever user scroll in order to accurately display the button when the user is scrolled high up
+	messages.addEventListener('scroll', showScrollBottomButton)
+  
+  	let isHidden = true; // tracking variable for if the scroll down button is revealed or not
+	
+	// whether or not to show scroll-to-bottom-button is called often when height of messages changes
+  	function showScrollBottomButton() {
+		// if user is 400+px above from bottom display button
+  		const atBottom = messages.scrollTop + messages.clientHeight >= messages.scrollHeight - 400; 
+
+        	if (atBottom && !isHidden) { // hide button
+              	scrollToBottomButton.style.opacity = "0";
+              	isHidden = true
+              	scrollToBottomButton.style.pointerEvents = "none";
+          	} else if (!atBottom && isHidden){ // show button
+              	scrollToBottomButton.style.opacity = "1";
+              	isHidden = false
+              	scrollToBottomButton.style.pointerEvents = "auto";
+          	}
+	}
+  
+	// scrolls to bottom of messages when scroll-to-bottom-button is pressed
+  	function scrollToBottom () { 
+    	messages.scrollTo({ top: messages.scrollHeight, behavior: "smooth" })
+    }
+
+	// Create a random sessionId for communicating to the backend
+	// this prevents 2 different users having the same chat history
+  	let sessionId = sessionStorage.getItem("sessionId");
+	if (!sessionId) {
+    	sessionId = crypto.randomUUID();
+    	sessionStorage.setItem("sessionId", sessionId);
+	}
+	
+	// on any key typed consider call sendMessage() will only send if key was "enter"
+	chatInput.addEventListener("keydown", sendMessage) 
+
+	// message sent visually and to backend, backend returns LLM response, bot response created visually
+  	function sendMessage (event) { 
+
+        if (event.key === "Enter" || event.type == "click") { // checks to make sure user either hit enter or hit send button
+          	if (event.key === "Enter" && event.shiftKey) return; // allows user to type a newline with "enter" + "shift"
+			
+			// get text from input box
+            const text = chatInput.value.trim()
+            
+            if (text) { // don't send message if its empty
+
+                createMessage(text, "user") // creates user's message visually
+				
+				// Reset input box sizes and text
+                chatInput.value = "";
+				updateScrollButtonPosition();
+
+				// prevents an error that occured with after sending a message 
+				// input box would empty then have a new line from the enter that was used to send a message
+				if (event.key === "Enter") event.preventDefault(); 
+				
+				// set variables
+				const bubble = createMessage(loadingMessage, "bot") // bot's message element
+				let chunkedResponse = ""; // words from bot message as they stream in (not what displays visually)
+				let displayedWordCount = 0; // ammount of words displayed from chunkedResponse
+				let fetchDone = false; // boolean to determine when token streaming is done
+
+				// interval displays words one-at-a-time so the user sees a typewriter effect
+				// runs independently of the fetch so streaming can happen at full speed in the background
+				const wordInterval = setInterval(() => {
+					if (!chunkedResponse) return; // if no tokens yet don't try to display anything
+
+					const words = chunkedResponse.split(" ");
+					if (displayedWordCount < words.length) {
+						displayedWordCount++;
+						bubble.innerHTML = marked.parse(words.slice(0, displayedWordCount).join(" ") + ' █');
+						showScrollBottomButton();
+					}
+					// only clear interval when fetch is done AND all words have been shown
+					if (fetchDone && displayedWordCount >= words.length) {
+						clearInterval(wordInterval);
+						bubble.innerHTML = marked.parse(chunkedResponse);
+					}
+				}, 65); // 65ms interval between words
+
+				async function runFetch () {
+					chunkedResponse = "";
+					displayedWordCount = 0;
+					fetchDone = false;
+
+					const res = await fetch("https://finlit-chatbot-backend-ccbjbfhvefcxhzhd.centralus-01.azurewebsites.net/chat/stream", {
+						method: "POST",
+						headers: {"Content-Type": "application/json"},
+						body: JSON.stringify({ message: text, session_id: sessionId, avatar: animal })
+					})
+					const reader = res.body?.getReader();
+					const decoder = new TextDecoder();
+
+					if (!reader) return;
+
+					let buffer = ""; // holds partial line leftover between reads (SSE lines may split across chunks)
+
+					while (true) {
+						const { value, done } = await reader.read();
+						if (done) {
+							fetchDone = true; // let interval finish revealing before clearing
+							break;
+						}
+
+						if (value) {
+							buffer += decoder.decode(value, { stream: true });
+							const lines = buffer.split("\n");
+							buffer = lines.pop(); // save incomplete last line for next read
+
+							for (const line of lines) {
+								const trimmed = line.trim();
+								if (!trimmed) continue;
+
+								try {
+									const parsed = JSON.parse(trimmed);
+									if (parsed.content !== undefined) {
+										chunkedResponse += parsed.content;
+									}
+								} catch (error) {
+									console.log("RAW:", trimmed, "Error:", error);
+								}
+							}
+						}
+					}
+				}
+
+				runFetch();
+				
+            }
+    	}
+	}
+
+
+
+</script>
+
+<!-- ########################################### -->
+<!-- sizing adjustments for mobile/small devices -->
+<!-- ########################################### -->
+
+<!-- This section is made up of mostly media queries with CSS 
+ 	 and some javascript to make the GUI dynamic to smaller sizes -->
+<style>
+	/* if screen size is really small (phones/small laptop/tablet) */
+	@media (max-width: calc(600px / 0.9)) or (max-height: calc(600px / 0.95)) {
+		#chat-container {
+			width: 90vw;
+			height: 95dvh;
+
+			position: fixed;
+			inset: 0;
+			margin: auto;
+		}
+
+		/* cap 2-row (landscape) animal sizes so they can't overflow the container vertically or horizontally */
+		#animals-2rows .animal {
+			width: min(calc((35vw + 15dvh)/3), calc(42dvh - 30px), 20vw);
+			height: min(calc((35vw + 15dvh)/3), calc(42dvh - 30px), 20vw);
+		}
+
+		/* #selected-animal {
+			width: min(calc((35vw + 15dvh)/3), calc(42dvh - 30px), 20vw);
+			height: min(calc((35vw + 15dvh)/3), calc(42dvh - 30px), 20vw);
+		} */
+
+		#animal-confirmation {
+			top: 33%;
+		}
+
+		.animal-row {
+			gap: min(4vw, 3dvh);
+		}
+
+		.tool {
+			padding: 5px;
+		}
+
+		.tool p {
+			font-size: calc(1.2*var(--large-body));
+		}
+
+		.symbol {
+			font-size: calc(1.2*var(--header-or-symbol));
+		}
+
+		#chat-input {
+			font-size: 16px; /* prevents iOS auto-zoom on input focus */
+		}
+
+		#chosen-animal {
+			width: 15vw;
+			height: 15vw;
+		}
+	}
+
+	@media (max-width: 380px) or (max-height: 340px) {
+		#animal-question {
+			font-size: calc(0.75*var(--header-or-symbol))
+		}
+
+		.tool p {
+			font-size: calc(var(--large-body));
+		}
+
+		.symbol {
+			font-size: calc(var(--header-or-symbol));
+		}
+
+	}
+
+</style>
+
+<!-- This script is for switching between 2 rows of animals and 4 rows of animals based on screen size -->
+<script>
+	window.addEventListener('resize', mobileChanges);
+	mobileChanges();
+	function mobileChanges () {
+		const isMobileMode = window.matchMedia('(max-width: calc(600px / 0.9)), (max-height: calc(600px / 0.95))').matches
+
+		// average of chatContainer width+height to for animal sizes
+		setAnimalSize();
+
+		if (!isMobileMode) {
+			resize.style.display = "block"
+
+			// reclamp inline size if it now overflows the shrunk window
+			if (chatContainer.style.width || chatContainer.style.height) {
+				const maxWidth = window.innerWidth - 40;
+				const maxHeight = window.innerHeight - 40;
+
+				if (chatContainer.offsetWidth > maxWidth) {
+					chatContainer.style.width = maxWidth + 'px';
+				}
+				if (chatContainer.offsetHeight > maxHeight) {
+					chatContainer.style.height = maxHeight + 'px';
+				}
+			}
+		} else if (isMobileMode) {
+			resize.style.display = "none"
+			chatContainer.style.width = "";
+			chatContainer.style.height = "";
+
+			// if in mobile mode and width+60 is bigger than height make 2 rows GUI show
+			if (window.innerWidth + 60 >= window.innerHeight) {
+				// swap to 2 rows
+				four.style.display = "none"
+				two.style.display = "flex"
+			} else {
+				// swap to 4 rows
+				four.style.display = "flex"
+				two.style.display = "none"
+			}
+		}
+	}
+</script>
+<!-- END sizing adjustments for mobile/small devices -->

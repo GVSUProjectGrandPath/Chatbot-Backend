@@ -6,8 +6,7 @@ from app.services.pii_detector import analyze_pii
 
 # Output guardrail — advice detection
 
-# Answers that cross into personalized advice, product picks, or guarantees.
-# The deterministic layer must flag these so they escalate to the model judge.
+# Answers crossing into personalized advice/product picks/guarantees that the deterministic layer must flag for escalation to the model judge.
 ADVICE_ANSWERS = [
     "You should invest 20% of your income in index funds.",
     "I recommend you buy AAPL right now.",
@@ -85,10 +84,7 @@ def test_ferpa_regex_allows_clean(text):
 
 # Input guardrail — Presidio PII detection
 
-# Messages Presidio should catch via NER or custom recognizers.
-# Note: structural patterns like phone numbers and SSNs are the hard regex layer's job
-# (ferpa_sanitizer). Presidio's value is NER-based detection (names, addresses) and
-# GVSU-specific custom recognizers that regex can't reliably cover.
+# Messages Presidio should catch via NER (names, addresses) or GVSU-specific custom recognizers; structural patterns like phones/SSNs are the hard regex layer's job (ferpa_sanitizer).
 PRESIDIO_PII_MESSAGES = [
     "My name is Sarah Johnson and I need help budgeting",       # PERSON via NER
     "Contact me at sarah.johnson@gmail.com",                    # EMAIL_ADDRESS

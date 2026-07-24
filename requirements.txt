@@ -98,6 +98,8 @@ cymem==2.0.13
     #   thinc
 dataclasses-json==0.6.7
     # via langchain-community
+deprecated==1.3.1
+    # via limits
 distro==1.9.0
     # via openai
 en-core-web-sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl
@@ -168,6 +170,8 @@ langsmith==0.1.147
     #   langchain
     #   langchain-community
     #   langchain-core
+limits==5.8.0
+    # via slowapi
 markdown-it-py==4.2.0
     # via rich
 markupsafe==3.0.3
@@ -309,6 +313,7 @@ orjson==3.11.9 ; platform_python_implementation != 'PyPy'
 packaging==24.2
     # via
     #   langchain-core
+    #   limits
     #   marshmallow
     #   opentelemetry-instrumentation
     #   opentelemetry-instrumentation-flask
@@ -398,6 +403,8 @@ shellingham==1.5.4
     # via typer
 six==1.17.0
     # via azure-core
+slowapi==0.1.9
+    # via finlit-bot
 smart-open==8.0.0
     # via weasel
 sniffio==1.3.1
@@ -454,6 +461,7 @@ typing-extensions==4.15.0
     #   azure-storage-blob
     #   fastapi
     #   langchain-core
+    #   limits
     #   openai
     #   opentelemetry-api
     #   opentelemetry-sdk
@@ -480,6 +488,7 @@ weasel==1.0.0
     # via spacy
 wrapt==2.2.2
     # via
+    #   deprecated
     #   opentelemetry-instrumentation
     #   opentelemetry-instrumentation-dbapi
     #   opentelemetry-instrumentation-urllib3

@@ -23,8 +23,7 @@ load_dotenv()
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-# 27 questions spread across all 6 modules, each labeled with the module number
-# and the lesson it should come from. These are phrased as students would actually ask.
+# 27 student-phrased questions across all 6 modules, each labeled with its module number and expected source lesson.
 GOLDEN_QA = [
     # Module 1 — Money Mindset
     {"question": "why do I feel guilty spending money on myself", "module": 1, "lesson": "Introduction to Money Mindsets"},
