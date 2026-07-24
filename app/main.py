@@ -14,6 +14,8 @@ from app.services.logger import logger, request_id_var, get_extra
 # Tracing helpers: setup_tracing() wires up the Azure AI Foundry OTel exporter at
 # startup; get_tracer() returns the app-wide tracer the rest of the app uses.
 from app.services.tracing import setup_tracing, get_tracer
+# trace.use_span keeps one span current across the streaming generator's lifetime.
+from opentelemetry import trace
 
 # Initialize tracing at import time so the exporter is ready before the first
 # request arrives. No-op when AZURE_AIPROJECT_ENDPOINT is unset (e.g. local dev).
@@ -112,21 +114,42 @@ async def chat_stream(body: ChatRequest):
     session_key = body.session_id
     user_role = body.avatar
 
-    # 1. FERPA Guardrail (Runs instantly before streaming)
-    if ferpa_sanitizer(body.message) == "Yes":
-        logger.warning("ferpa_blocked", extra=get_extra(session_id=session_key))
-        async def early_block():
-            yield json.dumps({"type": "token", "content": FERPA_RESPONSE}) + "\n"
-            yield json.dumps({"type": "done", "ferpa_blocked": True}) + "\n"
-        return StreamingResponse(early_block(), media_type="application/x-ndjson")
+    # Root span for the streaming pipeline. The real work runs inside generate()
+    # AFTER this function returns the StreamingResponse, so a plain `with` block here
+    # would end the span before streaming even starts. Instead we start it manually
+    # and end it exactly when the stream finishes (or when a guardrail blocks early).
+    # trace.use_span makes it the current span so child spans (guardrails, RAG, LLM
+    # calls) nest under it — matching the /chat trace shape.
+    tracer = get_tracer()
+    span = tracer.start_span("chat_request")
+    span.set_attribute("session_id", session_key)
+    span.set_attribute("avatar", user_role)
+    span.set_attribute("gen_ai.input.message", body.message)
+    span.set_attribute("stream", True)
 
-    # 2. Presidio Input Guardrail
-    input_block = await aguard_input(body.message, session_id=session_key)
-    if input_block is not None:
-        async def early_block():
-            yield json.dumps({"type": "token", "content": input_block}) + "\n"
-            yield json.dumps({"type": "done", "ferpa_blocked": True}) + "\n"
-        return StreamingResponse(early_block(), media_type="application/x-ndjson")
+    # Current for the synchronous guardrail checks; end_on_exit=False keeps the span
+    # open so generate() can continue it below.
+    with trace.use_span(span, end_on_exit=False):
+        # 1. FERPA Guardrail (Runs instantly before streaming)
+        if ferpa_sanitizer(body.message) == "Yes":
+            logger.warning("ferpa_blocked", extra=get_extra(session_id=session_key))
+            # Blocked before streaming — record the stage and end the span now.
+            span.set_attribute("pipeline.stage_blocked", "ferpa_regex")
+            span.end()
+            async def early_block():
+                yield json.dumps({"type": "token", "content": FERPA_RESPONSE}) + "\n"
+                yield json.dumps({"type": "done", "ferpa_blocked": True}) + "\n"
+            return StreamingResponse(early_block(), media_type="application/x-ndjson")
+
+        # 2. Presidio Input Guardrail
+        input_block = await aguard_input(body.message, session_id=session_key)
+        if input_block is not None:
+            span.set_attribute("pipeline.stage_blocked", "input_guardrail")
+            span.end()
+            async def early_block():
+                yield json.dumps({"type": "token", "content": input_block}) + "\n"
+                yield json.dumps({"type": "done", "ferpa_blocked": True}) + "\n"
+            return StreamingResponse(early_block(), media_type="application/x-ndjson")
 
     logger.info("chat_stream_started", extra=get_extra(session_id=session_key, avatar=user_role))
 
@@ -135,58 +158,67 @@ async def chat_stream(body: ChatRequest):
         start_time = time.time()
         total_tokens = 0
         full_response = ""
-        
-        try:
-            async for ev in build_chain(user_role).astream_events(
-                {'question': body.message, 'session_id': session_key},
-                config={"configurable": {"session_id": session_key}},
-                version="v2",
-            ):
-                kind = ev["event"]
 
-                # Only the final-answer call is tagged; skip the untagged query-rewrite tokens.
-                is_final = "final_response" in ev.get("tags", [])
+        # Re-activate the root span inside the generator and end it when the generator
+        # finishes (end_on_exit=True), so the span covers the entire stream lifetime.
+        with trace.use_span(span, end_on_exit=True):
+            try:
+                async for ev in build_chain(user_role).astream_events(
+                    {'question': body.message, 'session_id': session_key},
+                    config={"configurable": {"session_id": session_key}},
+                    version="v2",
+                ):
+                    kind = ev["event"]
 
-                if kind == "on_chat_model_stream" and is_final:
-                    token = ev['data']['chunk'].content
-                    if token:
-                        full_response += token
-                        yield json.dumps({"type": "token", "content": token}) + "\n"
+                    # Only the final-answer call is tagged; skip the untagged query-rewrite tokens.
+                    is_final = "final_response" in ev.get("tags", [])
 
-                elif kind == "on_chat_model_end" and is_final:
-                    try:
-                        msg = ev['data'].get('output')
-                        if hasattr(msg, "usage_metadata") and msg.usage_metadata:
-                            total_tokens = msg.usage_metadata.get("total_tokens", 0)
-                    except Exception:
-                        pass
-        except Exception:
-            logger.exception("chat_stream_failed", extra=get_extra(session_id=session_key))
-            yield json.dumps({"type": "error", "content": "The assistant is temporarily unavailable. Please try again."}) + "\n"
-            # Emit the terminal "done" so a frontend that finalizes on "done" doesn't hang on errors.
+                    if kind == "on_chat_model_stream" and is_final:
+                        token = ev['data']['chunk'].content
+                        if token:
+                            full_response += token
+                            yield json.dumps({"type": "token", "content": token}) + "\n"
+
+                    elif kind == "on_chat_model_end" and is_final:
+                        try:
+                            msg = ev['data'].get('output')
+                            if hasattr(msg, "usage_metadata") and msg.usage_metadata:
+                                total_tokens = msg.usage_metadata.get("total_tokens", 0)
+                        except Exception:
+                            pass
+            except Exception as exc:
+                logger.exception("chat_stream_failed", extra=get_extra(session_id=session_key))
+                # Record the failure on the root span so errored streams are visible in tracing.
+                span.record_exception(exc)
+                span.set_attribute("pipeline.stage_blocked", "stream_error")
+                yield json.dumps({"type": "error", "content": "The assistant is temporarily unavailable. Please try again."}) + "\n"
+                # Emit the terminal "done" so a frontend that finalizes on "done" doesn't hang on errors.
+                yield json.dumps({"type": "done", "ferpa_blocked": False}) + "\n"
+                return
+
+            # 4. Output Guardrail (Runs after stream finishes)
+            final_guarded = await aguard_output(body.message, full_response, session_id=session_key)
+
+            if final_guarded != full_response:
+                # Blocked by the judge: replace the streamed text and sync history so follow-ups can't reference the original.
+                sync_guarded_history(session_key, final_guarded)
+                yield json.dumps({"type": "replace", "content": final_guarded}) + "\n"
+
             yield json.dumps({"type": "done", "ferpa_blocked": False}) + "\n"
-            return
 
-        # 4. Output Guardrail (Runs after stream finishes)
-        final_guarded = await aguard_output(body.message, full_response, session_id=session_key)
+            # Record the final response so the full input->output pair sits on the root span.
+            span.set_attribute("gen_ai.output.message", final_guarded)
 
-        if final_guarded != full_response:
-            # Blocked by the judge: replace the streamed text and sync history so follow-ups can't reference the original.
-            sync_guarded_history(session_key, final_guarded)
-            yield json.dumps({"type": "replace", "content": final_guarded}) + "\n"
-
-        yield json.dumps({"type": "done", "ferpa_blocked": False}) + "\n"
-
-        end_time = time.time()
-        latency = end_time - start_time
-        logger.info(
-            "chat_stream_ended", 
-            extra=get_extra(
-                session_id=session_key, 
-                avatar=user_role, 
-                latency_seconds=round(latency, 2), 
-                total_tokens=total_tokens
+            end_time = time.time()
+            latency = end_time - start_time
+            logger.info(
+                "chat_stream_ended",
+                extra=get_extra(
+                    session_id=session_key,
+                    avatar=user_role,
+                    latency_seconds=round(latency, 2),
+                    total_tokens=total_tokens
+                )
             )
-        )
 
     return StreamingResponse(generate(), media_type="application/x-ndjson")
