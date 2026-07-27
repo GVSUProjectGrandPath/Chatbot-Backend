@@ -6,6 +6,30 @@ from opentelemetry import trace
 logger = logging.getLogger("FinLit-Logger")
 
 
+def trace_content_enabled() -> bool:
+    """True when spans may carry raw student text (messages, prompts, answers).
+
+    Defaults to OFF so that forgetting to set it is the safe outcome. Turn it on
+    (FINLIT_TRACE_CONTENT=true) for internal testing, where the only people typing
+    into the widget are the project team; leave it unset once real students are live,
+    since Application Insights retains what it receives for 90 days by default.
+
+    Read at call time rather than import time so tests and Azure App Settings changes
+    both take effect without a code change.
+    """
+    return os.getenv("FINLIT_TRACE_CONTENT", "false").strip().lower() == "true"
+
+
+def set_content(span: trace.Span, key: str, value: str) -> None:
+    """Set a span attribute holding user/message text — a no-op unless content tracing is on.
+
+    Every raw-text attribute in the app goes through here, so trace_content_enabled()
+    is the single switch that governs all of them.
+    """
+    if trace_content_enabled():
+        span.set_attribute(key, value)
+
+
 def setup_tracing() -> None:
     """Initialize Azure AI Foundry tracing. Call once at app startup.
 
@@ -24,10 +48,12 @@ def setup_tracing() -> None:
         from azure.monitor.opentelemetry import configure_azure_monitor
         from opentelemetry.instrumentation.openai_v2 import OpenAIInstrumentor
 
-        # OTel redacts prompt/response text from LLM spans by default; opt in so the
-        # raw system prompt (with retrieved chunks) and answers appear in traces.
+        # OTel redacts prompt/response text from LLM spans by default. Opt in only when
+        # FINLIT_TRACE_CONTENT is on, so this layer and set_content() below stay in sync.
         # Must be set before OpenAIInstrumentor().instrument() runs.
-        os.environ.setdefault("OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT", "true")
+        os.environ["OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT"] = (
+            "true" if trace_content_enabled() else "false"
+        )
 
         # DefaultAzureCredential automatically uses managed identity when running on
         # Azure App Service, and falls back to `az login` credentials locally.

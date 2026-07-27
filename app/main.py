@@ -13,7 +13,7 @@ from app.services.chain import build_chain, sync_guarded_history
 from app.services.logger import logger, request_id_var, get_extra
 # Tracing helpers: setup_tracing() wires up the Azure AI Foundry OTel exporter at
 # startup; get_tracer() returns the app-wide tracer the rest of the app uses.
-from app.services.tracing import setup_tracing, get_tracer
+from app.services.tracing import setup_tracing, get_tracer, set_content
 # trace.use_span keeps one span current across the streaming generator's lifetime.
 from opentelemetry import trace
 
@@ -62,7 +62,7 @@ async def chat(body: ChatRequest):
         span.set_attribute("session_id", body.session_id)
         span.set_attribute("avatar", body.avatar)
         # Raw user message recorded at the root so it's visible at the top level.
-        span.set_attribute("gen_ai.input.message", body.message)
+        set_content(span,"gen_ai.input.message", body.message)
 
         # FERPA guard runs first - blocked messages never reach Azure OpenAI or the logs.
         # Returned with HTTP 200 so the widget renders it like a normal bot message.
@@ -103,7 +103,7 @@ async def chat(body: ChatRequest):
             sync_guarded_history(body.session_id, message)
 
         # Record the final response so the full input->output pair sits on the root span.
-        span.set_attribute("gen_ai.output.message", message)
+        set_content(span,"gen_ai.output.message", message)
         logger.info("chat_request_ended", extra=get_extra(session_id=body.session_id))
         return {"message": message, "ferpa_blocked": False}
 
@@ -124,7 +124,7 @@ async def chat_stream(body: ChatRequest):
     span = tracer.start_span("chat_request")
     span.set_attribute("session_id", session_key)
     span.set_attribute("avatar", user_role)
-    span.set_attribute("gen_ai.input.message", body.message)
+    set_content(span,"gen_ai.input.message", body.message)
     span.set_attribute("stream", True)
 
     # Current for the synchronous guardrail checks; end_on_exit=False keeps the span
@@ -207,7 +207,7 @@ async def chat_stream(body: ChatRequest):
             yield json.dumps({"type": "done", "ferpa_blocked": False}) + "\n"
 
             # Record the final response so the full input->output pair sits on the root span.
-            span.set_attribute("gen_ai.output.message", final_guarded)
+            set_content(span,"gen_ai.output.message", final_guarded)
 
             end_time = time.time()
             latency = end_time - start_time
