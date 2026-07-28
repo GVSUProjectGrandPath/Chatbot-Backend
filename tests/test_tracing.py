@@ -68,3 +68,35 @@ def test_setup_tracing_swallows_failures(monkeypatch):
     with patch.dict(sys.modules, {"azure.ai.projects": fake_projects}):
         # Must NOT raise, and returns None on the failure path.
         assert tracing.setup_tracing() is None
+
+
+def test_trace_content_disabled_by_default(monkeypatch):
+    """Forgetting to configure the flag must be the SAFE outcome: no raw student
+    text on spans. This is the guarantee that makes it safe to leave the student
+    rollout un-configured.
+    """
+    monkeypatch.delenv("FINLIT_TRACE_CONTENT", raising=False)
+
+    assert tracing.trace_content_enabled() is False
+
+
+def test_set_content_is_noop_when_disabled(monkeypatch):
+    """With content tracing off, set_content() must not touch the span at all."""
+    monkeypatch.delenv("FINLIT_TRACE_CONTENT", raising=False)
+    span = MagicMock()
+
+    tracing.set_content(span, "gen_ai.input.message", "my G-number is G01234567")
+
+    span.set_attribute.assert_not_called()
+
+
+def test_set_content_records_when_enabled(monkeypatch):
+    """With content tracing on (internal testing), the text is recorded as normal —
+    the flag disables capture, it does not permanently remove the capability.
+    """
+    monkeypatch.setenv("FINLIT_TRACE_CONTENT", "true")
+    span = MagicMock()
+
+    tracing.set_content(span, "gen_ai.input.message", "how do I build credit?")
+
+    span.set_attribute.assert_called_once_with("gen_ai.input.message", "how do I build credit?")

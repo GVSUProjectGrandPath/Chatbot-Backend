@@ -7,7 +7,7 @@ from app.services.llm import CHAT_LLM
 from app.services.logger import logger, get_extra
 from app.services.pii_detector import analyze_pii
 # get_tracer() returns a no-op tracer when tracing is disabled, so no guards needed.
-from app.services.tracing import get_tracer
+from app.services.tracing import get_tracer, set_content
 
 
 # Shared judge — same gpt-4o-mini deployment, temperature 0 so verdicts are stable
@@ -76,7 +76,7 @@ def ferpa_sanitizer(message: str) -> str:
     # Span lets us see in AI Foundry exactly which messages triggered the regex layer
     # and which pattern matched, without needing to search through log files.
     with get_tracer().start_as_current_span("guardrail.ferpa_regex") as span:
-        span.set_attribute("gen_ai.input.message", message)
+        set_content(span,"gen_ai.input.message", message)
         for pattern in FERPA_PATTERNS:
             if pattern.search(message):
                 span.set_attribute("ferpa.blocked", True)
@@ -146,7 +146,7 @@ async def aguard_input(message: str, session_id: str = "") -> str | None:
     # Parent span for the entire input guardrail stage. Child spans for Presidio and
     # the LLM classifier nest underneath, so the AI Foundry UI shows the full decision tree.
     with tracer.start_as_current_span("guardrail.input") as span:
-        span.set_attribute("gen_ai.input.message", message)
+        set_content(span,"gen_ai.input.message", message)
         span.set_attribute("session_id", session_id)
 
         # Child span isolates the Presidio NER scan so we can see its cost and results
@@ -196,7 +196,7 @@ async def aguard_input(message: str, session_id: str = "") -> str | None:
         # Child span for the LLM injection classifier — only created when the prefilter fires,
         # so it's absent on clean requests. Records why it was triggered and what verdict it returned.
         with tracer.start_as_current_span("guardrail.injection_classifier") as inj_span:
-            inj_span.set_attribute("gen_ai.input.message", message)
+            set_content(inj_span,"gen_ai.input.message", message)
             inj_span.set_attribute("injection.escalation_reason", log_reason)
             try:
                 verdict = await _classify_injection(message)
@@ -294,8 +294,8 @@ async def aguard_output(question: str, answer: str, session_id: str = "") -> str
     # Parent span captures both the question and the LLM's answer so we can see the
     # full context when reviewing a block decision in AI Foundry Tracing.
     with tracer.start_as_current_span("guardrail.output") as span:
-        span.set_attribute("gen_ai.input.message", question)
-        span.set_attribute("gen_ai.output.message", answer)
+        set_content(span,"gen_ai.input.message", question)
+        set_content(span,"gen_ai.output.message", answer)
         span.set_attribute("session_id", session_id)
 
         if not looks_like_advice(answer):
@@ -311,8 +311,8 @@ async def aguard_output(question: str, answer: str, session_id: str = "") -> str
         # Child span for the LLM judge call — only present when the regex prefilter fired.
         # Records the judge's verdict so we can audit block/allow decisions over time.
         with tracer.start_as_current_span("guardrail.output_judge") as judge_span:
-            judge_span.set_attribute("gen_ai.input.message", question)
-            judge_span.set_attribute("gen_ai.output.message", answer)
+            set_content(judge_span,"gen_ai.input.message", question)
+            set_content(judge_span,"gen_ai.output.message", answer)
             try:
                 verdict = await ajudge_output(question, answer)
                 judge_span.set_attribute("judge.verdict", verdict)

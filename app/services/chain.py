@@ -11,7 +11,7 @@ from app.services.llm import CHAT_LLM, OPENAI_CLIENT, SEARCH_CLIENT, EMBED_DEPLO
 from app.services.avatars import AVATARS
 from app.services.logger import logger, get_extra
 # get_tracer() returns the app-wide OTel tracer; no-op when tracing is disabled.
-from app.services.tracing import get_tracer
+from app.services.tracing import get_tracer, set_content
 
 # Shared across every avatar persona so the constraint isn't duplicated 8x in avatars.py.
 # guardrails.py enforces the same two things after the fact (injection classifier, output judge) —
@@ -75,7 +75,7 @@ def rewrite_query(question: str, session_id: str) -> str:
     # Span captures the original question and the rewritten version side-by-side,
     # making it easy to spot when the rewriter changes intent or adds unnecessary words.
     with get_tracer().start_as_current_span("rag.query_rewrite") as span:
-        span.set_attribute("gen_ai.input.question", question)
+        set_content(span,"gen_ai.input.question", question)
 
         # If no history yet, nothing to rewrite
         history = get_session_history(session_id).messages
@@ -95,7 +95,7 @@ def rewrite_query(question: str, session_id: str) -> str:
 
         # Record both the original and rewritten question so we can evaluate rewrite quality
         span.set_attribute("rewrite.skipped", False)
-        span.set_attribute("gen_ai.output.rewritten_question", rewritten)
+        set_content(span,"gen_ai.output.rewritten_question", rewritten)
         logger.info(f"Query rewrite: '{question}' -> '{rewritten}'", extra=get_extra())
         return rewritten
 
@@ -105,7 +105,7 @@ def retrieve(query: str, top_k: int = 5) -> list[dict]:
     # lesson names, and relevance scores — so we can diagnose retrieval quality
     # without having to re-run queries manually.
     with get_tracer().start_as_current_span("rag.retrieval") as span:
-        span.set_attribute("retrieval.query", query)
+        set_content(span,"retrieval.query", query)
         span.set_attribute("retrieval.top_k", top_k)
 
         vector = embed(query)
