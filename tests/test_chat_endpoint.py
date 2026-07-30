@@ -1,8 +1,11 @@
+import asyncio
 import json
 from types import SimpleNamespace
 from unittest.mock import AsyncMock, MagicMock, patch
 
 from fastapi.testclient import TestClient
+from langchain_core.language_models.fake_chat_models import GenericFakeChatModel
+from langchain_core.messages import AIMessage
 
 from app.main import app
 from app.services.chain import build_chain
@@ -122,6 +125,37 @@ def test_stream_does_not_leak_rewritten_query():
     assert streamed == FINAL_ANSWER
     # Stream still terminates cleanly for the frontend.
     assert any(e["type"] == "done" for e in events)
+
+
+# The leak test above patches out build_chain, so it cannot catch the tag going missing
+# from chain.py itself. main.py only streams events where "final_response" is in ev["tags"],
+# so dropping .with_config(tags=[...]) silently streams NOTHING to the student.
+# This drives the real build_chain with a fake LLM to assert the tag actually reaches the events.
+
+def test_real_chain_tags_final_answer_events(monkeypatch):
+    fake_llm = GenericFakeChatModel(messages=iter([AIMessage(content="A budget is a plan.")] * 10))
+
+    # Keep Azure AI Search and the rewrite call out of it — only the tagging is under test.
+    monkeypatch.setattr("app.services.chain.CHAT_LLM", fake_llm)
+    monkeypatch.setattr("app.services.chain.retrieve", lambda q: [])
+    monkeypatch.setattr("app.services.chain.rewrite_query", lambda q, s: q)
+
+    async def collect():
+        return [
+            ev
+            async for ev in build_chain("panda").astream_events(
+                {"question": "What is a budget?", "session_id": "tag-test"},
+                config={"configurable": {"session_id": "tag-test"}},
+                version="v2",
+            )
+            if ev["event"] == "on_chat_model_stream"
+        ]
+
+    stream_events = asyncio.run(collect())
+
+    assert stream_events, "chain produced no model-stream events at all"
+    # Mirrors app/main.py: an untagged final answer means the widget renders an empty reply.
+    assert all("final_response" in ev.get("tags", []) for ev in stream_events)
 
 
 # Avatar casing — the widget sends the capitalized display name (e.g. "Squirrel") but AVATARS keys are lowercase, so build_chain() must normalize casing or every real request 502s on a KeyError.
