@@ -4,8 +4,11 @@
 dev = [
     "pytest>=8.0",
     "pytest-dotenv>=0.5.2",
+    "pytest-asyncio>=0.24",   # async guardrail/judge tests
     "ipykernel>=7.2.0",   # Jupyter notebooks only
     "pandas>=2.3.3",      # used by tests / data preprocessing, not the web app
+    "ragas>=0.4.3",
+    "ruff>=0.16.1",
 ]
 
 [project]
@@ -37,11 +40,23 @@ dependencies = [
 [tool.pytest.ini_options]
 # Resolve imports from the repo root so `import app...` works under pytest
 pythonpath = ["."]
+# Async tests are opt-in via @pytest.mark.asyncio rather than auto-detected
+asyncio_mode = "strict"
 
 [tool.pyrefly]
 project_includes = ["."]
 # Resolve imports from the repo root (the package is `app/`, not the legacy `src/` layout pyrefly auto-infers)
 search_path = ["."]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+# Pyflakes + a subset of pycodestyle, plus import sorting, modern-syntax, and bugbear.
+# Deliberately NOT enabling BLE (blind-except): guardrails.py catches broad exceptions
+# on purpose so the compliance judge fails closed.
+select = ["E4", "E7", "E9", "F", "I", "UP", "B"]
 
 [tool.pyright]
 pythonVersion = "3.11"
