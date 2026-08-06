@@ -1,15 +1,16 @@
+import time
 from operator import itemgetter
 
 from azure.search.documents.models import VectorizedQuery
-from langchain_core.runnables import RunnableParallel, RunnableLambda
-from langchain_core.output_parsers import StrOutputParser
-from langchain_core.messages import trim_messages, SystemMessage, HumanMessage, AIMessage
-from langchain_core.runnables.history import RunnableWithMessageHistory
 from langchain_community.chat_message_histories import ChatMessageHistory
+from langchain_core.messages import AIMessage, HumanMessage, SystemMessage, trim_messages
+from langchain_core.output_parsers import StrOutputParser
+from langchain_core.runnables import RunnableLambda, RunnableParallel
+from langchain_core.runnables.history import RunnableWithMessageHistory
 
-from app.services.llm import CHAT_LLM, OPENAI_CLIENT, SEARCH_CLIENT, EMBED_DEPLOYMENT
 from app.services.avatars import AVATARS
-from app.services.logger import logger, get_extra
+from app.services.llm import CHAT_LLM, EMBED_DEPLOYMENT, OPENAI_CLIENT, SEARCH_CLIENT
+from app.services.logger import elapsed_ms, get_extra, logger
 
 # Shared across every avatar persona so the constraint isn't duplicated 8x in avatars.py.
 # guardrails.py enforces the same two things after the fact (injection classifier, output judge) —
@@ -78,8 +79,7 @@ def rewrite_query(question: str, session_id: str) -> str:
     # Only use the last 4 messages (2 turns) — enough context, cheap to process
     recent = history[-4:]
     history_text = "\n".join(
-        f"{'Student' if isinstance(m, HumanMessage) else 'Bot'}: {m.content}"
-        for m in recent
+        f"{'Student' if isinstance(m, HumanMessage) else 'Bot'}: {m.content}" for m in recent
     )
     prompt = REWRITE_PROMPT.format(history=history_text, question=question)
     response = CHAT_LLM.invoke([HumanMessage(content=prompt)])
@@ -92,7 +92,9 @@ def retrieve(query: str, top_k: int = 5) -> list[dict]:
     vector = embed(query)
     results = SEARCH_CLIENT.search(
         search_text=query,
-        vector_queries=[VectorizedQuery(vector=vector, k_nearest_neighbors=top_k, fields="text_vector")],
+        vector_queries=[
+            VectorizedQuery(vector=vector, k_nearest_neighbors=top_k, fields="text_vector")
+        ],
         select=["text", "lesson", "module", "source_url"],
         top=top_k,
     )
@@ -157,8 +159,26 @@ def build_chain(avatar_key: str):
     # e.g. "what about the fees?" -> "What fees are associated with credit cards?"
     # session_id is passed in inputs so rewrite_query can look up the conversation history
     def rewrite_and_retrieve(inputs: dict) -> str:
-        rewritten = rewrite_query(inputs["question"], inputs.get("session_id", ""))
+        session_id = inputs.get("session_id", "")
+        rewritten = rewrite_query(inputs["question"], session_id)
+
+        started = time.perf_counter()
         chunks = retrieve(rewritten)
+        retrieval_ms = elapsed_ms(started)
+
+        # Live retrieval confidence, to compare against the offline golden-set baseline.
+        # Hybrid search returns RRF scores, not cosine, so treat these as relative not absolute.
+        scores = [c["score"] for c in chunks if c.get("score") is not None]
+        logger.info(
+            "retrieval_completed",
+            extra=get_extra(
+                session_id=session_id,
+                retrieval_ms=retrieval_ms,
+                top1_score=round(scores[0], 4) if scores else None,
+                mean_score=round(sum(scores) / len(scores), 4) if scores else None,
+                chunk_count=len(chunks),
+            ),
+        )
         return format_chunks(chunks)
 
     # Retrieve course chunks from Azure AI Search in parallel with trimming history
