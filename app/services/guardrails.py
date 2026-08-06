@@ -1,6 +1,13 @@
+import asyncio
 import re
 
-from openai import BadRequestError
+from openai import (
+    APIConnectionError,
+    APITimeoutError,
+    BadRequestError,
+    InternalServerError,
+    RateLimitError,
+)
 from langchain_core.messages import SystemMessage, HumanMessage
 
 from app.services.llm import CHAT_LLM
@@ -192,6 +199,19 @@ GUARDRAIL_RESPONSE = (
     "works?</p>"
 )
 
+# Shown when the judge never rendered a verdict. We still withhold the answer, but saying so
+# honestly beats telling a student their textbook question was "personalized advice" — that
+# mislabel is what a throttled judge used to produce on plain curriculum questions.
+JUDGE_UNAVAILABLE_RESPONSE = (
+    "<p>I had trouble processing that one on my end. Mind asking again?</p>"
+)
+
+# Transient Azure conditions mean the judge never saw the answer, so they carry no compliance
+# signal and are worth retrying before we withhold a reply that is probably fine.
+TRANSIENT_JUDGE_ERRORS = (RateLimitError, APITimeoutError, APIConnectionError, InternalServerError)
+JUDGE_RETRIES = 2
+JUDGE_BACKOFF_SECONDS = 1.0
+
 # A match only escalates the answer to the judge — it never blocks on its own
 ADVICE_TRIGGERS = [
     re.compile(r"\byou should (invest|buy|sell|put|move|open|take out|borrow|withdraw)\b", re.IGNORECASE),
@@ -233,20 +253,50 @@ async def ajudge_output(question: str, answer: str) -> str:
 
 
 async def aguard_output(question: str, answer: str, session_id: str = "") -> str:
-    """Returns the original answer, or GUARDRAIL_RESPONSE when blocked.
+    """Returns the original answer, or a block message when the answer can't be released.
 
-    Fails closed: if the judge errors we block, since releasing flagged advice is the
-    costlier mistake.
+    Fails closed either way — nothing unreviewed reaches a student — but distinguishes the two
+    reasons, because they are not the same product event:
+
+    - judge said BLOCK, or Azure content-filtered the answer → GUARDRAIL_RESPONSE
+    - judge never rendered a verdict (429/timeout/outage) → JUDGE_UNAVAILABLE_RESPONSE, after retries
+
+    The split exists because transient throttling used to surface as "I can't give personalized
+    financial advice" on plain curriculum questions like the 50/30/20 rule, which reads as the bot
+    refusing course material.
     """
     if not looks_like_advice(answer):
         return answer
 
     logger.info("output_guardrail_triggered", extra=get_extra(session_id=session_id))
-    try:
-        verdict = await ajudge_output(question, answer)
-    except Exception:
-        logger.exception("output_guardrail_judge_failed", extra=get_extra(session_id=session_id))
-        return GUARDRAIL_RESPONSE
+
+    verdict = None
+    for attempt in range(JUDGE_RETRIES + 1):
+        try:
+            verdict = await ajudge_output(question, answer)
+            break
+        except TRANSIENT_JUDGE_ERRORS:
+            if attempt < JUDGE_RETRIES:
+                await asyncio.sleep(JUDGE_BACKOFF_SECONDS * 2**attempt)
+                continue
+            logger.warning(
+                "output_guardrail_judge_unavailable",
+                extra=get_extra(session_id=session_id, attempts=attempt + 1),
+            )
+            return JUDGE_UNAVAILABLE_RESPONSE
+        except BadRequestError as exc:
+            # Azure filtering the judge call means the answer itself tripped a safety category —
+            # a real signal about the content, not an outage, so it stays a compliance block.
+            if getattr(exc, "code", None) == "content_filter" or "content_filter" in str(exc):
+                logger.warning(
+                    "output_guardrail_blocked_content_filter", extra=get_extra(session_id=session_id)
+                )
+                return GUARDRAIL_RESPONSE
+            logger.exception("output_guardrail_judge_failed", extra=get_extra(session_id=session_id))
+            return GUARDRAIL_RESPONSE
+        except Exception:
+            logger.exception("output_guardrail_judge_failed", extra=get_extra(session_id=session_id))
+            return GUARDRAIL_RESPONSE
 
     if verdict == "BLOCK":
         logger.warning("output_guardrail_blocked", extra=get_extra(session_id=session_id))
