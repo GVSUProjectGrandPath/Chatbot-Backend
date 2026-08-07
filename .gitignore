@@ -18,3 +18,8 @@ uv.lock
 .python-version
 
 .python-version
+
+# Timestamped retrieval eval dumps and metric reports; promoted baselines live in
+# tests/retrieval_baselines.json, which IS tracked.
+resources/data/eval-runs/
+

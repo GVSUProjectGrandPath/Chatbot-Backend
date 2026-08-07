@@ -1,0 +1,249 @@
+{
+  "config": {
+    "run_utc": "2026-08-06T20:59:50+00:00",
+    "git_sha": "b09ed8a",
+    "top_k": 10,
+    "search_mode": "hybrid (keyword search_text + vector text_vector, default RRF fusion)",
+    "hybrid_weights": "none set — Azure AI Search default RRF",
+    "semantic_reranker": false,
+    "query_rewrite": false,
+    "index_name": "finlit-modules",
+    "embedding_model": "text-embedding-3-small",
+    "chunk_count": 111,
+    "golden_source": "resources/data/golden-data/golden_dataset_curriculum.csv",
+    "question_count": 27
+  },
+  "metrics": {
+    "scored_utc": "2026-08-06T21:06:18+00:00",
+    "n": 27,
+    "errors": 0,
+    "lesson": {
+      "hit@1": {
+        "hits": 20,
+        "n": 27,
+        "pct": 74.1
+      },
+      "hit@3": {
+        "hits": 23,
+        "n": 27,
+        "pct": 85.2
+      },
+      "hit@5": {
+        "hits": 24,
+        "n": 27,
+        "pct": 88.9
+      },
+      "hit@10": {
+        "hits": 25,
+        "n": 27,
+        "pct": 92.6
+      },
+      "mrr": 0.804
+    },
+    "module": {
+      "hit@1": {
+        "hits": 23,
+        "n": 27,
+        "pct": 85.2
+      },
+      "hit@3": {
+        "hits": 26,
+        "n": 27,
+        "pct": 96.3
+      },
+      "hit@5": {
+        "hits": 27,
+        "n": 27,
+        "pct": 100.0
+      },
+      "hit@10": {
+        "hits": 27,
+        "n": 27,
+        "pct": 100.0
+      },
+      "mrr": 0.9043
+    },
+    "scores": {
+      "mean_top1": 0.0327,
+      "min_top1": 0.0312,
+      "max_top1": 0.0333,
+      "p10_top1": 0.0317,
+      "p50_top1": 0.0331,
+      "p90_top1": 0.0333,
+      "mean_margin_top1_top2": 0.001,
+      "mean_margin_top1_top5": 0.0042
+    },
+    "per_module": {
+      "Module 1: Money Mindset": {
+        "n": 4,
+        "lesson_hit@5": {
+          "hits": 2,
+          "n": 4,
+          "pct": 50.0
+        },
+        "lesson_hit@1": {
+          "hits": 2,
+          "n": 4,
+          "pct": 50.0
+        },
+        "module_hit@5": {
+          "hits": 4,
+          "n": 4,
+          "pct": 100.0
+        },
+        "module_hit@1": {
+          "hits": 3,
+          "n": 4,
+          "pct": 75.0
+        }
+      },
+      "Module 2: Building Healthy Habits": {
+        "n": 5,
+        "lesson_hit@5": {
+          "hits": 4,
+          "n": 5,
+          "pct": 80.0
+        },
+        "lesson_hit@1": {
+          "hits": 3,
+          "n": 5,
+          "pct": 60.0
+        },
+        "module_hit@5": {
+          "hits": 5,
+          "n": 5,
+          "pct": 100.0
+        },
+        "module_hit@1": {
+          "hits": 3,
+          "n": 5,
+          "pct": 60.0
+        }
+      },
+      "Module 3: Money Management": {
+        "n": 5,
+        "lesson_hit@5": {
+          "hits": 5,
+          "n": 5,
+          "pct": 100.0
+        },
+        "lesson_hit@1": {
+          "hits": 4,
+          "n": 5,
+          "pct": 80.0
+        },
+        "module_hit@5": {
+          "hits": 5,
+          "n": 5,
+          "pct": 100.0
+        },
+        "module_hit@1": {
+          "hits": 5,
+          "n": 5,
+          "pct": 100.0
+        }
+      },
+      "Module 4: Navigating Credit": {
+        "n": 6,
+        "lesson_hit@5": {
+          "hits": 6,
+          "n": 6,
+          "pct": 100.0
+        },
+        "lesson_hit@1": {
+          "hits": 5,
+          "n": 6,
+          "pct": 83.3
+        },
+        "module_hit@5": {
+          "hits": 6,
+          "n": 6,
+          "pct": 100.0
+        },
+        "module_hit@1": {
+          "hits": 6,
+          "n": 6,
+          "pct": 100.0
+        }
+      },
+      "Module 5: Planning for the Future": {
+        "n": 4,
+        "lesson_hit@5": {
+          "hits": 4,
+          "n": 4,
+          "pct": 100.0
+        },
+        "lesson_hit@1": {
+          "hits": 3,
+          "n": 4,
+          "pct": 75.0
+        },
+        "module_hit@5": {
+          "hits": 4,
+          "n": 4,
+          "pct": 100.0
+        },
+        "module_hit@1": {
+          "hits": 3,
+          "n": 4,
+          "pct": 75.0
+        }
+      },
+      "Module 6: Financial Independence": {
+        "n": 3,
+        "lesson_hit@5": {
+          "hits": 3,
+          "n": 3,
+          "pct": 100.0
+        },
+        "lesson_hit@1": {
+          "hits": 3,
+          "n": 3,
+          "pct": 100.0
+        },
+        "module_hit@5": {
+          "hits": 3,
+          "n": 3,
+          "pct": 100.0
+        },
+        "module_hit@1": {
+          "hits": 3,
+          "n": 3,
+          "pct": 100.0
+        }
+      }
+    },
+    "coverage": {
+      "lessons_indexed": 52,
+      "lessons_covered": 27,
+      "lessons_uncovered": 25,
+      "uncovered": [
+        "Building Healthy Habits / Account Management Foundations",
+        "Building Healthy Habits / Creating New Habits",
+        "Building Healthy Habits / Setting Financial Goals",
+        "Building Healthy Habits / Tactics for Mindful Decision Making",
+        "Building Healthy Habits / Using Payment Apps",
+        "Financial Independence / Brooklyn Rent Strikes",
+        "Financial Independence / Embracing Your Worth",
+        "Financial Independence / Let Them Eat Cereal",
+        "Financial Independence / Pay it Forward",
+        "Financial Independence / Personal Reflection",
+        "Financial Independence / The Short Squeeze",
+        "Money Management / Bridging Income Gaps",
+        "Money Management / Common Student Decisions",
+        "Money Management / Know Your Rights",
+        "Money Management / Methods and Tools",
+        "Money Mindset / Conclusion",
+        "Money Mindset / Cycle of Liberation",
+        "Money Mindset / Cycle of Socialization",
+        "Money Mindset / First Gen Students",
+        "Money Mindset / Unpacking and Unlearning",
+        "Navigating Credit / Deciding to Take Out a Loan",
+        "Navigating Credit / Intro to Navigating Credit",
+        "Navigating Credit / Know Your Rights",
+        "Navigating Credit / Student Loan Deep Dive",
+        "Navigating Credit / The History of Credit Reports"
+      ]
+    }
+  }
+}
