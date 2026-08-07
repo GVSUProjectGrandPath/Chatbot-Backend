@@ -1,7 +1,7 @@
 {
   "config": {
-    "run_utc": "2026-08-06T20:59:50+00:00",
-    "git_sha": "b09ed8a",
+    "run_utc": "2026-08-07T02:06:20+00:00",
+    "git_sha": "e78d225",
     "top_k": 10,
     "search_mode": "hybrid (keyword search_text + vector text_vector, default RRF fusion)",
     "hybrid_weights": "none set — Azure AI Search default RRF",
@@ -11,239 +11,466 @@
     "embedding_model": "text-embedding-3-small",
     "chunk_count": 111,
     "golden_source": "resources/data/golden-data/golden_dataset_curriculum.csv",
-    "question_count": 27
+    "question_count": 200
   },
   "metrics": {
-    "scored_utc": "2026-08-07T01:02:03+00:00",
-    "n": 27,
+    "scored_utc": "2026-08-07T02:09:09+00:00",
+    "n": 200,
     "errors": 0,
     "lesson": {
       "hit@1": {
-        "hits": 22,
-        "n": 27,
-        "pct": 81.5
+        "hits": 111,
+        "n": 200,
+        "pct": 55.5
       },
       "hit@3": {
-        "hits": 25,
-        "n": 27,
-        "pct": 92.6
+        "hits": 153,
+        "n": 200,
+        "pct": 76.5
       },
       "hit@5": {
-        "hits": 26,
-        "n": 27,
-        "pct": 96.3
+        "hits": 172,
+        "n": 200,
+        "pct": 86.0
       },
       "hit@10": {
-        "hits": 27,
-        "n": 27,
-        "pct": 100.0
+        "hits": 186,
+        "n": 200,
+        "pct": 93.0
       },
-      "mrr": 0.8781
+      "mrr": 0.6757
     },
     "module": {
       "hit@1": {
-        "hits": 24,
-        "n": 27,
-        "pct": 88.9
+        "hits": 143,
+        "n": 200,
+        "pct": 71.5
       },
       "hit@3": {
-        "hits": 26,
-        "n": 27,
-        "pct": 96.3
+        "hits": 178,
+        "n": 200,
+        "pct": 89.0
       },
       "hit@5": {
-        "hits": 27,
-        "n": 27,
-        "pct": 100.0
+        "hits": 188,
+        "n": 200,
+        "pct": 94.0
       },
       "hit@10": {
-        "hits": 27,
-        "n": 27,
+        "hits": 200,
+        "n": 200,
         "pct": 100.0
       },
-      "mrr": 0.929
+      "mrr": 0.8104
     },
     "scores": {
-      "mean_top1": 0.0327,
-      "min_top1": 0.0312,
+      "mean_top1": 0.0324,
+      "min_top1": 0.0282,
       "max_top1": 0.0333,
-      "p10_top1": 0.0317,
-      "p50_top1": 0.0331,
+      "p10_top1": 0.031,
+      "p50_top1": 0.0328,
       "p90_top1": 0.0333,
       "mean_margin_top1_top2": 0.001,
-      "mean_margin_top1_top5": 0.0042
+      "mean_margin_top1_top5": 0.0044
+    },
+    "subsets": {
+      "by_cohort": {
+        "core27": {
+          "n": 27,
+          "lesson": {
+            "hit@1": {
+              "hits": 22,
+              "n": 27,
+              "pct": 81.5
+            },
+            "hit@3": {
+              "hits": 25,
+              "n": 27,
+              "pct": 92.6
+            },
+            "hit@5": {
+              "hits": 26,
+              "n": 27,
+              "pct": 96.3
+            },
+            "hit@10": {
+              "hits": 27,
+              "n": 27,
+              "pct": 100.0
+            },
+            "mrr": 0.8781
+          },
+          "module": {
+            "hit@1": {
+              "hits": 24,
+              "n": 27,
+              "pct": 88.9
+            },
+            "hit@3": {
+              "hits": 26,
+              "n": 27,
+              "pct": 96.3
+            },
+            "hit@5": {
+              "hits": 27,
+              "n": 27,
+              "pct": 100.0
+            },
+            "hit@10": {
+              "hits": 27,
+              "n": 27,
+              "pct": 100.0
+            },
+            "mrr": 0.929
+          }
+        },
+        "phase6": {
+          "n": 173,
+          "lesson": {
+            "hit@1": {
+              "hits": 89,
+              "n": 173,
+              "pct": 51.4
+            },
+            "hit@3": {
+              "hits": 128,
+              "n": 173,
+              "pct": 74.0
+            },
+            "hit@5": {
+              "hits": 146,
+              "n": 173,
+              "pct": 84.4
+            },
+            "hit@10": {
+              "hits": 159,
+              "n": 173,
+              "pct": 91.9
+            },
+            "mrr": 0.6441
+          },
+          "module": {
+            "hit@1": {
+              "hits": 119,
+              "n": 173,
+              "pct": 68.8
+            },
+            "hit@3": {
+              "hits": 152,
+              "n": 173,
+              "pct": 87.9
+            },
+            "hit@5": {
+              "hits": 161,
+              "n": 173,
+              "pct": 93.1
+            },
+            "hit@10": {
+              "hits": 173,
+              "n": 173,
+              "pct": 100.0
+            },
+            "mrr": 0.7919
+          }
+        }
+      },
+      "by_type": {
+        "standard": {
+          "n": 191,
+          "lesson": {
+            "hit@1": {
+              "hits": 106,
+              "n": 191,
+              "pct": 55.5
+            },
+            "hit@3": {
+              "hits": 146,
+              "n": 191,
+              "pct": 76.4
+            },
+            "hit@5": {
+              "hits": 165,
+              "n": 191,
+              "pct": 86.4
+            },
+            "hit@10": {
+              "hits": 177,
+              "n": 191,
+              "pct": 92.7
+            },
+            "mrr": 0.6761
+          },
+          "module": {
+            "hit@1": {
+              "hits": 135,
+              "n": 191,
+              "pct": 70.7
+            },
+            "hit@3": {
+              "hits": 169,
+              "n": 191,
+              "pct": 88.5
+            },
+            "hit@5": {
+              "hits": 179,
+              "n": 191,
+              "pct": 93.7
+            },
+            "hit@10": {
+              "hits": 191,
+              "n": 191,
+              "pct": 100.0
+            },
+            "mrr": 0.8049
+          }
+        },
+        "typo": {
+          "n": 5,
+          "lesson": {
+            "hit@1": {
+              "hits": 3,
+              "n": 5,
+              "pct": 60.0
+            },
+            "hit@3": {
+              "hits": 4,
+              "n": 5,
+              "pct": 80.0
+            },
+            "hit@5": {
+              "hits": 4,
+              "n": 5,
+              "pct": 80.0
+            },
+            "hit@10": {
+              "hits": 5,
+              "n": 5,
+              "pct": 100.0
+            },
+            "mrr": 0.7
+          },
+          "module": {
+            "hit@1": {
+              "hits": 4,
+              "n": 5,
+              "pct": 80.0
+            },
+            "hit@3": {
+              "hits": 5,
+              "n": 5,
+              "pct": 100.0
+            },
+            "hit@5": {
+              "hits": 5,
+              "n": 5,
+              "pct": 100.0
+            },
+            "hit@10": {
+              "hits": 5,
+              "n": 5,
+              "pct": 100.0
+            },
+            "mrr": 0.8667
+          }
+        },
+        "vague": {
+          "n": 4,
+          "lesson": {
+            "hit@1": {
+              "hits": 2,
+              "n": 4,
+              "pct": 50.0
+            },
+            "hit@3": {
+              "hits": 3,
+              "n": 4,
+              "pct": 75.0
+            },
+            "hit@5": {
+              "hits": 3,
+              "n": 4,
+              "pct": 75.0
+            },
+            "hit@10": {
+              "hits": 4,
+              "n": 4,
+              "pct": 100.0
+            },
+            "mrr": 0.625
+          },
+          "module": {
+            "hit@1": {
+              "hits": 4,
+              "n": 4,
+              "pct": 100.0
+            },
+            "hit@3": {
+              "hits": 4,
+              "n": 4,
+              "pct": 100.0
+            },
+            "hit@5": {
+              "hits": 4,
+              "n": 4,
+              "pct": 100.0
+            },
+            "hit@10": {
+              "hits": 4,
+              "n": 4,
+              "pct": 100.0
+            },
+            "mrr": 1.0
+          }
+        }
+      }
     },
     "per_module": {
       "Module 1: Money Mindset": {
-        "n": 4,
+        "n": 34,
         "lesson_hit@5": {
-          "hits": 4,
-          "n": 4,
-          "pct": 100.0
+          "hits": 25,
+          "n": 34,
+          "pct": 73.5
         },
         "lesson_hit@1": {
-          "hits": 4,
-          "n": 4,
-          "pct": 100.0
+          "hits": 14,
+          "n": 34,
+          "pct": 41.2
         },
         "module_hit@5": {
-          "hits": 4,
-          "n": 4,
-          "pct": 100.0
+          "hits": 33,
+          "n": 34,
+          "pct": 97.1
         },
         "module_hit@1": {
-          "hits": 4,
-          "n": 4,
-          "pct": 100.0
+          "hits": 22,
+          "n": 34,
+          "pct": 64.7
         }
       },
       "Module 2: Building Healthy Habits": {
-        "n": 5,
+        "n": 39,
         "lesson_hit@5": {
-          "hits": 4,
-          "n": 5,
-          "pct": 80.0
+          "hits": 31,
+          "n": 39,
+          "pct": 79.5
         },
         "lesson_hit@1": {
-          "hits": 3,
-          "n": 5,
-          "pct": 60.0
+          "hits": 13,
+          "n": 39,
+          "pct": 33.3
         },
         "module_hit@5": {
-          "hits": 5,
-          "n": 5,
-          "pct": 100.0
+          "hits": 34,
+          "n": 39,
+          "pct": 87.2
         },
         "module_hit@1": {
-          "hits": 3,
-          "n": 5,
-          "pct": 60.0
+          "hits": 21,
+          "n": 39,
+          "pct": 53.8
         }
       },
       "Module 3: Money Management": {
-        "n": 5,
+        "n": 35,
         "lesson_hit@5": {
-          "hits": 5,
-          "n": 5,
-          "pct": 100.0
+          "hits": 34,
+          "n": 35,
+          "pct": 97.1
         },
         "lesson_hit@1": {
-          "hits": 4,
-          "n": 5,
-          "pct": 80.0
+          "hits": 22,
+          "n": 35,
+          "pct": 62.9
         },
         "module_hit@5": {
-          "hits": 5,
-          "n": 5,
+          "hits": 35,
+          "n": 35,
           "pct": 100.0
         },
         "module_hit@1": {
-          "hits": 5,
-          "n": 5,
-          "pct": 100.0
+          "hits": 28,
+          "n": 35,
+          "pct": 80.0
         }
       },
       "Module 4: Navigating Credit": {
-        "n": 6,
+        "n": 48,
         "lesson_hit@5": {
-          "hits": 6,
-          "n": 6,
-          "pct": 100.0
+          "hits": 46,
+          "n": 48,
+          "pct": 95.8
         },
         "lesson_hit@1": {
-          "hits": 5,
-          "n": 6,
-          "pct": 83.3
+          "hits": 35,
+          "n": 48,
+          "pct": 72.9
         },
         "module_hit@5": {
-          "hits": 6,
-          "n": 6,
+          "hits": 48,
+          "n": 48,
           "pct": 100.0
         },
         "module_hit@1": {
-          "hits": 6,
-          "n": 6,
-          "pct": 100.0
+          "hits": 44,
+          "n": 48,
+          "pct": 91.7
         }
       },
       "Module 5: Planning for the Future": {
-        "n": 4,
+        "n": 17,
         "lesson_hit@5": {
-          "hits": 4,
-          "n": 4,
-          "pct": 100.0
+          "hits": 16,
+          "n": 17,
+          "pct": 94.1
         },
         "lesson_hit@1": {
-          "hits": 3,
-          "n": 4,
-          "pct": 75.0
+          "hits": 12,
+          "n": 17,
+          "pct": 70.6
         },
         "module_hit@5": {
-          "hits": 4,
-          "n": 4,
-          "pct": 100.0
+          "hits": 16,
+          "n": 17,
+          "pct": 94.1
         },
         "module_hit@1": {
-          "hits": 3,
-          "n": 4,
-          "pct": 75.0
+          "hits": 12,
+          "n": 17,
+          "pct": 70.6
         }
       },
       "Module 6: Financial Independence": {
-        "n": 3,
+        "n": 27,
         "lesson_hit@5": {
-          "hits": 3,
-          "n": 3,
-          "pct": 100.0
+          "hits": 20,
+          "n": 27,
+          "pct": 74.1
         },
         "lesson_hit@1": {
-          "hits": 3,
-          "n": 3,
-          "pct": 100.0
+          "hits": 15,
+          "n": 27,
+          "pct": 55.6
         },
         "module_hit@5": {
-          "hits": 3,
-          "n": 3,
-          "pct": 100.0
+          "hits": 22,
+          "n": 27,
+          "pct": 81.5
         },
         "module_hit@1": {
-          "hits": 3,
-          "n": 3,
-          "pct": 100.0
+          "hits": 16,
+          "n": 27,
+          "pct": 59.3
         }
       }
     },
     "coverage": {
       "lessons_indexed": 52,
-      "lessons_covered": 26,
-      "lessons_uncovered": 26,
+      "lessons_covered": 50,
+      "lessons_uncovered": 2,
       "uncovered": [
-        "Building Healthy Habits / Account Management Foundations",
-        "Building Healthy Habits / Creating New Habits",
-        "Building Healthy Habits / Setting Financial Goals",
-        "Building Healthy Habits / Tactics for Mindful Decision Making",
-        "Building Healthy Habits / Using Payment Apps",
-        "Financial Independence / Brooklyn Rent Strikes",
-        "Financial Independence / Embracing Your Worth",
-        "Financial Independence / Let Them Eat Cereal",
-        "Financial Independence / Pay it Forward",
-        "Financial Independence / Personal Reflection",
-        "Financial Independence / The Short Squeeze",
-        "Money Management / Bridging Income Gaps",
-        "Money Management / Common Student Decisions",
-        "Money Management / Know Your Rights",
-        "Money Management / Methods and Tools",
         "Money Mindset / Conclusion",
-        "Money Mindset / Cycle of Liberation",
-        "Money Mindset / First Gen Students",
-        "Money Mindset / Generational Legacies",
-        "Money Mindset / Introduction to Money Mindsets",
-        "Money Mindset / Unpacking and Unlearning",
-        "Navigating Credit / Deciding to Take Out a Loan",
-        "Navigating Credit / Intro to Navigating Credit",
-        "Navigating Credit / Know Your Rights",
-        "Navigating Credit / Student Loan Deep Dive",
-        "Navigating Credit / The History of Credit Reports"
+        "Money Mindset / Introduction to Money Mindsets"
       ]
     }
   }

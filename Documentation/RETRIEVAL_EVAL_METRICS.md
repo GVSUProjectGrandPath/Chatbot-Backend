@@ -161,10 +161,14 @@ either new data or new spend:
    before wiring it into `retrieve()`.
 2. **Context precision** — LLM judge over the 5 chunks per question, behind a `--judge` flag,
    using GPT-4o and a disk cache keyed by (question, chunk hash).
-3. **Grow the golden set to ~100** — proportional to module size, in student phrasing, including
-   follow-ups and malformed queries. 26 of 52 lessons still have zero questions, and single-chunk
-   lessons deserve extra weight (see the rank-8 miss below).
-4. **Multi-turn rows** — the only way query rewriting becomes measurable at all.
+3. ~~**Grow the golden set to ~100**~~ **Done 2026-08-06 — the set is 200 rows**, proportional to
+   module size and in student phrasing, covering 50 of 52 indexed (module, lesson) pairs with extra
+   weight on the 9 single-chunk lessons. Vague and misspelled rows are in and tagged `type`. The
+   two remaining uncovered lessons (`Conclusion`, `Introduction to Money Mindsets`) are
+   instructor-facing outline text with nothing student-answerable.
+4. **Multi-turn rows** — the only way query rewriting becomes measurable at all. Still open, and
+   blocked on a runner change: `run_retrieval_eval.py` sends every row as a fresh single-turn
+   session, so a follow-up row would be scored without the turn it depends on.
 
 ### What the first run already tells us
 
