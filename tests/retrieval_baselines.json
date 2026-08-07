@@ -14,37 +14,37 @@
     "question_count": 27
   },
   "metrics": {
-    "scored_utc": "2026-08-06T21:06:18+00:00",
+    "scored_utc": "2026-08-07T01:02:03+00:00",
     "n": 27,
     "errors": 0,
     "lesson": {
       "hit@1": {
-        "hits": 20,
+        "hits": 22,
         "n": 27,
-        "pct": 74.1
+        "pct": 81.5
       },
       "hit@3": {
-        "hits": 23,
-        "n": 27,
-        "pct": 85.2
-      },
-      "hit@5": {
-        "hits": 24,
-        "n": 27,
-        "pct": 88.9
-      },
-      "hit@10": {
         "hits": 25,
         "n": 27,
         "pct": 92.6
       },
-      "mrr": 0.804
+      "hit@5": {
+        "hits": 26,
+        "n": 27,
+        "pct": 96.3
+      },
+      "hit@10": {
+        "hits": 27,
+        "n": 27,
+        "pct": 100.0
+      },
+      "mrr": 0.8781
     },
     "module": {
       "hit@1": {
-        "hits": 23,
+        "hits": 24,
         "n": 27,
-        "pct": 85.2
+        "pct": 88.9
       },
       "hit@3": {
         "hits": 26,
@@ -61,7 +61,7 @@
         "n": 27,
         "pct": 100.0
       },
-      "mrr": 0.9043
+      "mrr": 0.929
     },
     "scores": {
       "mean_top1": 0.0327,
@@ -77,14 +77,14 @@
       "Module 1: Money Mindset": {
         "n": 4,
         "lesson_hit@5": {
-          "hits": 2,
+          "hits": 4,
           "n": 4,
-          "pct": 50.0
+          "pct": 100.0
         },
         "lesson_hit@1": {
-          "hits": 2,
+          "hits": 4,
           "n": 4,
-          "pct": 50.0
+          "pct": 100.0
         },
         "module_hit@5": {
           "hits": 4,
@@ -92,9 +92,9 @@
           "pct": 100.0
         },
         "module_hit@1": {
-          "hits": 3,
+          "hits": 4,
           "n": 4,
-          "pct": 75.0
+          "pct": 100.0
         }
       },
       "Module 2: Building Healthy Habits": {
@@ -215,8 +215,8 @@
     },
     "coverage": {
       "lessons_indexed": 52,
-      "lessons_covered": 27,
-      "lessons_uncovered": 25,
+      "lessons_covered": 26,
+      "lessons_uncovered": 26,
       "uncovered": [
         "Building Healthy Habits / Account Management Foundations",
         "Building Healthy Habits / Creating New Habits",
@@ -235,8 +235,9 @@
         "Money Management / Methods and Tools",
         "Money Mindset / Conclusion",
         "Money Mindset / Cycle of Liberation",
-        "Money Mindset / Cycle of Socialization",
         "Money Mindset / First Gen Students",
+        "Money Mindset / Generational Legacies",
+        "Money Mindset / Introduction to Money Mindsets",
         "Money Mindset / Unpacking and Unlearning",
         "Navigating Credit / Deciding to Take Out a Loan",
         "Navigating Credit / Intro to Navigating Credit",

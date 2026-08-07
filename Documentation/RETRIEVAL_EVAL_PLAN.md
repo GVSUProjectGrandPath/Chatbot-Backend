@@ -4,7 +4,7 @@ Step-by-step plan to finish the retrieval metrics. Companion to
 `Documentation/RETRIEVAL_EVAL_METRICS.md`, which is the catalogue of *what* gets measured and its
 current status. This file is the *how* and the order.
 
-Created: 2026-08-06 · **Phases 0-3 done 2026-08-06** · Phases 4-6 open
+Created: 2026-08-06 · **Phases 0-3 done 2026-08-06** · **N.1-N.3 done 2026-08-06** · Phases 4-6 open
 
 ## Status
 
@@ -12,9 +12,12 @@ Created: 2026-08-06 · **Phases 0-3 done 2026-08-06** · Phases 4-6 open
 |---|---|
 | Runner / scorer | `tests/run_retrieval_eval.py` -> `tests/score_retrieval_eval.py` |
 | Baseline | `tests/retrieval_baselines.json` — hybrid, no reranker, no rewrite, k=10, 27 questions |
-| Lesson-level (primary) | hit@1 20/27, hit@3 23/27, hit@5 24/27, hit@10 25/27, MRR 0.804 |
-| Module-level (legacy) | hit@1 23/27, hit@5 27/27, MRR 0.904 |
-| Coverage | 27 of 52 indexed lessons have a golden question |
+| Lesson-level (primary) | hit@1 22/27, hit@3 25/27, hit@5 26/27, hit@10 27/27, MRR 0.878 |
+| Module-level (legacy) | hit@1 24/27, hit@5 27/27, MRR 0.929 |
+| Coverage | 26 of 52 indexed lessons have a golden question |
+
+Numbers updated 2026-08-06 after the N.2 relabel. Retrieval itself is unchanged — see
+"Corrected numbers" under "Do now".
 
 ```
 uv run python tests/run_retrieval_eval.py                    # k=10 dump -> resources/data/eval-runs/ (gitignored)
@@ -154,23 +157,80 @@ the fingerprint differs from the baseline's.
 The first run surfaced three concrete misses that need no new data, no spend, and no ordering
 decision. They are the only findings on a 27-row set that clear the noise floor.
 
-- [ ] N.1 **The 2 questions whose correct lesson never appears in the top 10** — "Why do I feel bad
+- [x] N.1 **The 2 questions whose correct lesson never appears in the top 10** — "Why do I feel bad
       whenever I spend money on myself?" (want `Introduction to Money Mindsets`) and "How does the
-      way I grew up shape how I handle cash?" (want `Generational Legacies`). Unreachable at any
-      rank, so no reranker and no `top_k` change touches them. This is the one clear case for
-      re-chunking.
-- [ ] N.2 **Check whether N.1 is a labelling problem before treating it as a retrieval bug.** Both
-      return thematically adjacent lessons — `Cycle of Socialization`, `Give Yourself Grace`,
-      `Money and Relationships`. If those chunks genuinely answer the question, the golden label is
-      wrong and the fix is the label, not the index. Read the actual chunk text in the dump.
-      Resolve this first: it decides whether the ceiling is ~7% or ~0%.
-- [ ] N.3 **"How do I figure out which bank or credit union is right for me?"** ranks
-      `Selecting a Financial Institution` at 8, behind loan-officer and loan-decision chunks. Only
-      1 chunk exists for that lesson (vs 6 for `What Factors Do Loan Officers Consider`), so this
-      looks like a chunk-count imbalance rather than a semantic failure — worth confirming, since it
-      is the kind of thing re-chunking would fix.
+      way I grew up shape how I handle cash?" (want `Generational Legacies`).
+      **Dissolved by N.2: both were mislabelled, not unreachable.** There is no retrieval bug here
+      and no case for re-chunking on this evidence.
+- [x] N.2 **Check whether N.1 is a labelling problem before treating it as a retrieval bug.**
+      **Result: both are labelling problems. The ceiling is ~0%, not ~7%.** Reading the expected
+      lessons' actual chunk text settled it — *both are course-outline documents that do not answer
+      their question*:
+      - `Introduction to Money Mindsets` is an instructor-facing syllabus (Learning Objectives /
+        Activities / Assessment per module). Nothing about guilt over spending. What retrieval
+        returned instead does answer it: `Give Yourself Grace` at ranks 1-2 ("your worth is not
+        defined by your bank account", "room in my budget for things that bring me joy") and
+        `Cycle of Socialization` at 3-5 (Alex hesitating over a $25 copay from childhood money
+        stress).
+      - `Generational Legacies` is a 2-3 minute course outline about wealth *inequality* — redlining,
+        St. Louis Fed links — with a bare link dump as its second chunk. The question is about
+        inherited *habits*, which is exactly `Cycle of Socialization` ("our beliefs about money start
+        forming at a young age… our families, culture, and the media all shape how we think and feel
+        about money"), returned at ranks 1/3/5.
 
-Module 1 is the weakest module at 2/4 lesson hit@5, and N.1 accounts for both of its misses.
+      **Fixed** by relabelling both rows in the golden CSV. Row 1 lists two acceptable lessons —
+      the guilt-from-taught-values framing is genuinely covered by both `Cycle of Socialization`
+      and `Give Yourself Grace` — which is why the `lesson`/`module` columns now accept a
+      `|`-separated list (see "Multi-label golden rows" below).
+- [x] N.3 **"How do I figure out which bank or credit union is right for me?"** ranks
+      `Selecting a Financial Institution` at 8, behind loan-officer and loan-decision chunks.
+      **Confirmed: chunk-count imbalance, not a semantic failure.** That lesson has exactly 1 chunk
+      vs 6 for `What Factors Do Loan Officers Consider`. It is also systemic rather than a one-off —
+      **9 of 51 lessons are single-chunk**, and every one of them is similarly outgunned in a fused
+      ranking. This is now the only genuine retrieval miss in the set, and the one real argument for
+      revisiting chunking.
+
+Module 1 was reported as the weakest module at 2/4 lesson hit@5; after the N.2 relabel it is **4/4**.
+The weakest module is now Module 2: Building Healthy Habits at 3/5 lesson hit@5.
+
+### Corrected numbers (same dump, corrected labels)
+
+Relabelling changed no retrieval behaviour whatsoever — it re-graded the existing k=10 dump.
+
+| lesson-level | before (as-run labels) | after (corrected labels) |
+|---|---|---|
+| hit@1 | 20/27 | **22/27** |
+| hit@3 | 23/27 | **25/27** |
+| hit@5 | 24/27 | **26/27** |
+| hit@10 | 25/27 | **27/27** |
+| MRR | 0.804 | **0.8781** |
+
+`uv run python tests/score_retrieval_eval.py --dump-labels` still reproduces the old column exactly,
+which is the proof that relabelling is the only thing that moved. The corrected numbers are promoted
+to `tests/retrieval_baselines.json`.
+
+**hit@10 is now 27/27 — nothing in the golden set is unreachable.** The "~7% embedding/chunking
+ceiling" recorded below in "What this unlocks" was an artefact of two bad labels; that claim is
+retracted.
+
+### Multi-label golden rows
+
+The `module` and `lesson` columns accept `|`-separated alternatives, and any listed label counts as
+a hit. Some student questions are legitimately answered by more than one lesson, and forcing a
+single label grades a correct retrieval as a miss — exactly the failure N.2 found. Expect this to
+matter more as Phase 6 grows the set to ~100 rows.
+
+Two supporting changes came with it:
+
+- **The scorer re-reads labels from the golden CSV at score time** (`--dump-labels` opts out). The
+  dump embeds `expected_lesson`, so before this a label fix forced a full re-run — which contradicts
+  the plan's own principle that changing a rubric never costs another Azure call. A question absent
+  from the CSV keeps its dump label rather than silently scoring as a miss.
+- **The diff prints `RUBRIC CHANGED` when rows were relabelled**, alongside the existing
+  `CONFIG CHANGED`. Without it the relabel reads as a +7.4pp retrieval win across every lesson
+  metric, which it is not. Grading changes and retrieval changes must never be confusable.
+
+`tests/test_retrieval_scoring.py` covers the matching rules and the relabel step.
 
 ## Phase 4 — Negatives and the abstain path
 
@@ -247,8 +307,9 @@ wasted. Measured, that rule turns out to be the wrong test, for two reasons. **D
 cancel a reranker.**
 
 **1. Recall@5 is not what a reranker moves.** A reranker reorders; the metric that captures that is
-top-1. Rank of the correct lesson across the 27: rank 1 x20, rank 2 x2, rank 3 x1, rank 4 x1,
-rank 8 x1, never x2.
+top-1. Rank of the correct lesson across the 27, **corrected labels (2026-08-06)**:
+rank 1 x22, rank 2 x2, rank 3 x1, rank 4 x1, rank 8 x1, never x0.
+(As-run labels read rank 1 x20 … never x2 — the two "never" rows were the N.2 mislabels.)
 
 | headroom | questions | pp |
 |---|---|---|
@@ -264,10 +325,14 @@ top-1 headroom's 95% CI [4.2%, 33.7%] excludes zero.
 
 ### What does survive
 
-- **2 of 27 questions never retrieve the correct lesson in the top 10.** No reranker fixes those;
-  that is an embedding/chunking ceiling worth ~7%, and the one clear argument for re-chunking.
+- ~~**2 of 27 questions never retrieve the correct lesson in the top 10.**~~ **Retracted 2026-08-06
+  (N.2).** Both were mislabelled against course-outline lessons that do not answer their question.
+  With corrected labels lesson hit@10 is 27/27 — there is no measured embedding/chunking ceiling on
+  this set, and this is no longer an argument for re-chunking. The surviving argument for revisiting
+  chunking is N.3: 9 of 51 lessons have a single chunk and lose fused rankings to 6-chunk lessons.
 - **Raising `top_k` past 5 is not worth it.** A claim about pool depth, which is what the sweep
-  actually measures.
+  actually measures. Strengthened by the relabel: hit@5 26/27 vs hit@10 27/27, so the pool is deep
+  enough and the one remaining miss (N.3) sits at rank 8.
 - **The score distribution is nearly flat** — top-1 RRF scores all within 0.0312-0.0333, mean
   top1-top2 margin 0.0010. Little confidence signal, so Phase 4's abstain threshold may not
   separate cleanly.
@@ -296,11 +361,22 @@ top-1 and precision instead.
 
 ### Revised order
 
-**"Do now" N.1-N.3** (the 3 misses that clear the noise floor; N.2 first, since it decides whether
-the ceiling is real or a labelling artefact) -> **Phase 6** (grow to ~100, so effects become
-detectable at all) -> **Phase 5** (context precision: does rank order actually affect answers?) ->
-only then evaluate a reranker, scored on top-1 and precision, never on recall@5. Phase 4 is
-independent and can slot in anywhere.
+~~**"Do now" N.1-N.3**~~ **done 2026-08-06** — the ceiling turned out to be a labelling artefact,
+so re-chunking is no longer motivated by unreachable material. -> **Phase 6** (grow to ~100, so
+effects become detectable at all) -> **Phase 5** (context precision: does rank order actually affect
+answers?) -> only then evaluate a reranker, scored on top-1 and precision, never on recall@5.
+Phase 4 is independent and can slot in anywhere.
+
+**Next up: Phase 6.** Two findings feed into it. Coverage dropped from 27 to 26 of 52 lessons
+(the relabel freed `Introduction to Money Mindsets` and `Generational Legacies`, both now untested),
+and N.3 showed single-chunk lessons are structurally hard to retrieve — so weight new questions
+toward the 9 single-chunk lessons, where the measurement is most likely to find something.
+
+One question worth settling in Phase 6: **whether the two course-outline documents belong in the
+index at all.** `Introduction to Money Mindsets` and `Generational Legacies` are instructor-facing
+syllabus/outline text, not student-facing answers. CLAUDE.md records that one course outline was
+excluded at indexing time; these two were not. Four chunks of 111 that cannot usefully answer a
+student question are also four chunks that can be retrieved *instead* of one that can.
 
 ## Rules for every run
 

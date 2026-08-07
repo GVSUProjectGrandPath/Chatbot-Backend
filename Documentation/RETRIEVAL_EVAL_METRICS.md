@@ -35,16 +35,24 @@ Accepted baseline (hybrid, no reranker, no rewrite, k=10, 27 questions, 2026-08-
 
 | metric | lesson-level (primary) | module-level (legacy) |
 |---|---|---|
-| hit@1 | 20/27 (74.1%) | 23/27 (85.2%) |
-| hit@3 | 23/27 (85.2%) | 26/27 (96.3%) |
-| hit@5 | 24/27 (88.9%) | 27/27 (100%) |
-| hit@10 | 25/27 (92.6%) | 27/27 (100%) |
-| MRR | 0.804 | 0.904 |
+| hit@1 | 22/27 (81.5%) | 24/27 (88.9%) |
+| hit@3 | 25/27 (92.6%) | 26/27 (96.3%) |
+| hit@5 | 26/27 (96.3%) | 27/27 (100%) |
+| hit@10 | 27/27 (100%) | 27/27 (100%) |
+| MRR | 0.878 | 0.929 |
 
 Moving to lesson-level did what it was supposed to: the headline number came off the 100% ceiling
-and there is now headroom at every k.
+and there is now headroom at hit@1 through hit@5.
 
-Three things to know when reading these numbers:
+Four things to know when reading these numbers:
+
+0. **These numbers include the 2026-08-06 relabel (plan item N.2), not a retrieval change.** Two
+   golden rows were labelled against course-outline lessons that do not answer their question; they
+   were graded as misses while retrieval was returning the right material. Re-scoring the same dump
+   with corrected labels moved lesson metrics up ~7pp across the board. `--dump-labels` reproduces
+   the pre-relabel column (20/23/24/25, MRR 0.804) exactly. Golden cells may now list several
+   acceptable labels separated by `|`, and the scorer re-reads labels from the CSV at score time so
+   a label fix never costs another run.
 
 1. **The June 2026 baseline reproduces.** Re-running the old script verbatim on 2026-08-06 gave
    27/27 hit@5 and 24/27 top-1 again, so the index has not drifted. The module top-1 above is
@@ -88,10 +96,10 @@ Legend: DONE implemented / PARTIAL implemented but limited / TODO not implemente
 
 | Metric | What it answers | Status | Notes |
 |---|---|---|---|
-| Hit rate @5 | Is a correct chunk anywhere in the top 5? | DONE | Lesson-level 24/27 — de-saturated. Module-level still pinned at 27/27 |
-| Top-1 rate | Is the correct chunk ranked first? | DONE | Lesson-level 20/27 — the largest remaining gap |
-| MRR | On average, how high does the correct chunk rank? | DONE | 0.804 lesson-level. Continuous, so it will not saturate |
-| Recall@k sweep (k=1,3,5,10) | Is top_k=5 the right cutoff? | DONE | 20/23/24/25. hit@10 is +1 over hit@5, so deeper pools buy nothing — but this does not settle the reranker question |
+| Hit rate @5 | Is a correct chunk anywhere in the top 5? | DONE | Lesson-level 26/27 — de-saturated. Module-level still pinned at 27/27 |
+| Top-1 rate | Is the correct chunk ranked first? | DONE | Lesson-level 22/27 — the largest remaining gap |
+| MRR | On average, how high does the correct chunk rank? | DONE | 0.878 lesson-level. Continuous, so it will not saturate |
+| Recall@k sweep (k=1,3,5,10) | Is top_k=5 the right cutoff? | DONE | 22/25/26/27. hit@10 is +1 over hit@5, so deeper pools buy nothing — but this does not settle the reranker question |
 | nDCG@5 | Rank-weighted quality across the whole result list | TODO | Needs graded (not binary) relevance labels |
 
 The k sweep answers whether `top_k=5` is the right cutoff (measured: it is — hit@10 is one question
@@ -114,8 +122,8 @@ This is the cheapest meaningful change on this page.
 
 | Metric | What it answers | Status | Notes |
 |---|---|---|---|
-| Per-module breakdown | Is one module quietly failing? | DONE | Module 1 is the outlier: 2/4 lesson hit@5 vs 5/5 and 6/6 for Modules 3-4 |
-| Per-lesson coverage | Which lessons are untested? | DONE | Measured: 27/52 lessons covered, 25 untested. Listed in every run's metrics file |
+| Per-module breakdown | Is one module quietly failing? | DONE | After the N.2 relabel Module 1 is 4/4; the weakest is now Module 2 at 3/5 lesson hit@5 |
+| Per-lesson coverage | Which lessons are untested? | DONE | Measured: 26/52 lessons covered, 26 untested. Listed in every run's metrics file |
 | Question-type breakdown | Do vague, short, or misspelled queries degrade? | TODO | All 27 golden questions are well-formed sentences |
 
 ### Failure modes
@@ -154,15 +162,21 @@ either new data or new spend:
 2. **Context precision** — LLM judge over the 5 chunks per question, behind a `--judge` flag,
    using GPT-4o and a disk cache keyed by (question, chunk hash).
 3. **Grow the golden set to ~100** — proportional to module size, in student phrasing, including
-   follow-ups and malformed queries. 25 of 52 lessons still have zero questions.
+   follow-ups and malformed queries. 26 of 52 lessons still have zero questions, and single-chunk
+   lessons deserve extra weight (see the rank-8 miss below).
 4. **Multi-turn rows** — the only way query rewriting becomes measurable at all.
 
 ### What the first run already tells us
 
-Rank of the correct lesson: rank 1 x20, rank 2 x2, rank 3 x1, rank 4 x1, rank 8 x1, never x2.
+Rank of the correct lesson, corrected labels: rank 1 x22, rank 2 x2, rank 3 x1, rank 4 x1,
+rank 8 x1, never x0.
 
-- **2 of 27 questions never retrieve the correct lesson in the top 10.** No amount of reranking
-  fixes those — an embedding/chunking ceiling of ~7%, and the clearest argument for re-chunking.
+- ~~**2 of 27 questions never retrieve the correct lesson in the top 10.**~~ **Retracted 2026-08-06.**
+  Both were mislabelled against course-outline lessons that do not answer their question; retrieval
+  had returned the right material all along. Lesson hit@10 is 27/27, so there is no measured
+  embedding ceiling on this set. The surviving chunking argument is different: 9 of 51 lessons have
+  a single chunk, and the one remaining miss is exactly such a lesson losing a fused ranking to a
+  6-chunk lesson.
 - **`top_k=5` is the right cutoff.** hit@10 is one question above hit@5; deeper pools buy nothing.
 - **The reranker question is still open, and the k sweep does not close it.** A reranker reorders,
   so its headroom is top-1, not recall@5: 4 questions (14.8pp, 95% CI [4.2%, 33.7%]) within a pool
@@ -173,10 +187,14 @@ Rank of the correct lesson: rank 1 x20, rank 2 x2, rank 3 x1, rank 4 x1, rank 8 
   eval decides this, not retrieval metrics.
 - **The score distribution is nearly flat** — top-1 RRF scores all in 0.0312-0.0333, mean top1-top2
   margin 0.0010. Little confidence signal, a warning for Phase 4's abstain threshold.
-- **Module 1 (Money Mindset) is the weak module** at 2/4 lesson hit@5. Both misses ("why do I feel
-  bad spending on myself", "how did growing up shape how I handle cash") retrieve thematically
-  adjacent lessons — `Cycle of Socialization`, `Give Yourself Grace`. With 4 questions this is
-  directional, and may be label ambiguity rather than a retrieval bug: those lessons overlap.
+- **Module 1's two "misses" were label ambiguity, and it is now 4/4.** The suspicion recorded here
+  was correct: "why do I feel bad spending on myself" and "how did growing up shape how I handle
+  cash" were labelled against syllabus/outline lessons, while the thematically adjacent lessons they
+  retrieved — `Cycle of Socialization`, `Give Yourself Grace` — are the ones that actually answer
+  them. The weakest module is now Module 2 (Building Healthy Habits) at 3/5 lesson hit@5.
+- **The only remaining lesson-level miss is a chunk-count artefact.** "Which bank or credit union is
+  right for me?" puts `Selecting a Financial Institution` (1 chunk) at rank 8, behind
+  `What Factors Do Loan Officers Consider` (6 chunks).
 
 ### How big the golden set has to be to decide anything
 

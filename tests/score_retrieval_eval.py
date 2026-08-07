@@ -16,9 +16,19 @@ runs whose config fingerprint (including top_k) matches.
 Primary metric is LESSON-level matching. Module-level is reported alongside it only so the June
 2026 baseline (27/27 hit@5, 24/27 top-1) stays comparable — with 6 modules, any chunk from the
 right module counts as a hit, which is why that number saturated at 100%.
+
+A golden row may list several acceptable labels separated by "|" — some student questions are
+genuinely answered by more than one lesson, and forcing a single label grades a correct retrieval
+as a miss. Any listed label counts as a hit.
+
+Labels are re-read from the golden CSV at score time rather than trusted from the dump, so
+correcting a label is a rubric change that costs nothing (see the module docstring rationale in
+run_retrieval_eval.py). Pass --dump-labels to score against the labels as they were when the run
+was taken instead.
 """
 
 import argparse
+import csv
 import json
 from datetime import UTC, datetime
 from pathlib import Path
@@ -26,7 +36,11 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[1]
 RUNS_DIR = REPO_ROOT / "resources" / "data" / "eval-runs"
 CHUNKS_JSON = REPO_ROOT / "resources" / "data" / "chunks" / "chunks.json"
+GOLDEN_CSV = REPO_ROOT / "resources" / "data" / "golden-data" / "golden_dataset_curriculum.csv"
 BASELINE_PATH = Path(__file__).resolve().parent / "retrieval_baselines.json"
+
+# Separates alternative acceptable labels within one golden cell.
+LABEL_SEP = "|"
 
 K_VALUES = (1, 3, 5, 10)
 
@@ -55,16 +69,48 @@ def module_name(label: str) -> str:
     return norm(label.split(":", 1)[-1])
 
 
+def accepted(expected: str, level: str) -> set[str]:
+    """Split a golden cell into the set of labels that count as a hit, normalised for comparison."""
+    parts = [p for p in (expected or "").split(LABEL_SEP) if p.strip()]
+    return {norm(p) if level == "lesson" else module_name(p) for p in parts}
+
+
 def first_hit_rank(results: list[dict], expected: str, level: str) -> int | None:
-    """1-indexed rank of the first correct result, or None if it never appears."""
+    """1-indexed rank of the first result matching ANY acceptable label, or None if never."""
+    ok_labels = accepted(expected, level)
+    field = "lesson" if level == "lesson" else "module"
     for r in results:
-        if level == "lesson":
-            ok = norm(r.get("lesson")) == norm(expected)
-        else:
-            ok = module_name(expected) == norm(r.get("module"))
-        if ok:
+        if norm(r.get(field)) in ok_labels:
             return r["rank"]
     return None
+
+
+def load_golden_labels(csv_path: Path) -> dict[str, tuple[str, str]]:
+    """question -> (module, lesson) from the golden CSV, so label fixes need no new run."""
+    with csv_path.open(encoding="utf-8-sig", newline="") as fh:
+        return {
+            row["question"].strip(): (row["module"], row["lesson"])
+            for row in csv.DictReader(fh)
+            if row.get("question")
+        }
+
+
+def relabel(records: list[dict], csv_path: Path) -> int:
+    """Overwrite each record's expected labels from the CSV. Returns how many rows changed.
+
+    A question missing from the CSV keeps the labels captured in the dump — that way a dump taken
+    before a question was renamed still scores rather than silently counting as a miss.
+    """
+    labels = load_golden_labels(csv_path)
+    changed = 0
+    for rec in records:
+        current = labels.get(rec["question"].strip())
+        if current is None:
+            continue
+        if (rec["expected_module"], rec["expected_lesson"]) != current:
+            rec["expected_module"], rec["expected_lesson"] = current
+            changed += 1
+    return changed
 
 
 def rate(hits: int, n: int) -> dict:
@@ -129,7 +175,10 @@ def per_module(records: list[dict]) -> dict:
     """~4-5 questions per module, so treat these as directional, not precise."""
     groups: dict[str, list[dict]] = {}
     for rec in records:
-        groups.setdefault(rec["expected_module"], []).append(rec)
+        # A multi-label row is filed under its first module so the breakdown stays one row per
+        # real module; scoring inside the group still accepts every alternative.
+        primary = rec["expected_module"].split(LABEL_SEP)[0].strip()
+        groups.setdefault(primary, []).append(rec)
 
     return {
         mod: {
@@ -154,7 +203,13 @@ def lesson_coverage(records: list[dict]) -> dict:
         return {"error": "chunks.json unavailable — coverage not computed"}
 
     indexed = {(c["module"], c["lesson"]) for c in chunks}
-    tested = {(module_name(r["expected_module"]), norm(r["expected_lesson"])) for r in records}
+    # A multi-label row exercises every lesson it lists, so each one counts as covered.
+    tested = {
+        (mod, les)
+        for r in records
+        for mod in accepted(r["expected_module"], "module")
+        for les in accepted(r["expected_lesson"], "lesson")
+    }
     uncovered = sorted(f"{m} / {les}" for m, les in indexed if (norm(m), norm(les)) not in tested)
 
     return {
@@ -256,14 +311,15 @@ def print_misses(dump: dict) -> None:
             any_miss = True
             got = ", ".join(f"{r['lesson']}" for r in rec["results"][:3])
             where = "not in top 10" if rank is None else f"rank {rank}"
+            want = rec["expected_lesson"].replace(LABEL_SEP, " OR ")
             print(f"  {rec['question'][:62]}")
-            print(f"    want: {rec['expected_lesson']}  ({where})")
+            print(f"    want: {want}  ({where})")
             print(f"    got:  {got}")
     if not any_miss:
         print("  none")
 
 
-def print_diff(metrics: dict, config: dict, baseline: dict | None) -> None:
+def print_diff(metrics: dict, config: dict, baseline: dict | None, relabelled: int = 0) -> None:
     print("\n" + "-" * 74)
     if not baseline:
         print("No baseline recorded yet. Accept this run with --promote to create one.")
@@ -281,6 +337,14 @@ def print_diff(metrics: dict, config: dict, baseline: dict | None) -> None:
         print("  CONFIG CHANGED — these numbers are not a like-for-like comparison:")
         for m in mismatched:
             print(f"    {m}")
+    if relabelled:
+        # Without this, a corrected golden label reads as a retrieval win, which it is not. Note
+        # this compares against the DUMP's labels — if the baseline was promoted after the same
+        # relabel, the deltas here are already zero and only the notice remains.
+        print(
+            f"  RUBRIC CHANGED — {relabelled} row(s) scored against labels newer than this dump.\n"
+            f"    Any delta below reflects the grading change, NOT retrieval quality."
+        )
 
     now, base = flat_metrics(metrics), flat_metrics(base_metrics)
     print(f"\n  {'metric':<18} {'baseline':>10} {'now':>10} {'delta':>10}  verdict")
@@ -320,6 +384,11 @@ def main() -> None:
         "--promote", action="store_true", help="accept this run as the new baseline"
     )
     parser.add_argument("--no-misses", action="store_true", help="skip the per-question miss list")
+    parser.add_argument(
+        "--dump-labels",
+        action="store_true",
+        help="score against the labels stored in the dump instead of the current golden CSV",
+    )
     args = parser.parse_args()
 
     dump_path = args.dump
@@ -333,6 +402,17 @@ def main() -> None:
         dump_path = candidates[-1]
 
     dump = json.loads(dump_path.read_text(encoding="utf-8"))
+
+    # Labels are rubric, not measurement — refresh them so a corrected label never costs a re-run.
+    changed = 0
+    if not args.dump_labels and GOLDEN_CSV.exists():
+        changed = relabel(dump["records"], GOLDEN_CSV)
+        if changed:
+            print(
+                f"\nNOTE  {changed} row(s) relabelled from {GOLDEN_CSV.name} since this run was "
+                f"taken — scoring against the current labels (--dump-labels to score as-run)"
+            )
+
     config, metrics = dump["config"], score(dump)
 
     print_report(metrics, config)
@@ -342,7 +422,7 @@ def main() -> None:
     baseline = (
         json.loads(BASELINE_PATH.read_text(encoding="utf-8")) if BASELINE_PATH.exists() else None
     )
-    print_diff(metrics, config, baseline)
+    print_diff(metrics, config, baseline, relabelled=changed)
 
     # Metrics land next to the dump (gitignored). Promotion is a separate, explicit act so a bad
     # run cannot quietly become the reference.
