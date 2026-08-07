@@ -21,10 +21,26 @@ A golden row may list several acceptable labels separated by "|" — some studen
 genuinely answered by more than one lesson, and forcing a single label grades a correct retrieval
 as a miss. Any listed label counts as a hit.
 
+Lesson-level matching compares the (module, lesson) PAIR, not the lesson name alone, because
+"Know Your Rights" is two different lessons — Module 3 (workplace discrimination, pay transparency)
+and Module 4 (FCRA, credit report disputes). Matching on the name alone scored a Module 3 question
+as a hit when retrieval returned the Module 4 lesson. A golden row whose module label does not
+match its lesson can therefore never hit, so every pair is validated against chunks.json at score
+time and mismatches are reported loudly rather than silently counting as misses.
+
 Labels are re-read from the golden CSV at score time rather than trusted from the dump, so
 correcting a label is a rubric change that costs nothing (see the module docstring rationale in
 run_retrieval_eval.py). Pass --dump-labels to score against the labels as they were when the run
 was taken instead.
+
+The same applies to the CSV's `cohort` and `type` columns, also read at score time:
+
+  cohort  core27 = the original 27 questions the accepted baseline was measured on; phase6 = the
+          173 added in Phase 6. The core27 subset is scored separately and diffed against the
+          baseline as a continuity check, so growing the set from 27 to 200 does not throw away
+          every historical comparison.
+  type    standard | vague | typo. Vague one-liners and misspellings are reported separately so
+          they do not drag the headline number for reasons that have nothing to do with retrieval.
 """
 
 import argparse
@@ -44,8 +60,32 @@ LABEL_SEP = "|"
 
 K_VALUES = (1, 3, 5, 10)
 
-# Movement smaller than this many questions is noise on a set this small, not signal.
+# Floor for the noise threshold. Below ~2 questions nothing is ever a finding regardless of n.
 NOISE_QUESTIONS = 2
+
+# The cohort the accepted baseline was measured on, kept scoreable as a subset after the set grew.
+BASELINE_COHORT = "core27"
+
+# Reported separately from the headline: these move for reasons unrelated to retrieval quality.
+HARD_TYPES = ("vague", "typo")
+
+
+def noise_questions(n: int, pct: float) -> int:
+    """How many questions a metric must move before it counts as signal, at this n and rate.
+
+    A fixed 2-question floor was right at n=27 (7.4pp) but far too tight at n=200, where 2
+    questions is 1pp — well inside sampling noise. This scales with one standard error of a
+    binomial at the observed rate: 2 questions at n=27/p=0.815, 5 at n=200/p=0.815.
+
+    Deliberately conservative and unpaired — a real before/after on the SAME questions is a paired
+    comparison, for which McNemar (see the sample-size table in RETRIEVAL_EVAL_PLAN.md) is the
+    honest test. This only decides whether a diff line is worth reading, not whether a change ships.
+    """
+    if n <= 0:
+        return NOISE_QUESTIONS
+    p = min(max(pct / 100, 0.0), 1.0)
+    return max(NOISE_QUESTIONS, round((n * p * (1 - p)) ** 0.5))
+
 
 # Config keys that must match for two runs to be comparable at all.
 FINGERPRINT_KEYS = (
@@ -75,14 +115,64 @@ def accepted(expected: str, level: str) -> set[str]:
     return {norm(p) if level == "lesson" else module_name(p) for p in parts}
 
 
-def first_hit_rank(results: list[dict], expected: str, level: str) -> int | None:
-    """1-indexed rank of the first result matching ANY acceptable label, or None if never."""
+def accepted_pairs(expected_module: str, expected_lesson: str) -> set[tuple[str, str]]:
+    """(module, lesson) pairs that count as a lesson-level hit, normalised for comparison.
+
+    The cross product of the row's acceptable modules and lessons. For a multi-label row this can
+    include pairs that do not exist in the index (module 1's lesson crossed with module 3) — those
+    are inert, because no result can carry them.
+    """
+    return {
+        (mod, les)
+        for mod in accepted(expected_module, "module")
+        for les in accepted(expected_lesson, "lesson")
+    }
+
+
+def first_hit_rank(
+    results: list[dict], expected: str, level: str, expected_module: str | None = None
+) -> int | None:
+    """1-indexed rank of the first result matching ANY acceptable label, or None if never.
+
+    At lesson level, pass expected_module to match on the (module, lesson) pair — required to tell
+    the two "Know Your Rights" lessons apart. Without it, matching falls back to the lesson name
+    alone, which is what the pre-200-row scorer did.
+    """
+    if level == "lesson" and expected_module is not None:
+        ok_pairs = accepted_pairs(expected_module, expected)
+        for r in results:
+            if (norm(r.get("module")), norm(r.get("lesson"))) in ok_pairs:
+                return r["rank"]
+        return None
+
     ok_labels = accepted(expected, level)
     field = "lesson" if level == "lesson" else "module"
     for r in results:
         if norm(r.get(field)) in ok_labels:
             return r["rank"]
     return None
+
+
+def check_label_pairs(records: list[dict]) -> list[str]:
+    """Golden rows whose (module, lesson) pair does not exist in the index.
+
+    Pair matching makes a wrong module label an automatic miss for that row, which would otherwise
+    look like a retrieval regression. Surfacing it is the guard against that.
+    """
+    try:
+        chunks = json.loads(CHUNKS_JSON.read_text(encoding="utf-8"))
+    except Exception:
+        return []
+
+    indexed = {(norm(c["module"]), norm(c["lesson"])) for c in chunks}
+    bad = []
+    for rec in records:
+        pairs = accepted_pairs(rec["expected_module"], rec["expected_lesson"])
+        if pairs and not (pairs & indexed):
+            bad.append(
+                f"{rec['question'][:58]!r} -> {rec['expected_module']} / {rec['expected_lesson']}"
+            )
+    return bad
 
 
 def load_golden_labels(csv_path: Path) -> dict[str, tuple[str, str]]:
@@ -93,6 +183,32 @@ def load_golden_labels(csv_path: Path) -> dict[str, tuple[str, str]]:
             for row in csv.DictReader(fh)
             if row.get("question")
         }
+
+
+def load_golden_meta(csv_path: Path) -> dict[str, tuple[str, str]]:
+    """question -> (cohort, type) from the golden CSV.
+
+    Read at score time for the same reason labels are: how a run is partitioned for reporting is
+    rubric, not measurement, so re-partitioning an old dump must never cost another Azure run.
+    """
+    with csv_path.open(encoding="utf-8-sig", newline="") as fh:
+        return {
+            row["question"].strip(): (
+                (row.get("cohort") or "unknown").strip() or "unknown",
+                (row.get("type") or "standard").strip() or "standard",
+            )
+            for row in csv.DictReader(fh)
+            if row.get("question")
+        }
+
+
+def annotate(records: list[dict], csv_path: Path) -> None:
+    """Attach cohort/type to each record. Rows absent from the CSV are unknown/standard."""
+    meta = load_golden_meta(csv_path)
+    for rec in records:
+        cohort, qtype = meta.get(rec["question"].strip(), ("unknown", "standard"))
+        rec.setdefault("cohort", cohort)
+        rec.setdefault("type", qtype)
 
 
 def relabel(records: list[dict], csv_path: Path) -> int:
@@ -122,7 +238,16 @@ def score_level(records: list[dict], level: str) -> dict:
     n = len(records)
     key = "expected_lesson" if level == "lesson" else "expected_module"
     # An errored row has no results, so first_hit_rank returns None and it counts as a miss.
-    ranks = [first_hit_rank(r["results"], r[key], level) for r in records]
+    # expected_module is passed at lesson level so the two "Know Your Rights" lessons stay distinct.
+    ranks = [
+        first_hit_rank(
+            r["results"],
+            r[key],
+            level,
+            expected_module=r["expected_module"] if level == "lesson" else None,
+        )
+        for r in records
+    ]
 
     out: dict = {
         f"hit@{k}": rate(sum(1 for rk in ranks if rk is not None and rk <= k), n) for k in K_VALUES
@@ -171,8 +296,39 @@ def score_stats(records: list[dict]) -> dict:
     }
 
 
+def subset_block(records: list[dict]) -> dict:
+    """A scoreable metric block for a slice of the run, shaped like the top-level one.
+
+    Same shape matters: flat_metrics() runs over it unchanged, which is what lets the core27 slice
+    be diffed against the old 27-row baseline.
+    """
+    return {
+        "n": len(records),
+        "lesson": score_level(records, "lesson"),
+        "module": score_level(records, "module"),
+    }
+
+
+def subsets(records: list[dict]) -> dict:
+    """Break the run down by cohort and by question type.
+
+    by_cohort keeps the pre-Phase-6 baseline comparable; by_type stops 4 vague one-liners and 5
+    misspellings from moving the headline for reasons that are not about retrieval.
+    """
+    by_cohort: dict[str, list[dict]] = {}
+    by_type: dict[str, list[dict]] = {}
+    for rec in records:
+        by_cohort.setdefault(rec.get("cohort", "unknown"), []).append(rec)
+        by_type.setdefault(rec.get("type", "standard"), []).append(rec)
+
+    return {
+        "by_cohort": {name: subset_block(rows) for name, rows in sorted(by_cohort.items())},
+        "by_type": {name: subset_block(rows) for name, rows in sorted(by_type.items())},
+    }
+
+
 def per_module(records: list[dict]) -> dict:
-    """~4-5 questions per module, so treat these as directional, not precise."""
+    """Directional only — the per-module counts are small relative to the whole set."""
     groups: dict[str, list[dict]] = {}
     for rec in records:
         # A multi-label row is filed under its first module so the breakdown stays one row per
@@ -203,12 +359,11 @@ def lesson_coverage(records: list[dict]) -> dict:
         return {"error": "chunks.json unavailable — coverage not computed"}
 
     indexed = {(c["module"], c["lesson"]) for c in chunks}
-    # A multi-label row exercises every lesson it lists, so each one counts as covered.
+    # A multi-label row exercises every lesson it lists, so each one counts as covered. Pairs are
+    # used rather than bare lesson names so a Module 3 question does not mark Module 4's
+    # same-named "Know Your Rights" as covered.
     tested = {
-        (mod, les)
-        for r in records
-        for mod in accepted(r["expected_module"], "module")
-        for les in accepted(r["expected_lesson"], "lesson")
+        pair for r in records for pair in accepted_pairs(r["expected_module"], r["expected_lesson"])
     }
     uncovered = sorted(f"{m} / {les}" for m, les in indexed if (norm(m), norm(les)) not in tested)
 
@@ -229,6 +384,7 @@ def score(dump: dict) -> dict:
         "lesson": score_level(records, "lesson"),
         "module": score_level(records, "module"),
         "scores": score_stats(records),
+        "subsets": subsets(records),
         "per_module": per_module(records),
         "coverage": lesson_coverage(records),
     }
@@ -259,9 +415,10 @@ def print_report(metrics: dict, config: dict) -> None:
         f"rewrite={config.get('query_rewrite')}  index={config.get('index_name')}  "
         f"chunks={config.get('chunk_count')}"
     )
+    floor = noise_questions(n, metrics["lesson"]["hit@1"]["pct"])
     print(
         f"noise   n={n}, 1 question = {100 / n:.1f}pp — treat any move under "
-        f"{NOISE_QUESTIONS} questions as noise"
+        f"{floor} questions ({100 * floor / n:.1f}pp) as noise"
     )
     if metrics["errors"]:
         print(f"WARNING {metrics['errors']} rows errored during retrieval and score as misses")
@@ -286,7 +443,29 @@ def print_report(metrics: dict, config: dict) -> None:
         f"  margins    top1-top2 {s['mean_margin_top1_top2']}   top1-top5 {s['mean_margin_top1_top5']}"
     )
 
-    print("\nPer-module (directional only — ~4-5 questions each)")
+    subs = metrics.get("subsets", {})
+    if len(subs.get("by_cohort", {})) > 1:
+        print("\nBy cohort (core27 = the questions the baseline was measured on)")
+        print(f"  {'cohort':<12} {'n':>4}  {'lesson@1':>9} {'lesson@5':>9} {'lesson MRR':>10}")
+        for name, b in subs["by_cohort"].items():
+            print(
+                f"  {name:<12} {b['n']:>4}  {b['lesson']['hit@1']['pct']:>8.1f}% "
+                f"{b['lesson']['hit@5']['pct']:>8.1f}% {b['lesson']['mrr']:>10}"
+            )
+
+    by_type = subs.get("by_type", {})
+    if any(t in by_type for t in HARD_TYPES):
+        print("\nBy question type (vague/typo are reported apart from the headline)")
+        print(f"  {'type':<12} {'n':>4}  {'lesson@1':>9} {'lesson@5':>9} {'lesson MRR':>10}")
+        for name, b in by_type.items():
+            print(
+                f"  {name:<12} {b['n']:>4}  {b['lesson']['hit@1']['pct']:>8.1f}% "
+                f"{b['lesson']['hit@5']['pct']:>8.1f}% {b['lesson']['mrr']:>10}"
+            )
+        hard_n = sum(by_type[t]["n"] for t in HARD_TYPES if t in by_type)
+        print(f"  note  {hard_n} hard-type rows are included in the headline numbers above")
+
+    print("\nPer-module (directional only)")
     print(f"  {'module':<34} {'n':>2}  {'lesson@1':>8} {'lesson@5':>8} {'module@1':>8}")
     for mod, b in metrics["per_module"].items():
         print(
@@ -306,7 +485,9 @@ def print_misses(dump: dict) -> None:
     print("\nLesson-level misses (correct lesson not in top 5)")
     any_miss = False
     for rec in dump["records"]:
-        rank = first_hit_rank(rec["results"], rec["expected_lesson"], "lesson")
+        rank = first_hit_rank(
+            rec["results"], rec["expected_lesson"], "lesson", expected_module=rec["expected_module"]
+        )
         if rank is None or rank > 5:
             any_miss = True
             got = ", ".join(f"{r['lesson']}" for r in rec["results"][:3])
@@ -346,21 +527,32 @@ def print_diff(metrics: dict, config: dict, baseline: dict | None, relabelled: i
             f"    Any delta below reflects the grading change, NOT retrieval quality."
         )
 
-    now, base = flat_metrics(metrics), flat_metrics(base_metrics)
+    print_diff_table(flat_metrics(metrics), flat_metrics(base_metrics))
+    print_continuity(metrics, base_metrics)
+
+
+def print_diff_table(now: dict, base: dict) -> None:
     print(f"\n  {'metric':<18} {'baseline':>10} {'now':>10} {'delta':>10}  verdict")
     for name, (value, hits, n) in now.items():
         if name not in base:
             print(f"  {name:<18} {'—':>10} {value:>10} {'new':>10}  new metric")
             continue
-        base_value, base_hits, _ = base[name]
+        base_value, base_hits, base_n = base[name]
         delta = round(value - base_value, 4)
 
-        # Noise is defined in questions, not percentage points, so hit rates compare counts and
-        # MRR falls back to the equivalent of NOISE_QUESTIONS worth of perfect-rank movement.
-        if hits is not None and base_hits is not None:
-            moved = abs(hits - base_hits) >= NOISE_QUESTIONS
+        # Noise is defined in questions, so hit rates compare counts where they can. MRR is a 0-1
+        # figure, so scale it to a percentage to reuse the same threshold. The threshold scales
+        # with n, which keeps the same code honest at 27 rows and at 200.
+        rate_pct = base_value if hits is not None else 100 * base_value
+        floor = noise_questions(n, rate_pct)
+        if hits is not None and base_hits is not None and base_n == n:
+            moved = abs(hits - base_hits) >= floor
+        elif hits is not None:
+            # Different set sizes — counts are not comparable (27/27 vs 200/200 is a 173-question
+            # "move" at an identical rate), so fall back to percentage points.
+            moved = abs(delta) >= 100 * floor / max(n, 1)
         else:
-            moved = abs(delta) >= NOISE_QUESTIONS / max(n, 1)
+            moved = abs(delta) >= floor / max(n, 1)
 
         if not moved:
             verdict = "within noise"
@@ -369,6 +561,34 @@ def print_diff(metrics: dict, config: dict, baseline: dict | None, relabelled: i
         else:
             verdict = "REGRESSION"
         print(f"  {name:<18} {base_value:>10} {value:>10} {delta:>+10}  {verdict}")
+
+
+def print_continuity(metrics: dict, base_metrics: dict) -> None:
+    """Diff the baseline's own cohort against the baseline, when the set has grown since.
+
+    Growing the golden set makes every headline number incomparable to the accepted baseline. The
+    subset the baseline was actually measured on is still comparable, and that is the only line of
+    continuity across the expansion — without it, promoting a bigger set silently discards the
+    ability to detect a regression against anything historical.
+    """
+    cohort = metrics.get("subsets", {}).get("by_cohort", {}).get(BASELINE_COHORT)
+    if not cohort or not base_metrics:
+        return
+    # Nothing to reconcile if this run IS the baseline cohort — the headline diff already is
+    # like-for-like, and a second identical table would only be confusing.
+    if metrics["n"] == cohort["n"]:
+        return
+    # Only meaningful while the baseline predates the expansion; once re-promoted at the full set,
+    # the cohort no longer lines up with what the baseline measured.
+    if base_metrics.get("n") != cohort["n"]:
+        return
+
+    print(
+        f"\n  Continuity check — the {cohort['n']} {BASELINE_COHORT} rows only, vs the baseline "
+        f"measured on those same rows."
+    )
+    print("  This is the like-for-like comparison; the table above is not.")
+    print_diff_table(flat_metrics(cohort), flat_metrics(base_metrics))
 
 
 def main() -> None:
@@ -412,6 +632,20 @@ def main() -> None:
                 f"\nNOTE  {changed} row(s) relabelled from {GOLDEN_CSV.name} since this run was "
                 f"taken — scoring against the current labels (--dump-labels to score as-run)"
             )
+
+    # Cohort/type are reporting partitions, so they come from the CSV too, even under --dump-labels.
+    if GOLDEN_CSV.exists():
+        annotate(dump["records"], GOLDEN_CSV)
+
+    # A wrong module label is an automatic miss now that matching is pair-based, so say so.
+    bad_pairs = check_label_pairs(dump["records"])
+    if bad_pairs:
+        print(
+            f"\nWARNING  {len(bad_pairs)} golden row(s) have a (module, lesson) pair that is not in "
+            f"the index.\n  These can never score a lesson-level hit — fix the label, not retrieval:"
+        )
+        for line in bad_pairs[:10]:
+            print(f"    {line}")
 
     config, metrics = dump["config"], score(dump)
 

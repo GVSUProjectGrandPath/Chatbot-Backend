@@ -1,7 +1,8 @@
 """Unit tests for the retrieval scorer's matching rules.
 
-These cover the grading logic itself, not retrieval quality: multi-label golden rows, and the
-relabel-from-CSV step that lets a corrected label be re-scored without paying for a new run.
+These cover the grading logic itself, not retrieval quality: multi-label golden rows, the
+relabel-from-CSV step that lets a corrected label be re-scored without paying for a new run,
+(module, lesson) pair matching, and the cohort/type partitions added when the set grew to 200.
 """
 
 import csv
@@ -10,11 +11,18 @@ import pytest
 
 from tests.score_retrieval_eval import (
     accepted,
+    accepted_pairs,
+    annotate,
+    check_label_pairs,
     first_hit_rank,
     load_golden_labels,
+    load_golden_meta,
+    noise_questions,
     per_module,
+    print_diff_table,
     relabel,
     score_level,
+    subsets,
 )
 
 
@@ -115,6 +123,186 @@ class TestPerModule:
             }
         ]
         assert list(per_module(records)) == ["Module 1: Money Mindset"]
+
+
+class TestPairMatching:
+    """ "Know Your Rights" is a lesson in BOTH Module 3 and Module 4.
+
+    Matching on the lesson name alone scored a Module 3 question as a hit when retrieval returned
+    Module 4's lesson. These pin the fix.
+    """
+
+    KYR_M4 = [result(1, "Know Your Rights", "Navigating Credit")]
+    KYR_M3 = [result(1, "Know Your Rights", "Money Management")]
+
+    def test_same_named_lesson_in_the_wrong_module_is_not_a_hit(self):
+        rank = first_hit_rank(
+            self.KYR_M4,
+            "Know Your Rights",
+            "lesson",
+            expected_module="Module 3: Money Management",
+        )
+        assert rank is None
+
+    def test_same_named_lesson_in_the_right_module_is_a_hit(self):
+        rank = first_hit_rank(
+            self.KYR_M3,
+            "Know Your Rights",
+            "lesson",
+            expected_module="Module 3: Money Management",
+        )
+        assert rank == 1
+
+    def test_without_a_module_it_falls_back_to_name_only_matching(self):
+        assert first_hit_rank(self.KYR_M4, "Know Your Rights", "lesson") == 1
+
+    def test_pairs_are_the_cross_product_of_both_cells(self):
+        pairs = accepted_pairs(
+            "Module 1: Money Mindset|Module 3: Money Management",
+            "Cycle of Socialization|Give Yourself Grace",
+        )
+        assert ("money mindset", "cycle of socialization") in pairs
+        assert ("money management", "give yourself grace") in pairs
+        assert len(pairs) == 4
+
+    def test_multi_label_row_still_matches_its_alternative(self):
+        records = [
+            {
+                "question": "q",
+                "expected_module": "Module 1: Money Mindset|Module 3: Money Management",
+                "expected_lesson": "Cycle of Socialization|Give Yourself Grace",
+                "results": RESULTS,
+            }
+        ]
+        assert score_level(records, "lesson")["hit@1"]["hits"] == 1
+
+
+class TestCheckLabelPairs:
+    """A wrong module label is an automatic miss under pair matching, so it must be reported."""
+
+    def test_pair_that_does_not_exist_in_the_index_is_flagged(self):
+        records = [
+            {
+                "question": "a mislabelled row",
+                "expected_module": "Module 1: Money Mindset",
+                "expected_lesson": "Income Taxes",
+                "results": [],
+            }
+        ]
+        assert len(check_label_pairs(records)) == 1
+
+    def test_real_pair_is_not_flagged(self):
+        records = [
+            {
+                "question": "a correct row",
+                "expected_module": "Module 3: Money Management",
+                "expected_lesson": "Income Taxes",
+                "results": [],
+            }
+        ]
+        assert check_label_pairs(records) == []
+
+
+class TestNoiseThreshold:
+    """A fixed 2-question floor was right at n=27 and far too tight at n=200."""
+
+    def test_small_set_keeps_the_two_question_floor(self):
+        assert noise_questions(27, 81.5) == 2
+
+    def test_threshold_grows_with_the_set(self):
+        assert noise_questions(200, 81.5) == 5
+
+    def test_never_drops_below_the_floor(self):
+        assert noise_questions(200, 100.0) == 2
+        assert noise_questions(0, 80.0) == 2
+
+
+class TestDiffTable:
+    """Verdicts must not compare raw hit counts across sets of different sizes."""
+
+    def test_identical_rate_at_a_different_n_is_not_a_regression(self, capsys):
+        # 27/27 vs 200/200 is the same 100% rate but a 173-question difference in counts.
+        print_diff_table(
+            {"module.hit@10": (100.0, 200, 200)},
+            {"module.hit@10": (100.0, 27, 27)},
+        )
+        assert "within noise" in capsys.readouterr().out
+
+    def test_real_movement_at_the_same_n_is_still_flagged(self, capsys):
+        print_diff_table(
+            {"lesson.hit@1": (55.5, 111, 200)},
+            {"lesson.hit@1": (81.5, 163, 200)},
+        )
+        assert "REGRESSION" in capsys.readouterr().out
+
+
+class TestSubsets:
+    RECORDS = [
+        {
+            "question": "old",
+            "cohort": "core27",
+            "type": "standard",
+            "expected_module": "Module 1: Money Mindset",
+            "expected_lesson": "Cycle of Socialization",
+            "results": RESULTS,
+        },
+        {
+            "question": "new",
+            "cohort": "phase6",
+            "type": "vague",
+            "expected_module": "Module 1: Money Mindset",
+            "expected_lesson": "Cycle of Socialization",
+            "results": [],
+        },
+    ]
+
+    def test_cohorts_are_scored_separately(self):
+        out = subsets(self.RECORDS)["by_cohort"]
+        assert out["core27"]["n"] == 1
+        assert out["core27"]["lesson"]["hit@5"]["hits"] == 1
+        # The phase6 row has no results, so it misses — the point is it does not drag core27 down.
+        assert out["phase6"]["lesson"]["hit@5"]["hits"] == 0
+
+    def test_hard_types_are_broken_out(self):
+        out = subsets(self.RECORDS)["by_type"]
+        assert set(out) == {"standard", "vague"}
+        assert out["vague"]["n"] == 1
+
+    def test_records_without_metadata_fall_back(self):
+        out = subsets([dict(self.RECORDS[0], cohort=None, type=None) | {"cohort": "unknown"}])
+        assert "unknown" in out["by_cohort"]
+
+
+class TestGoldenMeta:
+    @pytest.fixture
+    def meta_csv(self, tmp_path):
+        path = tmp_path / "golden.csv"
+        with path.open("w", encoding="utf-8", newline="") as fh:
+            w = csv.DictWriter(fh, fieldnames=["question", "module", "lesson", "cohort", "type"])
+            w.writeheader()
+            w.writerow(
+                {
+                    "question": "tagged",
+                    "module": "Module 1: Money Mindset",
+                    "lesson": "Cycle of Socialization",
+                    "cohort": "phase6",
+                    "type": "typo",
+                }
+            )
+        return path
+
+    def test_meta_is_read_from_the_csv(self, meta_csv):
+        assert load_golden_meta(meta_csv)["tagged"] == ("phase6", "typo")
+
+    def test_annotate_attaches_cohort_and_type(self, meta_csv):
+        records = [{"question": "tagged"}]
+        annotate(records, meta_csv)
+        assert (records[0]["cohort"], records[0]["type"]) == ("phase6", "typo")
+
+    def test_row_absent_from_the_csv_gets_defaults(self, meta_csv):
+        records = [{"question": "not in the csv"}]
+        annotate(records, meta_csv)
+        assert (records[0]["cohort"], records[0]["type"]) == ("unknown", "standard")
 
 
 class TestRelabel:
