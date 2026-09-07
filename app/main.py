@@ -3,9 +3,9 @@ import time
 import uuid
 from typing import Annotated
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import StreamingResponse
+from fastapi.responses import JSONResponse, StreamingResponse
 from langchain_core.callbacks import UsageMetadataCallbackHandler
 from pydantic import BaseModel, StringConstraints
 
@@ -30,6 +30,7 @@ from app.services.logger import (
     logger,
     request_id_var,
 )
+from app.services.rate_limit import RATE_LIMIT_RESPONSE, check_rate_limit
 
 # LearnWorlds widget is the only caller of /chat
 ALLOWED_ORIGINS = ["https://www.rep4finlit.org"]
@@ -93,10 +94,29 @@ def health():
 
 
 @app.post("/chat")
-async def chat(body: ChatRequest):
+async def chat(request: Request, body: ChatRequest):
     # Each request gets its own id so log lines can be traced individually
     request_id_var.set(str(uuid.uuid4()))
     started = time.perf_counter()
+
+    # Throttle before any guardrail, so a flood costs no Azure calls at all.
+    # 429, but with the same body shape as a normal reply so the widget can render it.
+    rate_limited = await check_rate_limit(request, body.session_id)
+    if rate_limited is not None:
+        logger.warning(
+            "rate_limited",
+            extra=get_extra(
+                session_id=body.session_id,
+                avatar=body.avatar,
+                block_reason=rate_limited.reason,
+                latency_ms=elapsed_ms(started),
+            ),
+        )
+        return JSONResponse(
+            status_code=429,
+            content={"message": RATE_LIMIT_RESPONSE, "ferpa_blocked": False},
+            headers={"Retry-After": str(rate_limited.retry_after)},
+        )
 
     # FERPA guard runs first - blocked messages never reach Azure OpenAI or the logs.
     # Returned with HTTP 200 so the widget renders it like a normal bot message.
@@ -180,12 +200,37 @@ async def chat(body: ChatRequest):
 
 
 @app.post("/chat/stream")
-async def chat_stream(body: ChatRequest):
+async def chat_stream(request: Request, body: ChatRequest):
     # Each request gets its own id so log lines can be traced individually
     request_id_var.set(str(uuid.uuid4()))
     started = time.perf_counter()
     session_key = body.session_id
     user_role = body.avatar
+
+    # 0. Rate limit - before any guardrail, so a flood costs no Azure calls at all.
+    # Still ndjson so the widget renders it as a normal bot message despite the 429.
+    rate_limited = await check_rate_limit(request, session_key)
+    if rate_limited is not None:
+        logger.warning(
+            "rate_limited",
+            extra=get_extra(
+                session_id=session_key,
+                avatar=user_role,
+                block_reason=rate_limited.reason,
+                latency_ms=elapsed_ms(started),
+            ),
+        )
+
+        async def limit_block():
+            yield json.dumps({"type": "token", "content": RATE_LIMIT_RESPONSE}) + "\n"
+            yield json.dumps({"type": "done", "ferpa_blocked": False}) + "\n"
+
+        return StreamingResponse(
+            limit_block(),
+            status_code=429,
+            media_type="application/x-ndjson",
+            headers={"Retry-After": str(rate_limited.retry_after)},
+        )
 
     # 1. FERPA Guardrail (Runs instantly before streaming)
     if ferpa_sanitizer(body.message) == "Yes":

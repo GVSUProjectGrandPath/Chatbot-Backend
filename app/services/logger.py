@@ -31,7 +31,7 @@ BLOCK_FERPA_REGEX = "ferpa_regex"
 BLOCK_PII_PRESIDIO = "pii_presidio"
 BLOCK_INPUT_JUDGE = "input_judge"
 BLOCK_OUTPUT_JUDGE = "output_judge"
-BLOCK_JUDGE_ERROR = "judge_error"  # fail-closed block caused by a broken judge call
+BLOCK_JUDGE_ERROR = "judge_error"  
 
 
 def get_extra(

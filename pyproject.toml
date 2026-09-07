@@ -34,7 +34,10 @@ dependencies = [
     "python-json-logger>=2.0.7",
     "tiktoken>=0.12.0",
     "uvicorn==0.30.6",
-    "slowapi==0.1.9",
+    # Rate limiting (app/services/rate_limit.py). This is slowapi's own engine, used
+    # directly: slowapi's key_func is sync and only sees the Request, so it cannot key on
+    # session_id, which lives in the JSON body.
+    "limits>=5.0",
 ]
 
 [tool.pytest.ini_options]
