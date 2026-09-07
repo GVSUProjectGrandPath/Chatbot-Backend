@@ -14,54 +14,54 @@
     "question_count": 200
   },
   "metrics": {
-    "scored_utc": "2026-08-07T02:09:09+00:00",
+    "scored_utc": "2026-08-07T02:30:35+00:00",
     "n": 200,
     "errors": 0,
     "lesson": {
       "hit@1": {
-        "hits": 111,
+        "hits": 119,
         "n": 200,
-        "pct": 55.5
+        "pct": 59.5
       },
       "hit@3": {
-        "hits": 153,
+        "hits": 156,
         "n": 200,
-        "pct": 76.5
+        "pct": 78.0
       },
       "hit@5": {
-        "hits": 172,
+        "hits": 174,
         "n": 200,
-        "pct": 86.0
+        "pct": 87.0
       },
       "hit@10": {
-        "hits": 186,
+        "hits": 187,
         "n": 200,
-        "pct": 93.0
+        "pct": 93.5
       },
-      "mrr": 0.6757
+      "mrr": 0.704
     },
     "module": {
       "hit@1": {
-        "hits": 143,
+        "hits": 147,
         "n": 200,
-        "pct": 71.5
+        "pct": 73.5
       },
       "hit@3": {
-        "hits": 178,
+        "hits": 179,
         "n": 200,
-        "pct": 89.0
+        "pct": 89.5
       },
       "hit@5": {
-        "hits": 188,
+        "hits": 189,
         "n": 200,
-        "pct": 94.0
+        "pct": 94.5
       },
       "hit@10": {
         "hits": 200,
         "n": 200,
         "pct": 100.0
       },
-      "mrr": 0.8104
+      "mrr": 0.823
     },
     "scores": {
       "mean_top1": 0.0324,
@@ -79,9 +79,9 @@
           "n": 27,
           "lesson": {
             "hit@1": {
-              "hits": 22,
+              "hits": 23,
               "n": 27,
-              "pct": 81.5
+              "pct": 85.2
             },
             "hit@3": {
               "hits": 25,
@@ -98,13 +98,13 @@
               "n": 27,
               "pct": 100.0
             },
-            "mrr": 0.8781
+            "mrr": 0.8966
           },
           "module": {
             "hit@1": {
-              "hits": 24,
+              "hits": 25,
               "n": 27,
-              "pct": 88.9
+              "pct": 92.6
             },
             "hit@3": {
               "hits": 26,
@@ -121,56 +121,56 @@
               "n": 27,
               "pct": 100.0
             },
-            "mrr": 0.929
+            "mrr": 0.9475
           }
         },
         "phase6": {
           "n": 173,
           "lesson": {
             "hit@1": {
-              "hits": 89,
+              "hits": 96,
               "n": 173,
-              "pct": 51.4
+              "pct": 55.5
             },
             "hit@3": {
-              "hits": 128,
+              "hits": 131,
               "n": 173,
-              "pct": 74.0
+              "pct": 75.7
             },
             "hit@5": {
-              "hits": 146,
+              "hits": 148,
               "n": 173,
-              "pct": 84.4
+              "pct": 85.5
             },
             "hit@10": {
-              "hits": 159,
+              "hits": 160,
               "n": 173,
-              "pct": 91.9
+              "pct": 92.5
             },
-            "mrr": 0.6441
+            "mrr": 0.6739
           },
           "module": {
             "hit@1": {
-              "hits": 119,
+              "hits": 122,
               "n": 173,
-              "pct": 68.8
+              "pct": 70.5
             },
             "hit@3": {
-              "hits": 152,
+              "hits": 153,
               "n": 173,
-              "pct": 87.9
+              "pct": 88.4
             },
             "hit@5": {
-              "hits": 161,
+              "hits": 162,
               "n": 173,
-              "pct": 93.1
+              "pct": 93.6
             },
             "hit@10": {
               "hits": 173,
               "n": 173,
               "pct": 100.0
             },
-            "mrr": 0.7919
+            "mrr": 0.8036
           }
         }
       },
@@ -179,49 +179,49 @@
           "n": 191,
           "lesson": {
             "hit@1": {
-              "hits": 106,
+              "hits": 113,
               "n": 191,
-              "pct": 55.5
+              "pct": 59.2
             },
             "hit@3": {
-              "hits": 146,
+              "hits": 149,
               "n": 191,
-              "pct": 76.4
+              "pct": 78.0
             },
             "hit@5": {
-              "hits": 165,
+              "hits": 167,
               "n": 191,
-              "pct": 86.4
+              "pct": 87.4
             },
             "hit@10": {
-              "hits": 177,
+              "hits": 178,
               "n": 191,
-              "pct": 92.7
+              "pct": 93.2
             },
-            "mrr": 0.6761
+            "mrr": 0.7023
           },
           "module": {
             "hit@1": {
-              "hits": 135,
+              "hits": 139,
               "n": 191,
-              "pct": 70.7
+              "pct": 72.8
             },
             "hit@3": {
-              "hits": 169,
+              "hits": 170,
               "n": 191,
-              "pct": 88.5
+              "pct": 89.0
             },
             "hit@5": {
-              "hits": 179,
+              "hits": 180,
               "n": 191,
-              "pct": 93.7
+              "pct": 94.2
             },
             "hit@10": {
               "hits": 191,
               "n": 191,
               "pct": 100.0
             },
-            "mrr": 0.8049
+            "mrr": 0.8182
           }
         },
         "typo": {
@@ -277,9 +277,9 @@
           "n": 4,
           "lesson": {
             "hit@1": {
-              "hits": 2,
+              "hits": 3,
               "n": 4,
-              "pct": 50.0
+              "pct": 75.0
             },
             "hit@3": {
               "hits": 3,
@@ -296,7 +296,7 @@
               "n": 4,
               "pct": 100.0
             },
-            "mrr": 0.625
+            "mrr": 0.7917
           },
           "module": {
             "hit@1": {
@@ -328,14 +328,14 @@
       "Module 1: Money Mindset": {
         "n": 34,
         "lesson_hit@5": {
-          "hits": 25,
+          "hits": 26,
           "n": 34,
-          "pct": 73.5
+          "pct": 76.5
         },
         "lesson_hit@1": {
-          "hits": 14,
+          "hits": 15,
           "n": 34,
-          "pct": 41.2
+          "pct": 44.1
         },
         "module_hit@5": {
           "hits": 33,
@@ -351,24 +351,24 @@
       "Module 2: Building Healthy Habits": {
         "n": 39,
         "lesson_hit@5": {
-          "hits": 31,
+          "hits": 32,
           "n": 39,
-          "pct": 79.5
+          "pct": 82.1
         },
         "lesson_hit@1": {
-          "hits": 13,
+          "hits": 17,
           "n": 39,
-          "pct": 33.3
+          "pct": 43.6
         },
         "module_hit@5": {
-          "hits": 34,
+          "hits": 35,
           "n": 39,
-          "pct": 87.2
+          "pct": 89.7
         },
         "module_hit@1": {
-          "hits": 21,
+          "hits": 23,
           "n": 39,
-          "pct": 53.8
+          "pct": 59.0
         }
       },
       "Module 3: Money Management": {
@@ -402,9 +402,9 @@
           "pct": 95.8
         },
         "lesson_hit@1": {
-          "hits": 35,
+          "hits": 38,
           "n": 48,
-          "pct": 72.9
+          "pct": 79.2
         },
         "module_hit@5": {
           "hits": 48,
@@ -412,9 +412,9 @@
           "pct": 100.0
         },
         "module_hit@1": {
-          "hits": 44,
+          "hits": 46,
           "n": 48,
-          "pct": 91.7
+          "pct": 95.8
         }
       },
       "Module 5: Planning for the Future": {

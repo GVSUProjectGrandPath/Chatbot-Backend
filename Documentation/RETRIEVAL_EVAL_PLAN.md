@@ -16,13 +16,14 @@ the ordering arguments scattered through the older sections.
 | | |
 |---|---|
 | Runner / scorer | `tests/run_retrieval_eval.py` -> `tests/score_retrieval_eval.py` |
-| Baseline | `tests/retrieval_baselines.json` — hybrid, no reranker, no rewrite, k=10, **200 questions** (promoted 2026-08-07, sha e78d225) |
-| Lesson-level (primary) | hit@1 111/200 (55.5%), hit@3 153/200, hit@5 172/200 (86.0%), hit@10 186/200 (93.0%), MRR 0.676 |
-| Module-level (legacy) | hit@1 143/200 (71.5%), hit@5 188/200, hit@10 200/200, MRR 0.810 |
+| Baseline | `tests/retrieval_baselines.json` — hybrid, no reranker, no rewrite, k=10, **200 questions** (re-promoted 2026-08-07 after the relabelling pass, sha e78d225) |
+| Lesson-level (primary) | hit@1 119/200 (59.5%), hit@3 156/200, hit@5 174/200 (87.0%), hit@10 187/200 (93.5%), MRR 0.704 |
+| Module-level (legacy) | hit@1 147/200 (73.5%), hit@5 189/200, hit@10 200/200, MRR 0.823 |
 | Coverage | **50 of 52** indexed (module, lesson) pairs have a golden question (was 26; see Phase 6) |
-| Continuity | the core27 slice still scores hit@1 22/27, hit@5 26/27, MRR 0.8781 — **identical to the 27-row baseline** |
+| Continuity | the core27 slice scores hit@1 23/27, hit@5 26/27, MRR 0.8966 — one row above the 27-row baseline, and that row is the `subsidized vs unsubsidized` relabel, not a retrieval change |
 
-**The 27-row set was flattering.** Top-1 is 55.5% at n=200, not 81.5%. Retrieval did not change:
+**The 27-row set was flattering.** Top-1 is 59.5% at n=200 (55.5% before the relabel), not 81.5%.
+Retrieval did not change:
 the same 27 questions score exactly what they always did (the scorer's continuity check confirms it
 line by line). The old number was measured on a set that covered half the curriculum and, by
 construction, the half someone had already thought to write questions about.
@@ -34,8 +35,8 @@ uv run python tests/score_retrieval_eval.py <dump> --promote  # accept a run as 
 ```
 
 **Phase order.** The n=27 argument for doing Phase 6 first is spent — the set is grown and the
-baseline re-promoted. Current order is in "Recommendations" at the bottom; in short, a free
-relabelling pass, then Phase 4, then chunking, then Phase 5 and a reranker.
+baseline re-promoted. Current order is in "Recommendations" at the bottom; the free relabelling pass
+is now done too, so what remains is Phase 4, then chunking, then Phase 5 and a reranker.
 
 Phases 0-3 needed no new golden data and no changes to `app/`; that is still true of 4-6.
 
@@ -200,8 +201,8 @@ decision. They are the only findings on a 27-row set that clear the noise floor.
       revisiting chunking.
       **Confirmed at n=200 (2026-08-07):** "the only genuine miss in the set" was a 27-row statement
       and no longer holds — but the mechanism does, and much more strongly. Top-1 by source-lesson
-      chunk count is 36.7% / 54.7% / 65.6% for 1 / 2 / 3+ chunks, and this same question's lesson is
-      0/5 on top-1 across five phrasings. See "The n=200 run".
+      chunk count is 43.3% / 58.4% / 70.2% for 1 / 2 / 3+ chunks, and this same question's lesson is
+      still 0/5 on top-1 across five phrasings after the relabelling pass. See "The n=200 run".
 
 Module 1 was reported as the weakest module at 2/4 lesson hit@5; after the N.2 relabel it is **4/4**.
 The weakest module is now Module 2: Building Healthy Habits at 3/5 lesson hit@5.
@@ -231,8 +232,8 @@ retracted.
 The `module` and `lesson` columns accept `|`-separated alternatives, and any listed label counts as
 a hit. Some student questions are legitimately answered by more than one lesson, and forcing a
 single label grades a correct retrieval as a miss — exactly the failure N.2 found. It did matter
-more at 200 rows: see "Read 55.5% as a floor" below, where near-duplicate lessons are the leading
-suspect for the misses.
+more at 200 rows: the relabelling pass below found 8 such rows among the 89 top-1 misses, though
+magnet chunks — not strict labels — turned out to be the dominant cause.
 
 Two supporting changes came with it:
 
@@ -440,11 +441,11 @@ Rank of the correct lesson across all 200 questions:
 
 Two conclusions change:
 
-1. **Top-1 headroom is now 61 questions (30.5pp), not 4.** The correct lesson is inside the top 5
-   but not first for 61 of 200. That is the largest single pool of addressable error in the eval,
+1. **Top-1 headroom is now 55 questions (27.5pp), not 4.** The correct lesson is inside the top 5
+   but not first for 55 of 200 (61 before the relabelling pass). That is the largest single pool of addressable error in the eval,
    and it is exactly what a reranker reorders. The n=27 CI [4.2%, 33.7%] turned out to be centred
    about right and hopelessly wide.
-2. **"Raising `top_k` past 5 is not worth it" no longer holds.** 14 questions (7pp) have their
+2. **"Raising `top_k` past 5 is not worth it" no longer holds.** 13 questions (6.5pp) have their
    lesson in the k=10 pool but outside the top 5 — at n=27 that was a single question. Read with
    the RRF caveat: truncating a k=10 dump is not the same as retrieving at k=5, so this is a reason
    to *test* `top_k=8` or `10` with a proper before/after, not a reason to change it outright. The
@@ -496,6 +497,9 @@ pair that was valid but wrong for its question.
 
 ## The n=200 run — 2026-08-07, promoted
 
+> Every number in this section is **pre-relabel**, kept as the record of the run as taken. The
+> accepted baseline is the corrected-rubric one in "The relabelling pass" below.
+
 200/200 retrieved, zero errors, sha e78d225. Lesson hit@1 **111/200 (55.5%)**, hit@5 172/200
 (86.0%), hit@10 186/200 (93.0%), MRR 0.676. Noise floor is now **7 questions (3.5pp)** at this n
 and rate — the scorer computes it rather than assuming 2.
@@ -518,13 +522,13 @@ N.3. A lesson with one chunk gets one shot at the fused ranking while a 6-chunk 
 **This is now the strongest argument in the document for revisiting chunking**, and unlike the
 retracted n=27 claim it is not a labelling artefact.
 
-### 14 questions (7%) never retrieve their lesson in the top 10
+### 13 questions (6.5%) never retrieve their lesson in the top 10
 
 Unlike the retracted 27-row version of this claim, these were not checked one by one. Concentrated
 in `Cycle of Liberation` (3), `Tactics for Mindful Decision Making` (2) and `Embracing Your Worth`
 (2) — abstract mindset lessons whose vocabulary a student question rarely shares.
 
-### Read 55.5% as a floor, not a settled number
+### Read 55.5% as a floor, not a settled number — resolved, see "The relabelling pass" below
 
 Spot-checking the worst lessons shows a mix, and the two need separating before anyone reranks
 anything:
@@ -541,6 +545,56 @@ Relabelling costs nothing: the scorer re-reads labels from the CSV, so a pass ov
 be re-scored against **this same dump** with no new Azure spend, and it will print RUBRIC CHANGED
 so the correction is never mistaken for a retrieval win.
 
+## The relabelling pass — 2026-08-07, done
+
+Recommendation 1 below is complete. All **89** rows whose labelled lesson was not at rank 1 were
+reviewed against the text of the chunk that beat it, on the same dump (`retrieval_20260807T020638Z`,
+zero Azure spend). The rule was fixed before looking, per the N.2 standard: relabel only where the
+retrieved lesson **genuinely answers the question**, never because it is merely topically adjacent.
+
+**8 of 89 were mislabels.** All were corrected to multi-label rows rather than moved, since in every
+case both lessons answer:
+
+| question | added label | why |
+|---|---|---|
+| subsidized vs unsubsidized student loans | M4 `Student Loan Deep Dive` | both lessons spell out the interest-accrual difference |
+| how do I get a free copy of my credit report | M5 `Filing a Dispute` | step 1 of the dispute flow is AnnualCreditReport.com |
+| how long does a bureau have to look into a dispute | M5 `Filing a Dispute` | states the 30-day investigation window |
+| worth switching banks? | M2 `Avoiding Fees and Overdrafts` | closes by telling you when it is time to switch |
+| is borrowing worth it for the major I picked | M4 `Deciding to Take Out a Loan` | "Is the Debt Worth the Investment?" is that question |
+| longer loan for a lower monthly payment? | M4 `Deciding to Take Out a Loan` | "Longer terms = lower monthly payments but more interest over time" |
+| break out of bad money patterns | M1 `Cycle of Socialization` | its Financial Liberation section is the answer |
+| a savings goal I'll actually stick to | M2 `Creating New Habits` | realistic goal setting + habit stickiness |
+
+Result on the same dump: lesson hit@1 **111/200 (55.5%) → 119/200 (59.5%)**, hit@5 86.0% → 87.0%,
+hit@10 93.0% → 93.5%, MRR 0.676 → 0.704. Rank distribution moves to 1 x119, 2-5 x55, 6-10 x13,
+never x13. The baseline was re-promoted at the corrected rubric, so future runs compare
+like-for-like. **This is a grading correction, not a retrieval gain** — the scorer printed RUBRIC
+CHANGED throughout, and nothing about `retrieve()` changed.
+
+### What the other 81 turned out to be
+
+Not strict labels — **magnet chunks**. A handful of chunks win rank 1 for questions belonging to
+lessons they have nothing to do with:
+
+| chunk's lesson | times it took rank 1 on a miss | distinct labelled lessons it displaced |
+|---|---|---|
+| `Give Yourself Grace` (M3) | 19 | 13 |
+| `What Factors Do Loan Officers Consider` (M4) | 10 | 10 |
+| `Cycle of Socialization` (M1) | 6 | 6 |
+
+Between them, 35 of 81 remaining misses. These are long, conversational, emotionally-worded chunks
+that share vocabulary with almost any student question ("stress", "budget", "money", "worth it"),
+which is exactly the failure mode a reranker exists to fix — it re-reads the query against each
+candidate rather than trusting lexical/vector overlap. **This strengthens recommendation 4 and is
+the clearest single argument for the reranker in this document.** It also suggests a cheaper probe
+first: check whether these chunks win on the keyword leg, the vector leg, or only after RRF fusion.
+
+Three chunk-count observations survive the pass unchanged: the gradient is still monotonic
+(1 chunk 43.3%, 2 chunks 58.4%, 3+ chunks 70.2% — every bucket lifted, the shape identical), and
+`Selecting a Financial Institution` is still 0/5 on its own label (its one rank-1 is the relabelled
+`worth switching banks?`). Recommendation 3 is unaffected.
+
 ## Recommendations — current priority order (2026-08-07)
 
 This supersedes the ordering arguments in "Revised order" and "Phase order" above.
@@ -549,10 +603,10 @@ This supersedes the ordering arguments in "Revised order" and "Phase order" abov
 it is the only live exposure on the board — `slowapi` is a dependency and nothing in `app/` imports
 it. Everything below improves a system whose front door is open. See the to-do in `.claude/CLAUDE.md`.
 
-**1. Hand-review the misses for near-duplicate-lesson mislabels.** Free: the scorer re-reads labels,
-so this re-scores the existing dump with no Azure spend, and prints RUBRIC CHANGED so a relabel is
-never mistaken for a retrieval win. Start with `Student Loans`/`Student Loan Deep Dive`, the two
-`Know Your Rights`, and `Identifying Common Scams`/`Online Financial Safety`.
+**1. ~~Hand-review the misses for near-duplicate-lesson mislabels.~~ DONE 2026-08-07** — see "The
+relabelling pass" above. 8 of 89 relabelled, top-1 55.5% → 59.5%, baseline re-promoted.
+`Identifying Common Scams`/`Online Financial Safety` turned out **not** to be a mislabel pair: the
+scam questions that miss are beaten by unrelated chunks, not by each other.
 
 > **Set the rule before looking, or this is just moving the goalposts.** Relabel only when you have
 > read the retrieved lesson's chunk text and it genuinely answers the question — the N.2 standard.
@@ -560,22 +614,24 @@ never mistaken for a retrieval win. Start with `Student Loans`/`Student Loan Dee
 > makes a later win credible.
 
 **2. Phase 4 (negatives and the abstain path) — moved ahead of Phase 5 and the reranker.** hit@5 is
-86%, so roughly **1 in 7 student questions puts five chunks in front of the model that do not
+87%, so roughly **1 in 8 student questions puts five chunks in front of the model that do not
 contain the answer**, and `retrieve()` has no abstain path, so the bot answers from them anyway.
 That is a failure students actually experience. A reranker only reorders chunks the model already
 sees. Bigger payoff, lower cost, and it is the one phase that needs no decision from anyone else.
 Expect the flat RRF distribution to make a clean threshold hard — that negative result is still
 worth having, and points at scoring the vector leg separately.
 
-**3. Re-chunk the 9 single-chunk lessons.** The 36.7% / 54.7% / 65.6% top-1 gradient by chunk count
+**3. Re-chunk the 9 single-chunk lessons.** The 43.3% / 58.4% / 70.2% top-1 gradient by chunk count
 is the clearest causal story in the data. Smaller chunk size with overlap so short lessons yield 2-3
 chunks. **Judge on hit@10**, per the rules below — that is the metric that moves when material is
 unreachable at any rank. One variable, before and after.
 
-**4. Phase 5 (context precision), then a reranker.** 61 questions have the right lesson in the top 5
-but not first, which is real headroom — but measure it against a corrected rubric (1) and a settled
-chunking layout (3), or you are optimising against a moving target. At n=200 a 10-15pp top-1 shift
-is finally detectable.
+**4. Phase 5 (context precision), then a reranker.** 55 questions have the right lesson in the top 5
+but not first, which is real headroom — and the rubric is now corrected (1), so only a settled
+chunking layout (3) is still outstanding before this is worth optimising. The magnet-chunk finding
+from the relabel pass is the specific mechanism a reranker would attack: 35 of the 81 surviving
+misses are three chunks winning rank 1 on questions from a dozen unrelated lessons. At n=200 a
+10-15pp top-1 shift is finally detectable.
 
 **5. Phase 6.4 multi-turn rows**, whenever the runner learns to seed session history. Also the only
 way the query-rewrite arm becomes measurable.
