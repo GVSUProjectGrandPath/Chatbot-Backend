@@ -1,0 +1,30 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find /Users/puneeth/Desktop/FinLit-Bot/data -type f -exec ls -lh {})",
+      "Read(//Users/puneeth/Desktop/FinLit-Bot/**)",
+      "Bash(find /Users/puneeth/Desktop/FinLit-Bot/data -type f -exec basename {})",
+      "Bash(find /Users/puneeth/Desktop/FinLit-Bot/data -type f \\\\\\(-name *.txt -o -name *.pdf \\\\\\) -exec wc -l {} +)",
+      "Bash(xargs file:*)",
+      "Bash(xargs -0 file)",
+      "Bash(python3 -c \":*)",
+      "Bash(python3:*)",
+      "Bash(git branch:*)",
+      "Bash(uv run *)",
+      "Bash(curl -s http://localhost:8000/health)",
+      "Bash(curl -s -X POST http://localhost:8000/session/start)",
+      "Bash(tee /dev/stderr)",
+      "Bash(curl *)",
+      "Bash(.venv/bin/pip show *)",
+      "Bash(mkdir -p /Users/puneeth/Desktop/FinLit-Bot/src/services)",
+      "Bash(touch /Users/puneeth/Desktop/FinLit-Bot/src/services/__init__.py)",
+      "Bash(grep -q 'AZURE_OPENAI_CHAT_DEPLOYMENT=gpt-4o$' .env)",
+      "Bash(uv export *)",
+      "Bash(git fetch *)",
+      "Bash(git check-ignore *)",
+      "Bash(grep -E \"\\(^|/\\)\\\\.env$\")",
+      "Bash(git push *)",
+      "WebFetch(domain:raw.githubusercontent.com)"
+    ]
+  }
+}

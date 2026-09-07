@@ -12,6 +12,10 @@ uv.lock
 test/
 Additional-Docs/*
 .*
+!.claude/
+!.claude/**
+!.gitignore
+.DS_Store
 test/*
 
 uv.lock
